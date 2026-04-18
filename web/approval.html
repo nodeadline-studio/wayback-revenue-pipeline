@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Spy | Operator Matrix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f0f13;
+            --surface: rgba(26, 26, 36, 0.7);
+            --surface2: rgba(36, 36, 58, 0.4);
+            --border: rgba(46, 46, 74, 0.5);
+            --text: #e4e4f0;
+            --muted: #8888aa;
+            --accent: #7c5cfc;
+            --accent-hover: #6345d3;
+            --green: #34d399;
+            --red: #ff6b6b;
+            --gold: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 2rem;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(124, 92, 252, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(124, 92, 252, 0.05) 0%, transparent 40%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .header {
+            margin-bottom: 3rem;
+            text-align: left;
+            width: 100%;
+        }
+
+        h1 {
+            font-weight: 800;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, var(--muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle { color: var(--muted); font-size: 1rem; }
+
+        .glass-card {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .job-loader {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        input {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            flex-grow: 1;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.2); }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Review Content */
+        #review-content { display: none; }
+
+        .meta-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 99px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .badge-pending { background: rgba(245, 158, 11, 0.15); color: var(--gold); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-processing { background: rgba(124, 92, 252, 0.15); color: #b49eff; border: 1px solid rgba(124, 92, 252, 0.3); }
+        .badge-completed { background: rgba(52, 211, 153, 0.15); color: var(--green); border: 1px solid rgba(52, 211, 153, 0.3); }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 1.5rem 0 2.5rem 0;
+            display: none;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: var(--surface2);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #b49eff);
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Matrix Grid */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .matrix-item {
+            background: var(--surface2);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+
+        .matrix-item.approved { border-color: rgba(52, 211, 153, 0.4); background: rgba(52, 211, 153, 0.03); }
+
+        .matrix-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            width: 44px;
+            height: 24px;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: var(--muted);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn.active { background: var(--green); border-color: var(--green); }
+        .toggle-btn.active::after { left: calc(100% - 20px); background: white; }
+
+        .matrix-desc { font-size: 0.9rem; color: var(--text); line-height: 1.4; }
+
+        /* Action Footer */
+        .action-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Toast System */
+        #toast-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .toast {
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            color: var(--text);
+            font-size: 0.9rem;
+            font-weight: 600;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .toast.success { border-left: 4px solid var(--green); }
+        .toast.error { border-left: 4px solid var(--red); }
+
+        /* Links */
+        .external-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .external-link:hover { text-decoration: underline; }
+
+    </style>
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Operator Matrix</h1>
+            <div class="subtitle">Strategic Forensics | Human-in-the-Loop Validation</div>
+        </div>
+
+        <div class="glass-card">
+            <div class="job-loader">
+                <input type="text" id="job-id-input" placeholder="Enter Job ID (e.g. e5df04e0...)">
+                <button class="btn btn-primary" id="load-btn" onclick="startLoading()">Load Job</button>
+            </div>
+
+            <div id="review-content">
+                <div class="meta-header">
+                    <h2 id="startup-name" style="font-weight: 800; font-size: 1.5rem;">Target Startup</h2>
+                    <div id="job-status-badge" class="badge">PENDING</div>
+                </div>
+
+                <div class="progress-container" id="progress-area">
+                    <div class="progress-label">
+                        <span id="stage-label">Initializing Analysis...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="matrix-grid">
+                    <div class="matrix-item" id="m-mining">
+                        <div class="matrix-label">
+                            MINING DATA
+                            <div class="toggle-btn" onclick="toggleMatrix('mining')"></div>
+                        </div>
+                        <p class="matrix-desc">Verify competitor selection & archive snapshots are relevant to the niche.</p>
+                    </div>
+
+                    <div class="matrix-item" id="m-narrative">
+                        <div class="matrix-label">
+                            STRATEGY NARRATIVE
+                            <div class="toggle-btn" onclick="toggleMatrix('narrative')"></div>
+                        </div>
+                        <p class="matrix-desc">Confirm AI pivot interpretation matches historical visual evidence.</p>
+                    </div>
+
+                    <div class="matrix-item" id="m-handoff">
+                        <div class="matrix-label">
+                            LEADIDEAL HANDOFF
+                            <div class="toggle-btn" onclick="toggleMatrix('handoff')"></div>
+                        </div>
+                        <p class="matrix-desc">Validate lead generation brief and personalized pitch scripts.</p>
+                        <a id="preview-link" class="external-link" href="#" target="_blank">View LeadIdeal Preview &rarr;</a>
+                    </div>
+
+                    <div class="matrix-item" id="m-dispatch">
+                        <div class="matrix-label">
+                            OUTREACH GO
+                            <div class="toggle-btn" onclick="toggleMatrix('dispatch')"></div>
+                        </div>
+                        <p class="matrix-desc">Final authorization to dispatch report via Customer CRM / Email.</p>
+                    </div>
+                </div>
+
+                <div class="action-footer">
+                    <button class="btn btn-primary" style="background: var(--surface2); color: var(--muted);" onclick="closeJob()">Close</button>
+                    <button class="btn btn-primary" id="save-btn" onclick="saveMatrix()">Apply Multi-Decision</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentJobId = '';
+        let pollInterval = null;
+        let matrix = {
+            mining: false,
+            narrative: false,
+            handoff: false,
+            dispatch: false
+        };
+
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        async function startLoading() {
+            const input = document.getElementById('job-id-input');
+            const id = input.value.trim();
+            if (!id) {
+                showToast("Please enter a valid Job ID", "error");
+                return;
+            }
+
+            if (pollInterval) clearInterval(pollInterval);
+            currentJobId = id;
+            
+            // Try updating URL without reload for convenience
+            try {
+                const url = new URL(window.location);
+                url.searchParams.set('job_id', id);
+                window.history.pushState({}, '', url);
+            } catch(e) {}
+
+            loadJobStatus();
+            pollInterval = setInterval(loadJobStatus, 3000);
+        }
+
+        async function loadJobStatus() {
+            if (!currentJobId) return;
+
+            try {
+                const res = await fetch(`/api/status_api/${currentJobId}`);
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({error: "Server returned " + res.status}));
+                    throw new Error(err.error || "Failed to fetch status");
+                }
+                const data = await res.json();
+
+                // UI Updates
+                document.getElementById('review-content').style.display = 'block';
+                document.getElementById('startup-name').innerText = data.startup_name || data.target_url;
+                
+                const status = data.status || 'processing';
+                const badge = document.getElementById('job-status-badge');
+                badge.innerText = status;
+                badge.className = `badge badge-${status}`;
+
+                // Progress Area
+                const progressArea = document.getElementById('progress-area');
+                if (status === 'processing' || status === 'analyzing') {
+                    progressArea.style.display = 'block';
+                    document.getElementById('stage-label').innerText = data.stage_label || 'Processing...';
+                    const pct = data.progress_percent || 0;
+                    document.getElementById('progress-percent').innerText = pct + '%';
+                    document.getElementById('progress-fill').style.width = pct + '%';
+                } else {
+                    progressArea.style.display = 'none';
+                    if (status === 'completed' || status === 'failed') {
+                        if (pollInterval) clearInterval(pollInterval);
+                        pollInterval = null;
+                    }
+                }
+
+                // LeadIdeal Link
+                const previewLink = document.getElementById('preview-link');
+                if (data.leadideal_preview_url) {
+                    previewLink.href = data.leadideal_preview_url;
+                    previewLink.style.display = 'inline-block';
+                } else {
+                    previewLink.style.display = 'none';
+                }
+
+                // If job is completed, stop polling
+                if (status === 'completed') {
+                    showToast("Job analysis complete. Matrix ready.");
+                }
+
+            } catch (err) {
+                console.error(err);
+                if (pollInterval) clearInterval(pollInterval);
+                showToast(err.message, "error");
+            }
+        }
+
+        function toggleMatrix(key) {
+            matrix[key] = !matrix[key];
+            const btn = document.querySelector(`#m-${key} .toggle-btn`);
+            const item = document.getElementById(`m-${key}`);
+            
+            if (matrix[key]) {
+                btn.classList.add('active');
+                item.classList.add('approved');
+            } else {
+                btn.classList.remove('active');
+                item.classList.remove('approved');
+            }
+        }
+
+        async function saveMatrix() {
+            if (!currentJobId) return;
+            
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.disabled = true;
+            saveBtn.innerText = "Saving Decisions...";
+
+            try {
+                // Determine if this is a full approval or just partial
+                const allApproved = Object.values(matrix).every(v => v);
+                const decision = {
+                    status: allApproved ? 'approved' : 'partially_reviewed',
+                    mining_approved: matrix.mining,
+                    narrative_approved: matrix.narrative,
+                    handoff_approved: matrix.handoff,
+                    dispatch_approved: matrix.dispatch,
+                    operator_note: "Matrix update at " + new Date().toISOString()
+                };
+
+                const res = await fetch(`/api/approval/${currentJobId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(decision)
+                });
+                
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Save failed");
+
+                showToast("Multi-decision Matrix persisted successfully");
+            } catch (err) {
+                showToast(err.message, "error");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = "Apply Multi-Decision";
+            }
+        }
+
+        function closeJob() {
+            if (pollInterval) clearInterval(pollInterval);
+            document.getElementById('review-content').style.display = 'none';
+            document.getElementById('job-id-input').value = '';
+            currentJobId = '';
+        }
+
+        // Auto-load if job_id in URL
+        window.addEventListener('load', () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('job_id');
+            if (id) {
+                document.getElementById('job-id-input').value = id;
+                startLoading();
+            }
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Building Your Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: rgba(26, 26, 36, 0.72);
+      --surface-2: rgba(36, 36, 58, 0.65);
+      --border: rgba(124, 92, 252, 0.18);
+      --text: #e4e4f0;
+      --muted: #8888aa;
+      --accent: #7c5cfc;
+      --accent-soft: #b49eff;
+      --success: #34d399;
+      --danger: #ff6b6b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(124, 92, 252, 0.18), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(255, 107, 107, 0.12), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 880px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.65rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(124, 92, 252, 0.25);
+      background: rgba(124, 92, 252, 0.14);
+      color: var(--accent-soft);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    .badge-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(124, 92, 252, 0.4);
+      animation: pulse 1.8s infinite;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 2.25rem;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr;
+      gap: 1.5rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 3vw, 2.8rem);
+      line-height: 1.08;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.9rem;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.65;
+      max-width: 44rem;
+    }
+
+    .status-panel {
+      background: var(--surface-2);
+      border: 1px solid rgba(124, 92, 252, 0.15);
+      border-radius: 20px;
+      padding: 1.1rem 1.15rem;
+      display: grid;
+      gap: 0.75rem;
+      align-content: start;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: rgba(124, 92, 252, 0.12);
+      color: var(--accent-soft);
+    }
+
+    .status-pill.success {
+      background: rgba(52, 211, 153, 0.14);
+      color: var(--success);
+    }
+
+    .status-pill.failed {
+      background: rgba(255, 107, 107, 0.14);
+      color: var(--danger);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin: 1.4rem 0 1.7rem;
+    }
+
+    .metric {
+      background: rgba(15, 15, 19, 0.36);
+      border: 1px solid rgba(124, 92, 252, 0.12);
+      border-radius: 18px;
+      padding: 1rem;
+    }
+
+    .metric-value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--accent-soft);
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .progress-wrap {
+      margin-bottom: 1.6rem;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      align-items: baseline;
+    }
+
+    .progress-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .progress-subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
+
+    .progress-percent {
+      color: var(--accent-soft);
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: rgba(124, 92, 252, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(124, 92, 252, 0.12);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+      transition: width 0.35s ease;
+      box-shadow: 0 0 26px rgba(124, 92, 252, 0.35);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 0.7rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+      flex-wrap: wrap;
+    }
+
+    .detail-card {
+      background: rgba(15, 15, 19, 0.34);
+      border: 1px solid rgba(124, 92, 252, 0.12);
+      border-radius: 18px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .detail-label {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.45rem;
+    }
+
+    .detail-value {
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .steps {
+      display: grid;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.85rem;
+      align-items: start;
+      padding: 0.95rem 1rem;
+      border-radius: 18px;
+      background: rgba(15, 15, 19, 0.28);
+      border: 1px solid rgba(124, 92, 252, 0.10);
+      transition: all 0.2s ease;
+    }
+
+    .step.active {
+      background: rgba(124, 92, 252, 0.12);
+      border-color: rgba(124, 92, 252, 0.24);
+    }
+
+    .step.done {
+      border-color: rgba(52, 211, 153, 0.20);
+      background: rgba(52, 211, 153, 0.08);
+    }
+
+    .step-icon {
+      width: 1.55rem;
+      height: 1.55rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 800;
+      background: rgba(124, 92, 252, 0.16);
+      color: var(--accent-soft);
+      margin-top: 0.05rem;
+    }
+
+    .step.done .step-icon {
+      background: rgba(52, 211, 153, 0.16);
+      color: var(--success);
+    }
+
+    .step-title {
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .step-copy {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .cta-row {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border-radius: 14px;
+      padding: 0.95rem 1.2rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cta.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      color: white;
+      box-shadow: 0 14px 28px rgba(124, 92, 252, 0.22);
+    }
+
+    .cta.secondary {
+      background: rgba(124, 92, 252, 0.08);
+      border: 1px solid rgba(124, 92, 252, 0.16);
+      color: var(--text);
+    }
+
+    .cta:hover {
+      transform: translateY(-2px);
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(124, 92, 252, 0.35);
+      }
+
+      70% {
+        box-shadow: 0 0 0 12px rgba(124, 92, 252, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(124, 92, 252, 0);
+      }
+    }
+
+    @media (max-width: 820px) {
+      .top {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 1rem;
+      }
+
+      .card {
+        padding: 1.25rem;
+        border-radius: 22px;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .progress-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .cta-row {
+        flex-direction: column;
+      }
+
+      .cta {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body data-job-id="{{ job_id }}">
+  <div class="shell">
+    <div class="badge"><span class="badge-dot"></span> Real Wayback Processing</div>
+    <div class="card">
+      <div class="top">
+        <div class="hero">
+          <h1>Mining Competitive History</h1>
+          <p>Your report is pulling archived snapshots, extracting market signals, and assembling a report from real
+            Wayback data. This screen reflects actual backend progress, not a placeholder timer.</p>
+        </div>
+        <div class="status-panel">
+          <div id="status-pill" class="status-pill">Processing</div>
+          <div>
+            <div class="detail-label">Discovery Mode</div>
+            <div id="discovery-mode" class="detail-value">Initializing discovery</div>
+          </div>
+          <div>
+            <div class="detail-label">Current Competitor</div>
+            <div id="current-competitor" class="detail-value">Waiting to start</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric">
+          <div id="metric-progress" class="metric-value">0%</div>
+          <div class="metric-label">Progress</div>
+        </div>
+        <div class="metric">
+          <div id="metric-competitors" class="metric-value">0 / 0</div>
+          <div class="metric-label">Competitors</div>
+        </div>
+        <div class="metric">
+          <div id="metric-snapshots" class="metric-value">0 / 0</div>
+          <div class="metric-label">Snapshots</div>
+        </div>
+        <div class="metric">
+          <div id="metric-elapsed" class="metric-value">00:00</div>
+          <div class="metric-label">Elapsed</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-head">
+          <div>
+            <div id="stage-label" class="progress-title">Preparing request</div>
+            <div id="status-detail" class="progress-subtitle">The pipeline has accepted your request.</div>
+          </div>
+          <div id="progress-percent" class="progress-percent">0%</div>
+        </div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="snapshot-meta">Selecting representative snapshots</span>
+          <span id="redirect-meta">You will be redirected automatically when the report is ready.</span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="detail-label">What The System Is Doing</div>
+        <div id="current-action" class="detail-value">Initializing archive scan.</div>
+      </div>
+
+      <div id="steps" class="steps"></div>
+
+      <div id="cta-row" class="cta-row" style="display:none;">
+        <a id="report-link" class="cta primary" href="#">Open Report</a>
+        <a class="cta secondary" href="/">Run Another Report</a>
+      </div>
+    </div>
+  </div>
+
+  <script id="initial-state" type="application/json">{{ initial_state | safe }}</script>
+  <script>
+    const jobId = document.body.dataset.jobId;
+    const initialState = JSON.parse(document.getElementById('initial-state').textContent);
+    const stepsContainer = document.getElementById('steps');
+
+    const STEP_DEFS = [
+      { key: 'discover', label: 'Discover competitors', copy: 'Identify relevant competitors using Gemini when available, or domain-aware fallback discovery.' },
+      { key: 'analyze', label: 'Pull archived pages', copy: 'Fetch representative Wayback snapshots and extract signals from real archived HTML.' },
+      { key: 'insights', label: 'Generate insights', copy: 'Create competitor-level and market-level strategic summaries when AI narration is enabled.' },
+      { key: 'render', label: 'Build the report', copy: 'Render the HTML report, save JSON output, and prepare the final report route.' },
+      { key: 'ready', label: 'Deliver report', copy: 'Redirect to the completed report once the final output is confirmed on disk.' },
+    ];
+
+    function formatDuration(totalSeconds) {
+      const safe = Math.max(0, Number(totalSeconds || 0));
+      const hours = Math.floor(safe / 3600);
+      const minutes = Math.floor((safe % 3600) / 60);
+      const seconds = safe % 60;
+      if (hours > 0) {
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+      return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function getStepKey(payload) {
+      const stage = payload.stage || 'queued';
+      if (stage === 'queued' || stage === 'discovering_competitors') return 'discover';
+      if (stage === 'starting_analysis' || stage.startsWith('analyzing_')) return 'analyze';
+      if (stage.startsWith('narrating_') || stage === 'summarizing') return 'insights';
+      if (stage === 'rendering_report' || stage === 'report_written') return 'render';
+      if (stage === 'report_ready' || payload.status === 'completed') return 'ready';
+      return 'discover';
+    }
+
+    function renderSteps(payload) {
+      const activeKey = getStepKey(payload);
+      const activeIndex = STEP_DEFS.findIndex((step) => step.key === activeKey);
+      stepsContainer.innerHTML = STEP_DEFS.map((step, index) => {
+        const classes = ['step'];
+        let icon = index + 1;
+        if (payload.status === 'completed' || index < activeIndex) {
+          classes.push('done');
+          icon = '✓';
+        } else if (index === activeIndex && payload.status !== 'failed') {
+          classes.push('active');
+          icon = '•';
+        }
+
+        let copy = step.copy;
+        if (step.key === 'insights' && !payload.narrator_enabled) {
+          copy = 'AI narration is unavailable, so the report will skip generated summaries and continue with real archive analysis.';
+        }
+
+        return `
+          <div class="${classes.join(' ')}">
+            <div class="step-icon">${icon}</div>
+            <div>
+              <div class="step-title">${step.label}</div>
+              <div class="step-copy">${copy}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function render(payload) {
+      const progress = Math.max(0, Math.min(100, Number(payload.progress_percent || 0)));
+      document.getElementById('metric-progress').innerText = `${progress}%`;
+      document.getElementById('progress-percent').innerText = `${progress}%`;
+      document.getElementById('progress-fill').style.width = `${progress}%`;
+      document.getElementById('stage-label').innerText = payload.stage_label || 'Processing';
+      document.getElementById('status-detail').innerText = payload.status_detail || 'Working through the pipeline.';
+      document.getElementById('metric-competitors').innerText = `${payload.competitors_completed || 0} / ${payload.competitors_total || 0}`;
+      document.getElementById('metric-snapshots').innerText = `${payload.snapshots_completed || 0} / ${payload.snapshots_total || 0}`;
+      document.getElementById('metric-elapsed').innerText = formatDuration(payload.elapsed_seconds || 0);
+      document.getElementById('current-competitor').innerText = payload.current_competitor || humanizeTarget(payload.target_url || 'Waiting to start');
+      document.getElementById('discovery-mode').innerText = payload.discovery_mode_label || 'Initializing discovery';
+      document.getElementById('snapshot-meta').innerText = payload.snapshots_total
+        ? `Snapshot progress: ${payload.snapshots_completed || 0}/${payload.snapshots_total}`
+        : 'Selecting representative snapshots';
+      document.getElementById('current-action').innerText = payload.current_action
+        ? payload.current_action.replaceAll('_', ' ')
+        : 'Initializing archive scan.';
+
+      const pill = document.getElementById('status-pill');
+      pill.className = 'status-pill';
+      if (payload.status === 'completed') {
+        pill.classList.add('success');
+        pill.innerText = 'Completed';
+      } else if (payload.status === 'failed') {
+        pill.classList.add('failed');
+        pill.innerText = 'Failed';
+      } else {
+        pill.innerText = 'Processing';
+      }
+
+      renderSteps(payload);
+
+      const ctaRow = document.getElementById('cta-row');
+      const reportLink = document.getElementById('report-link');
+      const redirectMeta = document.getElementById('redirect-meta');
+      if (payload.status === 'completed' && payload.report_url) {
+        reportLink.href = payload.report_url;
+        ctaRow.style.display = 'flex';
+        redirectMeta.innerText = 'Redirecting to the finished report...';
+      } else if (payload.status === 'failed') {
+        ctaRow.style.display = 'flex';
+        reportLink.href = '/';
+        reportLink.innerText = 'Try Again';
+        redirectMeta.innerText = payload.error || 'The pipeline stopped before the report could be created.';
+      } else {
+        ctaRow.style.display = 'none';
+        reportLink.innerText = 'Open Report';
+        redirectMeta.innerText = 'You will be redirected automatically when the report is ready.';
+      }
+    }
+
+    function humanizeTarget(value) {
+      const cleaned = String(value || '').replace(/^https?:\/\//, '').split('/')[0];
+      const root = cleaned.replace(/^www\./, '').split('.')[0].replace(/[-_]+/g, ' ').trim();
+      return root ? root.replace(/\b\w/g, (char) => char.toUpperCase()) : 'Waiting to start';
+    }
+
+    async function poll() {
+      const response = await fetch(`/api/status_api/${jobId}`);
+      const payload = await response.json();
+      render(payload);
+      if (payload.status === 'completed' && payload.report_url) {
+        window.setTimeout(() => {
+          window.location.href = payload.report_url;
+        }, 1200);
+        return;
+      }
+      if (payload.status === 'failed') {
+        return;
+      }
+      window.setTimeout(poll, 2000);
+    }
+
+    render(initialState);
+    if (initialState.status !== 'completed' && initialState.status !== 'failed') {
+      window.setTimeout(poll, 1200);
+    }
+  </script>
+</body>
+
+</html>

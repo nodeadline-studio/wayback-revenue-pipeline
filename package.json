@@ -1,0 +1,19 @@
+{
+  "name": "wayback-revenue-pipeline",
+  "version": "1.0.0",
+  "description": "Local Flask demo for generating competitive-intelligence reports from Wayback Machine snapshots.",
+  "main": "take-gallery-screenshots.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1"
+  }
+}

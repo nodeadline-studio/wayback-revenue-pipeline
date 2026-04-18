@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Spy - Competitor Strategy Reports</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --surface2: #24243a;
+      --border: #2e2e4a;
+      --text: #e4e4f0;
+      --muted: #8888aa;
+      --accent: #7c5cfc;
+      --accent-hover: #6345d3;
+      --accent2: #ff6b6b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4rem 2rem;
+    }
+
+    .hero {
+      text-align: center;
+      max-width: 800px;
+      margin-bottom: 3rem;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #b49eff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .glass-card {
+      background: rgba(26, 26, 36, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(124, 92, 252, 0.2);
+      border-radius: 24px;
+      padding: 3rem;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 1rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.2);
+    }
+
+    .competitor-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn-add {
+      background: none;
+      border: 1px dashed var(--border);
+      color: var(--muted);
+      padding: 0.75rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      width: 100%;
+    }
+
+    .btn-add:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(124, 92, 252, 0.05);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: white;
+      border: none;
+      padding: 1.25rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      width: 100%;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 1rem;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(124, 92, 252, 0.3);
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        box-shadow: 0 0 0 0 rgba(124, 92, 252, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 15px rgba(124, 92, 252, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(124, 92, 252, 0);
+      }
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(124, 92, 252, 0.15);
+      border: 1px solid rgba(124, 92, 252, 0.3);
+      color: #b49eff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+
+    .ai-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulseGlow 2s infinite;
+    }
+
+    .case-study-pill {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .case-study-pill:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="ai-badge">
+    <div class="ai-dot"></div>
+    Strategic Pivot Forensics for Founders
+  </div>
+
+  <div class="hero">
+    <h1>See How Today's Titans Survived Their Early Years</h1>
+    <p>We analyze the strategic pivots of market leaders from their "no-name" beginnings. Stop guessing your positioning—de-risk your startup by stealing the messaging trajectory of the giants.</p>
+    
+    <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="/reports/case-study-leadideal-com.html" target="_blank" class="case-study-pill">Breakthrough: LeadIdeal (The $10M Messaging Pivot)</a>
+      <a href="/reports/case-study-creatorpacks-store.html" target="_blank" class="case-study-pill">Breakthrough: CreatorPacks (Market Dominance)</a>
+      <a href="/reports/case-study-anyvideomaker-com.html" target="_blank" class="case-study-pill">Breakthrough: AnyVideoMaker (Engine De-risking)</a>
+    </div>
+
+    <p
+      style="margin-top: 2rem; font-size: 0.95rem; color: #b49eff; font-style: italic; max-width: 560px; margin-left: auto; margin-right: auto;">
+      &ldquo;By analyzing Apollo's 2018 pivot in Business Spy, LeadIdeal V4 identified the exact messaging shift needed to double its conversion rate.&rdquo;</p>
+  </div>
+
+  <div class="glass-card">
+    <form id="pipeline-form">
+      <div class="form-group">
+        <input type="text" id="target-url" placeholder="e.g. yourstartup.com" required
+          style="font-size:1.2rem; padding: 1.5rem; text-align:center;">
+      </div>
+
+      <button type="submit" class="btn-primary">Generate Free Market Report</button>
+
+      <div class="pricing-tier" style="margin-top: 1.5rem">
+        Free: 2 competitors + Executive Strategy Summary<br>
+        <strong>Upgrade to unlock all 5 competitors + Market Impact Analysis + JSON export</strong>
+      </div>
+    </form>
+  </div>
+
+  <div class="footer-note">
+    AI-powered competitive intelligence from historical web data
+  </div>
+
+  <script>
+    document.getElementById('pipeline-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const target = document.getElementById('target-url').value;
+
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.innerText = "Discovering Competitors & Analyzing...";
+      submitBtn.disabled = true;
+
+      fetch('/api/demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target_url: target })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.url) {
+            window.location.href = data.url;
+          } else {
+            console.error('[Pipeline] Start failed:', data);
+            alert('Error starting demo: ' + (data?.error || 'Unknown server error'));
+            submitBtn.innerText = "Generate Free Market Report";
+            submitBtn.disabled = false;
+          }
+        })
+        .catch(err => {
+          alert("Failed to connect to API.");
+          console.error(err);
+          submitBtn.innerText = "Generate Free Market Report";
+          submitBtn.disabled = false;
+        });
+    });
+  </script>
+</body>
+
+</html>
