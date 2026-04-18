@@ -8,21 +8,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f0f13;
-      --surface: #1a1a24;
-      --surface2: #24243a;
-      --border: #2e2e4a;
-      --text: #e4e4f0;
-      --muted: #8888aa;
+      --bg: #050510;
+      --surface: rgba(20, 20, 35, 0.4);
+      --surface-border: rgba(124, 92, 252, 0.2);
+      --text: #ffffff;
+      --muted: #94a3b8;
       --accent: #7c5cfc;
-      --accent-hover: #6345d3;
-      --accent2: #ff6b6b;
+      --accent-glow: rgba(124, 92, 252, 0.5);
+      --accent2: #00f5ff;
+      --accent2-glow: rgba(0, 245, 255, 0.4);
+      --gradient: linear-gradient(135deg, #7c5cfc 0%, #00f5ff 100%);
+      --glass: backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      cursor: default;
     }
 
     body {
@@ -30,223 +33,302 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 4rem 2rem;
     }
 
+    /* Radial Glows */
+    .glow-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .glow-1 {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(circle, rgba(124, 92, 252, 0.15) 0%, transparent 70%);
+      filter: blur(60px);
+    }
+
+    .glow-2 {
+      position: absolute;
+      bottom: -10%;
+      right: -10%;
+      width: 50%;
+      height: 50%;
+      background: radial-gradient(circle, rgba(0, 245, 255, 0.1) 0%, transparent 70%);
+      filter: blur(60px);
+    }
+
     .hero {
       text-align: center;
-      max-width: 800px;
-      margin-bottom: 3rem;
+      max-width: 900px;
+      margin-bottom: 4rem;
+      position: relative;
     }
 
     .hero h1 {
-      font-size: 3.5rem;
+      font-family: 'Inter', sans-serif;
       font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), #b49eff);
+      font-size: 4rem;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 1rem;
-      line-height: 1.2;
     }
 
     .hero p {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       color: var(--muted);
-      max-width: 600px;
-      margin: 0 auto;
+      max-width: 650px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
     }
 
-    .glass-card {
-      background: rgba(26, 26, 36, 0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(124, 92, 252, 0.2);
+    .glass-intake {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
       border-radius: 24px;
-      padding: 3rem;
+      padding: 1rem;
       width: 100%;
-      max-width: 600px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      max-width: 700px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      gap: 1rem;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
 
-    .form-group {
-      margin-bottom: 1.5rem;
+    .glass-intake::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: scan 3s infinite linear;
     }
 
-    label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      color: var(--text);
+    @keyframes scan {
+      0% { left: -100%; }
+      100% { left: 100%; }
     }
 
     input[type="text"] {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 1rem;
-      border-radius: 12px;
-      font-size: 1rem;
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.1rem;
+      padding: 1rem 1.5rem;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: 'Inter', sans-serif;
     }
 
-    input[type="text"]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.2);
-    }
-
-    .competitor-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .btn-add {
-      background: none;
-      border: 1px dashed var(--border);
-      color: var(--muted);
-      padding: 0.75rem;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-      width: 100%;
-    }
-
-    .btn-add:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(124, 92, 252, 0.05);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    .btn-forensic {
+      background: var(--accent);
       color: white;
       border: none;
-      padding: 1.25rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 12px;
-      width: 100%;
+      padding: 1rem 2rem;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 1rem;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      margin-top: 1rem;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 0 20px rgba(124, 92, 252, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(124, 92, 252, 0.3);
+    .btn-forensic:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(124, 92, 252, 0.5);
+      background: #8b6fff;
     }
 
-    .footer-note {
-      text-align: center;
+    /* Breakthrough Bento Grid */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1000px;
       margin-top: 2rem;
+    }
+
+    .bento-card {
+      background: rgba(20, 20, 35, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bento-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(124, 92, 252, 0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--surface-border);
+      background: rgba(20, 20, 35, 0.5);
+    }
+
+    .bento-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: block;
+      letter-spacing: 0.1em;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-meta {
       font-size: 0.85rem;
       color: var(--muted);
+      line-height: 1.4;
     }
 
-    @keyframes pulseGlow {
-      0% {
-        box-shadow: 0 0 0 0 rgba(124, 92, 252, 0.4);
-      }
+    .metric-visual {
+      height: 40px;
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+    }
 
-      70% {
-        box-shadow: 0 0 0 15px rgba(124, 92, 252, 0);
-      }
+    .bar {
+      flex: 1;
+      background: var(--surface-border);
+      border-radius: 2px;
+    }
 
-      100% {
-        box-shadow: 0 0 0 0 rgba(124, 92, 252, 0);
-      }
+    .bar-grow {
+      background: var(--accent2);
+      box-shadow: 0 0 10px var(--accent2-glow);
     }
 
     .ai-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: rgba(124, 92, 252, 0.15);
-      border: 1px solid rgba(124, 92, 252, 0.3);
+      background: rgba(124, 92, 252, 0.1);
+      border: 1px solid rgba(124, 92, 252, 0.2);
       color: #b49eff;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 2rem;
-    }
-
-    .ai-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--accent);
-      border-radius: 50%;
-      animation: pulseGlow 2s infinite;
-    }
-
-    .case-study-pill {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      text-decoration: none;
       padding: 0.6rem 1.2rem;
       border-radius: 99px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    .case-study-pill:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-2px);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
     }
   </style>
 </head>
 
 <body>
 
+  <div class="glow-layer">
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+  </div>
+
   <div class="ai-badge">
-    <div class="ai-dot"></div>
-    Strategic Pivot Forensics for Founders
+    Strategic Pivot Forensics
   </div>
 
   <div class="hero">
-    <h1>See How Today's Titans Survived Their Early Years</h1>
-    <p>We analyze the strategic pivots of market leaders from their "no-name" beginnings. Stop guessing your positioning—de-risk your startup by stealing the messaging trajectory of the giants.</p>
-    
-    <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-      <a href="/reports/case-study-leadideal-com.html" target="_blank" class="case-study-pill">Breakthrough: LeadIdeal (The $10M Messaging Pivot)</a>
-      <a href="/reports/case-study-creatorpacks-store.html" target="_blank" class="case-study-pill">Breakthrough: CreatorPacks (Market Dominance)</a>
-      <a href="/reports/case-study-anyvideomaker-com.html" target="_blank" class="case-study-pill">Breakthrough: AnyVideoMaker (Engine De-risking)</a>
+    <h1>The Forensic Engine for <span style="color: var(--accent);">Founder Breakouts</span></h1>
+    <p>We analyze the hidden pivots of market leaders from their "no-name" beginnings. Replicate the messaging trajectory of the giants.</p>
+
+    <div style="display: flex; justify-content: center; margin-bottom: 3rem;">
+      <form id="pipeline-form" class="glass-intake">
+        <input type="text" id="target-url" placeholder="Enter target domain to scan..." required>
+        <button type="submit" class="btn-forensic">Initiate Scan</button>
+      </form>
     </div>
 
-    <p
-      style="margin-top: 2rem; font-size: 0.95rem; color: #b49eff; font-style: italic; max-width: 560px; margin-left: auto; margin-right: auto;">
-      &ldquo;By analyzing Apollo's 2018 pivot in Business Spy, LeadIdeal V4 identified the exact messaging shift needed to double its conversion rate.&rdquo;</p>
-  </div>
+    <div class="bento-grid">
+      <!-- Story 1: LeadIdeal -->
+      <a href="/reports/case-study-leadideal-com.html" target="_blank" class="bento-card">
+        <span class="card-label">Pivot Strategy</span>
+        <div class="card-title">LeadIdeal Breakthrough</div>
+        <div class="card-meta">Deciphered Apollo's 2018 shift to unlock $10M messaging gap.</div>
+        <div class="metric-visual">
+          <div class="bar" style="height: 40%"></div>
+          <div class="bar" style="height: 60%"></div>
+          <div class="bar bar-grow" style="height: 85%"></div>
+          <div class="bar bar-grow" style="height: 100%"></div>
+        </div>
+      </a>
 
-  <div class="glass-card">
-    <form id="pipeline-form">
-      <div class="form-group">
-        <input type="text" id="target-url" placeholder="e.g. yourstartup.com" required
-          style="font-size:1.2rem; padding: 1.5rem; text-align:center;">
-      </div>
+      <!-- Story 2: CreatorPacks -->
+      <a href="/reports/case-study-creatorpacks-store.html" target="_blank" class="bento-card">
+        <span class="card-label">Market Capture</span>
+        <div class="card-title">CreatorPacks Scale</div>
+        <div class="card-meta">Reverse-engineered Sephora's early influencer outreach engine.</div>
+        <div class="metric-visual">
+          <div class="bar" style="height: 30%"></div>
+          <div class="bar bar-grow" style="height: 50%"></div>
+          <div class="bar bar-grow" style="height: 80%"></div>
+          <div class="bar bar-grow" style="height: 90%"></div>
+        </div>
+      </a>
 
-      <button type="submit" class="btn-primary">Generate Free Market Report</button>
+      <!-- Story 3: AnyVideoMaker -->
+      <a href="/reports/case-study-anyvideomaker-com.html" target="_blank" class="bento-card">
+        <span class="card-label">De-risking</span>
+        <div class="card-title">AnyVideoMaker Launch</div>
+        <div class="card-meta">Used Vibe's 2021 pivots to achieve 0.8s engine parity.</div>
+        <div class="metric-visual">
+          <div class="bar" style="height: 20%"></div>
+          <div class="bar" style="height: 40%"></div>
+          <div class="bar bar-grow" style="height: 70%"></div>
+          <div class="bar bar-grow" style="height: 95%"></div>
+        </div>
+      </a>
+    </div>
 
-      <div class="pricing-tier" style="margin-top: 1.5rem">
-        Free: 2 competitors + Executive Strategy Summary<br>
-        <strong>Upgrade to unlock all 5 competitors + Market Impact Analysis + JSON export</strong>
-      </div>
-    </form>
-  </div>
-
-  <div class="footer-note">
-    AI-powered competitive intelligence from historical web data
+    <p style="margin-top: 3rem; font-size: 0.9rem; color: var(--muted); opacity: 0.6;">
+      Forensic analysis powered by historical web archives and Gemini 2.0 Pro
+    </p>
   </div>
 
   <script>
@@ -254,9 +336,10 @@
       e.preventDefault();
 
       const target = document.getElementById('target-url').value;
-
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      submitBtn.innerText = "Discovering Competitors & Analyzing...";
+      const submitBtn = e.target.querySelector('button');
+      
+      submitBtn.innerText = "SCANNING ARCHIVES...";
+      submitBtn.style.opacity = "0.7";
       submitBtn.disabled = true;
 
       fetch('/api/demo', {
@@ -269,20 +352,21 @@
           if (data && data.url) {
             window.location.href = data.url;
           } else {
-            console.error('[Pipeline] Start failed:', data);
-            alert('Error starting demo: ' + (data?.error || 'Unknown server error'));
-            submitBtn.innerText = "Generate Free Market Report";
+            console.error('[Pipeline] Scan failed:', data);
+            alert('Forensic Scan Interrupted: ' + (data?.error || 'Unknown server error'));
+            submitBtn.innerText = "Initiate Scan";
+            submitBtn.style.opacity = "1";
             submitBtn.disabled = false;
           }
         })
         .catch(err => {
-          alert("Failed to connect to API.");
+          alert("Terminal connection lost.");
           console.error(err);
-          submitBtn.innerText = "Generate Free Market Report";
+          submitBtn.innerText = "Initiate Scan";
+          submitBtn.style.opacity = "1";
           submitBtn.disabled = false;
         });
     });
   </script>
 </body>
-
 </html>
