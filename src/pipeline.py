@@ -238,38 +238,37 @@ class Pipeline:
             is_paid=is_paid,
         )
 
-        # PUBLIC CASE STUDY GENERATION
-        public_html_out = None
-        publishability = (sprint_context or {}).get("publishability", {})
-        if publishability.get("public_case_study_ready"):
-            public_path = os.path.join(output_dir, f"case-study-{safe_name}.html")
-            redactions = {}
-            for field in publishability.get("redactions_needed", []):
-                if "name" in field:
-                    redactions[r"[A-Z][a-z]+ [A-Z][a-z]+"] = "[NAME REDACTED]"
-                if "email" in field:
-                    redactions[r"[\w\.-]+@[\w\.-]+\.\w+"] = "[EMAIL REDACTED]"
-            
-            # Public case study with optional breakthrough story
-            breakthrough_story = None
-            story_path = os.path.join("stories", f"{safe_name}_breakout.md")
-            if os.path.exists(story_path):
-                with open(story_path, "r") as f:
-                    breakthrough_story = f.read()
-            
-            public_html_out = self.reporter.generate(
-                niche_name, competitors, f"public/{safe_name}.html",
-                niche_narrative=niche_narrative,
-                locked_competitors=locked_competitors,
-                key_findings=key_findings,
-                roi_analysis=roi_analysis,
-                is_public=True,
-                redactions=redactions,
-                agent_tasks=agent_tasks,
-                breakthrough_story=breakthrough_story,
-                video_script=video_script,
-                is_paid=is_paid,
-            )
+        # PUBLIC CASE STUDY / OUTREACH GENERATION
+        # We always generate a redacted version for acquisition & sharing
+        public_html_rel = f"{safe_name}/public-demo.html"
+        redactions = {
+            r"[A-Z][a-z]+ [A-Z][a-z]+": "[NAME REDACTED]",
+            r"[\w\.-]+@[\w\.-]+\.\w+": "[EMAIL REDACTED]",
+            r"\$\d+(?:\.\d+)?(?:[KMB])?": "$[REDACTED]" # Redact specific revenue numbers for demo
+        }
+        
+        # Public case study with optional breakthrough story
+        breakthrough_story = None
+        story_path = os.path.join("stories", f"{safe_name}_breakout.md")
+        if os.path.exists(story_path):
+            with open(story_path, "r") as f:
+                breakthrough_story = f.read()
+        
+        public_html_out = self.reporter.generate(
+            niche_name, competitors, public_html_rel,
+            niche_narrative=niche_narrative,
+            locked_competitors=locked_competitors,
+            key_findings=key_findings,
+            roi_analysis=roi_analysis,
+            is_public=True,
+            redactions=redactions,
+            agent_tasks=agent_tasks,
+            breakthrough_story=breakthrough_story,
+            video_script=video_script,
+        )
+        # Multi-artifact output tracking
+        html_out = result_path
+        # public_html_out was already generated above
 
         json_out = self.reporter.generate_json(niche_name, competitors, json_rel, niche_narrative=niche_narrative)
         manifest_out = self.reporter.generate_manifest(sprint_manifest, manifest_rel)

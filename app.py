@@ -686,6 +686,7 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
             return os.path.relpath(abs_path, OUTPUT_DIR) if abs_path else ""
 
         report_rel = get_rel(result['html'])
+        public_rel = get_rel(result.get('public_html') or result.get('public_demo'))
         json_rel = get_rel(result['json'])
         manifest_rel = get_rel(result['manifest'])
         brief_rel = get_rel(result['brief'])
@@ -716,15 +717,18 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
         # Sync back to DB if this was a paid order
         order_id = job.get("paypal_order_id")
         if order_id:
-            db.update_order_report(order_id, report_rel)
+            db.update_order_report(order_id, report_rel, public_report_file=public_rel)
         
         # Trigger email notification if email exists
         user_email = job.get("email")
         if user_email and email_engine.enabled:
-            # Construct public URL for email
+            # Construct PUBLIC URL for acquisition (Strategic Teaser)
             base_url = os.getenv("APP_PUBLIC_DOMAIN", "https://bizspy.netlify.app")
-            full_report_url = f"{base_url}{report_rel if report_rel.startswith('/') else '/' + report_rel}"
-            email_engine.send_report_ready(user_email, target_url, full_report_url)
+            # Ensure path is valid
+            public_path = public_rel if public_rel.startswith('/') else '/' + public_rel
+            outreach_url = f"{base_url}/reports{public_path}"
+            
+            email_engine.send_report_ready(user_email, niche_name, outreach_url)
 
         logger.info("Pipeline job %s completed with report %s", job_id, html_file)
 
@@ -800,6 +804,23 @@ def confirm_order():
         'job_id': job_id,
         'status_url': f"/api/status?job_id={job_id}" if job_id else None
     })
+
+@app.route('/reports/<path:filename>')
+def serve_report(filename):
+    """Securely serve generated reports from the output directory."""
+    return send_from_directory(OUTPUT_DIR, filename)
+
+
+@app.route('/api/user/reports', methods=['GET'])
+def get_user_reports():
+    """Fetch all forensic investigations associated with a founder's email."""
+    email = request.args.get('email')
+    if not email:
+        return jsonify({"error": "Email required"}), 400
+    
+    reports = db.get_user_reports(email)
+    return jsonify({"success": True, "reports": reports})
+
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', '8889'))

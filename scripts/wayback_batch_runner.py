@@ -9,7 +9,7 @@ from typing import List, Dict
 from run_startup_preset import http_json, poll_job
 
 # Config
-BASE_URL = "http://127.0.0.1:8889"
+BASE_URL = "http://127.0.0.1:8890"
 BATCH_FILE = "beauty_founders_batch.json"
 RESULTS_FILE = "beauty_batch_results.json"
 PRESET_ID = "beauty-parallels"

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Founder Dashboard | Business Spy Forensic Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg: #050510;
@@ -163,30 +164,19 @@
     </div>
 
     <script>
-        // Netlify Identity Handling
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.open();
-                } else {
-                    loadDashboard();
-                }
-            });
-            window.netlifyIdentity.on("login", user => {
-                window.netlifyIdentity.close();
-                loadDashboard();
-            });
-            window.netlifyIdentity.on("logout", () => {
-                window.location.href = "/";
-            });
-        }
+        const SUPABASE_URL = "https://qylvmjncfblcsucfzdan.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_vWP7QIxV2ZUzMm8wGuefJw_0h_67DXo";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function loadDashboard() {
-            const user = window.netlifyIdentity ? window.netlifyIdentity.currentUser() : null;
-            const email = user ? user.email : localStorage.getItem('user_email');
+        async function loadDashboard(session) {
+            const email = session?.user?.email;
             
             if (!email) {
-                document.getElementById('reports-list').innerHTML = '<div style="text-align: center; padding: 2rem;">Please log in to access your forensic archive.</div>';
+                document.getElementById('reports-list').innerHTML = `
+                    <div style="text-align: center; padding: 4rem;">
+                        <p style="margin-bottom: 2rem;">Authentication required to access the forensic studio.</p>
+                        <a href="/" class="btn-view" style="background: var(--gradient);">Return to Portal</a>
+                    </div>`;
                 return;
             }
 
@@ -222,13 +212,20 @@
             }
         }
 
-        document.getElementById('logout-btn').addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.removeItem('user_email');
-            window.location.href = '/';
+        // Initialize Auth
+        _supabase.auth.getSession().then(({ data: { session } }) => {
+            loadDashboard(session);
         });
 
-        loadDashboard();
+        _supabase.auth.onAuthStateChange((_event, session) => {
+            loadDashboard(session);
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await _supabase.auth.signOut();
+            window.location.href = '/';
+        });
     </script>
 </body>
 </html>

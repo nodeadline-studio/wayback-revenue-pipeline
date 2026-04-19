@@ -21,5 +21,77 @@
     "status": "error",
     "error": "<urlopen error [Errno 61] Connection refused>",
     "timestamp": "2026-04-19T15:16:38Z"
+  },
+  {
+    "company": "Fenty Beauty",
+    "url": "fentybeauty.com",
+    "status": "error",
+    "error": "<urlopen error [Errno 61] Connection refused>",
+    "timestamp": "2026-04-19T15:17:03Z"
+  },
+  {
+    "company": "Tatcha",
+    "url": "tatcha.com",
+    "status": "error",
+    "error": "<urlopen error [Errno 61] Connection refused>",
+    "timestamp": "2026-04-19T15:17:08Z"
+  },
+  {
+    "company": "Hero Cosmetics",
+    "url": "herocosmetics.us",
+    "status": "error",
+    "error": "<urlopen error [Errno 61] Connection refused>",
+    "timestamp": "2026-04-19T15:17:13Z"
+  },
+  {
+    "company": "Sol de Janeiro",
+    "url": "soldejaneiro.com",
+    "status": "error",
+    "error": "Timed out waiting for job 16d399ef-3ce6-4316-bbc7-cea385c3ce66 after 600 seconds",
+    "timestamp": "2026-04-19T15:27:19Z"
+  },
+  {
+    "company": "Summer Fridays",
+    "url": "summerfridays.com",
+    "job_id": "13f83166-a300-415e-a977-11eb99a23719",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-19T15:33:34Z"
+  },
+  {
+    "company": "Rare Beauty",
+    "url": "rarebeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job 298d6a45-0836-4d7a-a417-5cd0aaf0e9d3 after 600 seconds",
+    "timestamp": "2026-04-19T15:43:40Z"
+  },
+  {
+    "company": "Nutrafol",
+    "url": "nutrafol.com",
+    "job_id": "6bbe4013-9318-41f0-a40e-f08bb9cfd86f",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-19T15:51:46Z"
+  },
+  {
+    "company": "Olaplex",
+    "url": "olaplex.com",
+    "status": "error",
+    "error": "Timed out waiting for job 74928282-51d1-4ee8-ae3d-7f3abe5ba628 after 600 seconds",
+    "timestamp": "2026-04-19T16:01:53Z"
+  },
+  {
+    "company": "Briogeo",
+    "url": "briogeohair.com",
+    "status": "error",
+    "error": "Timed out waiting for job 5923de85-4297-41f9-8719-68f9f39b9624 after 600 seconds",
+    "timestamp": "2026-04-19T16:11:59Z"
+  },
+  {
+    "company": "Glow Recipe",
+    "url": "glowrecipe.com",
+    "status": "error",
+    "error": "Timed out waiting for job a8a97621-6556-4bed-a32d-4b4652faa300 after 600 seconds",
+    "timestamp": "2026-04-19T16:22:07Z"
   }
 ]

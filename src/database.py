@@ -48,6 +48,7 @@ class Database:
                 status TEXT DEFAULT 'created',
                 target_url TEXT,
                 report_file TEXT,
+                public_report_file TEXT,
                 created_at TEXT NOT NULL,
                 captured_at TEXT
             )''')
@@ -132,11 +133,18 @@ class Database:
             self.execute('UPDATE orders SET status = ?, capture_id = ?, captured_at = ? WHERE paypal_order_id = ?', 
                          (status, capture_id or '', captured_at, paypal_id))
 
-    def update_order_report(self, paypal_id, report_file):
+    def update_order_report(self, paypal_id, report_file, public_report_file=None):
         if self.use_supabase:
-            self.supabase.table('orders').update({'report_file': report_file}).eq('paypal_order_id', paypal_id).execute()
+            data = {'report_file': report_file}
+            if public_report_file:
+                data['public_report_file'] = public_report_file
+            self.supabase.table('orders').update(data).eq('paypal_order_id', paypal_id).execute()
         else:
-            self.execute('UPDATE orders SET report_file = ? WHERE paypal_order_id = ?', (report_file, paypal_id))
+            if public_report_file:
+                self.execute('UPDATE orders SET report_file = ?, public_report_file = ? WHERE paypal_order_id = ?', 
+                             (report_file, public_report_file, paypal_id))
+            else:
+                self.execute('UPDATE orders SET report_file = ? WHERE paypal_order_id = ?', (report_file, paypal_id))
 
     def get_user_reports(self, email: str) -> List[Dict]:
         if self.use_supabase:

@@ -6,19 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Business Spy - Competitor Strategy Reports</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Bridge for local development - points localhost to the live Netlify site's identity settings
-    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-      const liveSite = "https://bizspy.netlify.app";
-      document.addEventListener("DOMContentLoaded", () => {
-        if (window.netlifyIdentity) {
-          window.netlifyIdentity.on('init', () => {
-            console.log("[Identity] Local bridge active for: " + liveSite);
-          });
-        }
-      });
-    }
+    const SUPABASE_URL = "https://qylvmjncfblcsucfzdan.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_vWP7QIxV2ZUzMm8wGuefJw_0h_67DXo";
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   </script>
   <style>
     :root {
@@ -359,7 +351,7 @@
   </div>
 
   <div class="header-nav">
-    <div data-netlify-identity-menu></div>
+    <a id="login-btn" href="#" class="netlify-identity-button" onclick="handleAuth()" style="display: none;">Log In</a>
     <a id="dashboard-link" href="/dashboard.html" class="btn-forensic" style="display: none; padding: 0.5rem 1rem; font-size: 0.8rem; text-decoration: none; border-radius: 8px;">Dashboard</a>
   </div>
 
@@ -514,42 +506,40 @@
         });
     });
 
-    if (window.netlifyIdentity) {
-      const dashboardLink = document.getElementById('dashboard-link');
+    async function handleAuth() {
+      const email = prompt("Enter your founder email:");
+      if (!email) return;
       
-      const updateAuthUI = (user) => {
-        if (user) {
-          dashboardLink.style.display = 'inline-flex';
-          // Netlify Identity widget handles hiding its own login/signup buttons if configured, 
-          // but we can also force style adjustments here if needed.
-        } else {
-          dashboardLink.style.display = 'none';
-        }
-      };
-
-      window.netlifyIdentity.on("init", user => {
-        updateAuthUI(user);
-        if (!user) {
-          window.netlifyIdentity.on("login", (user) => {
-            updateAuthUI(user);
-            window.location.href = "/dashboard.html";
-          });
-        }
+      // For MVP: Magic link or simple session logic
+      const { error } = await _supabase.auth.signInWithOtp({ 
+        email: email,
+        options: { emailRedirectTo: window.location.origin + '/dashboard.html' }
       });
-
-      window.netlifyIdentity.on("logout", () => {
-        updateAuthUI(null);
-        window.location.href = "/";
-      });
+      
+      if (error) alert("Auth error: " + error.message);
+      else alert("Check your email for the forensic access link!");
     }
 
-    // Force initialization wait to prevent 'mockup' flash
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', user => {
-          document.body.classList.add('identity-loaded');
-        });
+    const dashboardLink = document.getElementById('dashboard-link');
+    const loginBtn = document.getElementById('login-btn');
+
+    function updateAuthUI(session) {
+      if (session) {
+        dashboardLink.style.display = 'inline-flex';
+        loginBtn.style.display = 'none';
+      } else {
+        dashboardLink.style.display = 'none';
+        loginBtn.style.display = 'inline-flex';
       }
+    }
+
+    // Initialize Auth
+    _supabase.auth.getSession().then(({ data: { session } }) => {
+      updateAuthUI(session);
+    });
+
+    _supabase.auth.onAuthStateChange((_event, session) => {
+      updateAuthUI(session);
     });
   </script>
 </body>
