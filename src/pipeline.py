@@ -50,6 +50,8 @@ class Pipeline:
         self,
         niche_name: str,
         urls: List[Dict],
+        from_date: str = "20180101",
+        to_date: str = None,
         output_path: str = "report.html",
         status_callback: Optional[Callable[[Dict], None]] = None,
         is_public: bool = False,
