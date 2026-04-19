@@ -49,15 +49,12 @@ class Pipeline:
     def process_niche(
         self,
         niche_name: str,
-        urls: List[Dict[str, str]],
-        output_dir: str,
-        from_date: Optional[str] = None,
-        to_date: Optional[str] = None,
-        locked_competitors: Optional[List[str]] = None,
-        sprint_context: Optional[Dict[str, Any]] = None,
-        competitor_source: str = "discovery",
-        status_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
-    ) -> Dict[str, str]:
+        urls: List[Dict],
+        output_path: str = "report.html",
+        status_callback: Optional[Callable[[Dict], None]] = None,
+        is_public: bool = False,
+        is_paid: bool = True,
+    ) -> Dict:
         """
         Process an entire niche: pull data, analyze, and generate reports.
         """
@@ -127,7 +124,9 @@ class Pipeline:
                     current_action="generating_insight",
                 )
                 comp_data["ai_insight"] = self.narrator.generate_competitor_insight(
-                    comp_name, comp_data.get("changes", [])
+                    comp_name, 
+                    comp_data.get("changes", []),
+                    current_analysis=comp_data.get("current_analysis") or comp_data.get("live_site_summary")
                 )
 
             competitors.append(comp_data)
@@ -174,19 +173,34 @@ class Pipeline:
             )
             agent_tasks = self.narrator.generate_agent_tasks(niche_name, competitors)
 
+        # Generate video script
+        video_script = {}
+        if self.narrator.enabled and self.enable_narrative:
+            logger.info("Generating video generation script...")
+            # We use the breakthrough story if available, otherwise generic
+            # Note: breakthrough_story is loaded below if publishing is enabled, 
+            # so we check if stories exist here too for the video
+            story_for_video = None
+            story_path = os.path.join("stories", f"{self._slugify(niche_name)}_breakout.md")
+            if os.path.exists(story_path):
+                with open(story_path, "r") as f:
+                    story_for_video = f.read()
+            video_script = self.narrator.generate_video_script(niche_name, competitors, breakthrough_story=story_for_video)
+
         # Generate reports
         total_snapshots = sum(c.get("snapshot_count", 0) for c in competitors)
         total_changes = sum(len(c.get("changes", [])) for c in competitors)
 
         safe_name = self._slugify(niche_name)
-        html_path = os.path.join(output_dir, f"{safe_name}-report.html")
-        json_path = os.path.join(output_dir, f"{safe_name}-data.json")
-        manifest_path = os.path.join(output_dir, f"{safe_name}-manifest.json")
-        brief_path = os.path.join(output_dir, f"{safe_name}-internal-brief.md")
-        leadideal_handoff_path = os.path.join(output_dir, f"{safe_name}-leadideal-handoff.json")
-        leadideal_preview_path = os.path.join(output_dir, f"{safe_name}-leadideal-preview.json")
-        approval_state_path = os.path.join(output_dir, f"{safe_name}-approval-state.json")
-        agent_handoff_path = os.path.join(output_dir, f"{safe_name}-agent-handoff.json")
+        # Use relative paths for the Storage abstraction (target_dir/filename)
+        html_rel = f"{safe_name}/report.html"
+        json_rel = f"{safe_name}/data.json"
+        manifest_rel = f"{safe_name}/manifest.json"
+        brief_rel = f"{safe_name}/internal-brief.md"
+        leadideal_handoff_rel = f"{safe_name}/leadideal-handoff.json"
+        leadideal_preview_rel = f"{safe_name}/leadideal-preview.json"
+        approval_state_rel = f"{safe_name}/approval-state.json"
+        agent_handoff_rel = f"{safe_name}/agent-handoff.json"
 
         sprint_manifest = build_sprint_manifest(
             niche_name,
@@ -198,6 +212,7 @@ class Pipeline:
             total_snapshots=total_snapshots,
             total_changes=total_changes,
             competitor_source=competitor_source,
+            niche_narrative=niche_narrative,
         )
 
         self._notify(
@@ -211,12 +226,14 @@ class Pipeline:
         )
 
         html_out = self.reporter.generate(
-            niche_name, competitors, html_path,
+            niche_name, competitors, html_rel,
             niche_narrative=niche_narrative,
             locked_competitors=locked_competitors,
             key_findings=key_findings,
             roi_analysis=roi_analysis,
             agent_tasks=agent_tasks,
+            video_script=video_script,
+            is_paid=is_paid,
         )
 
         # PUBLIC CASE STUDY GENERATION
@@ -239,7 +256,7 @@ class Pipeline:
                     breakthrough_story = f.read()
             
             public_html_out = self.reporter.generate(
-                niche_name, competitors, public_path,
+                niche_name, competitors, f"public/{safe_name}.html",
                 niche_narrative=niche_narrative,
                 locked_competitors=locked_competitors,
                 key_findings=key_findings,
@@ -247,19 +264,21 @@ class Pipeline:
                 is_public=True,
                 redactions=redactions,
                 agent_tasks=agent_tasks,
-                breakthrough_story=breakthrough_story
+                breakthrough_story=breakthrough_story,
+                video_script=video_script,
+                is_paid=is_paid,
             )
 
-        json_out = self.reporter.generate_json(niche_name, competitors, json_path)
-        manifest_out = self.reporter.generate_manifest(sprint_manifest, manifest_path)
+        json_out = self.reporter.generate_json(niche_name, competitors, json_rel, niche_narrative=niche_narrative)
+        manifest_out = self.reporter.generate_manifest(sprint_manifest, manifest_rel)
         brief_out = self.reporter.generate_internal_brief(
             sprint_manifest,
             competitors,
-            brief_path,
+            brief_rel,
             key_findings=key_findings,
             roi_analysis=roi_analysis,
         )
-        leadideal_handoff_out = self.reporter.generate_leadideal_handoff(sprint_manifest, leadideal_handoff_path)
+        leadideal_handoff_out = self.reporter.generate_leadideal_handoff(sprint_manifest, leadideal_handoff_rel)
         leadideal_handoff_payload = build_leadideal_handoff(sprint_manifest)
         self._notify(
             status_callback,
@@ -272,18 +291,22 @@ class Pipeline:
         leadideal_preview = execute_leadideal_preview(leadideal_handoff_payload)
         leadideal_preview_out = self.reporter.generate_json_blob(
             leadideal_preview,
-            leadideal_preview_path,
+            leadideal_preview_rel,
             "LeadIdeal preview artifact",
         )
         approval_state = build_approval_state(sprint_manifest, leadideal_preview)
         approval_state_out = self.reporter.generate_json_blob(
             approval_state,
-            approval_state_path,
+            approval_state_rel,
             "Approval state artifact",
         )
         agent_handoff_out = self.reporter.generate_json_blob(
-            {"tasks": agent_tasks, "metadata": {"niche": niche_name, "generated_at": os.path.basename(html_out)}},
-            agent_handoff_path,
+            {
+                "tasks": agent_tasks, 
+                "video_script": video_script,
+                "metadata": {"niche": niche_name, "generated_at": os.path.basename(html_out)}
+            },
+            agent_handoff_rel,
             "Agent handoff artifact",
         )
 

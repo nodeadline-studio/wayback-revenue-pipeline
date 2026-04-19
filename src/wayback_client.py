@@ -114,39 +114,58 @@ class WaybackClient:
         """Fetch a representative candidate pool once, widening only as needed for sparse histories."""
         target_count = max(minimum_count, 3)
 
-        # Large sites can time out when asking CDX for thousands of digest-collapsed rows.
-        # Start with a year-collapsed sample that is usually enough to pick a few temporal anchors.
-        yearly = self.get_snapshots(
-            url,
-            from_date=from_date,
-            to_date=to_date,
-            limit=FAST_CDX_LIMIT,
-            collapse="timestamp:4",
-        )
-        if len(yearly) >= target_count:
-            return yearly
+        # Try variations if first one fails
+        variants = [url]
+        if url.startswith("www."):
+            variants.append(url[4:])
+        else:
+            variants.append(f"www.{url}")
+        
+        # Add wildcard as final desperate attempt
+        if not url.endswith("*"):
+            variants.append(f"{url}/*")
 
-        collapsed = self.get_snapshots(
-            url,
-            from_date=from_date,
-            to_date=to_date,
-            limit=STANDARD_CDX_LIMIT,
-            collapse="digest",
-        )
-        if not collapsed:
-            return yearly
+        for variant_index, current_url in enumerate(variants):
+            # Large sites can time out when asking CDX for thousands of digest-collapsed rows.
+            # Start with a year-collapsed sample that is usually enough to pick a few temporal anchors.
+            yearly = self.get_snapshots(
+                current_url,
+                from_date=from_date,
+                to_date=to_date,
+                limit=FAST_CDX_LIMIT,
+                collapse="timestamp:4",
+            )
+            if len(yearly) >= target_count:
+                return yearly
 
-        if len(collapsed) >= target_count:
-            return collapsed
+            collapsed = self.get_snapshots(
+                current_url,
+                from_date=from_date,
+                to_date=to_date,
+                limit=STANDARD_CDX_LIMIT,
+                collapse="digest",
+            )
+            if len(collapsed) >= target_count:
+                return collapsed
 
-        expanded = self.get_snapshots(
-            url,
-            from_date=from_date,
-            to_date=to_date,
-            limit=EXPANDED_CDX_LIMIT,
-            collapse="",
-        )
-        return expanded if len(expanded) > len(collapsed) else collapsed
+            expanded = self.get_snapshots(
+                current_url,
+                from_date=from_date,
+                to_date=to_date,
+                limit=EXPANDED_CDX_LIMIT,
+                collapse="",
+            )
+            
+            if expanded:
+                return expanded
+            
+            # If we are at the last variant and still nothing, return empty
+            if variant_index == len(variants) - 1:
+                return []
+            
+            logger.info("No snapshots for %s, trying variant: %s", current_url, variants[variant_index + 1])
+
+        return []
 
     def get_closest_snapshot(self, url: str, timestamp: Optional[str] = None) -> Optional[Dict]:
         """Get the closest available snapshot for a URL."""

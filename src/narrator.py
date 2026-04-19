@@ -252,22 +252,42 @@ class StrategicNarrator:
             context.append(comp_summary)
 
         prompt = f"""
-Analyze this niche: '{niche_name}'.
-Competitor Overview: {json.dumps(context, indent=2)}
+Analyze the '{niche_name}' market landscape.
+Competitor Data (Current State & History): {json.dumps(context, indent=2)}
 
-Write a 3-paragraph Executive Strategic Summary covering:
-1. Market Overview: What is the current state of this competitive landscape? What are the dominant patterns in messaging, positioning, and technology adoption?
-2. Key Shifts: What significant strategic moves have competitors made? Are they consolidating, expanding, pivoting to new audiences?
-3. Opportunities: What gaps or underserved angles exist based on what competitors are (and aren't) doing?
+Write an Executive Strategic Summary (3-4 paragraphs) emphasizing COMPARATIVE POSITIONING.
+Structure:
+1. Market Evolution & Bloat: How has the industry shifted? Identify where competitors have become "bloated" with features or generic messaging.
+2. Competitive Gaps: Specifically compare the target product's lean potential against the dominant titans. Where are they vulnerable or slow?
+3. Strategic Counter-Positioning: Based on the gaps, how should the target startup message itself to clearly differentiate? (e.g. "While X focuses on enterprise scale, the target should own the speed-to-insight angle").
 
-Be specific, cite competitor names and their actual data. Do not use markdown formatting.
+Be extremely specific. Cite competitor names and their specific data points. Avoid generic business consulting jargon. Return ONLY the text, no markdown.
 """
         return self._generate_text(prompt)
 
-    def generate_competitor_insight(self, competitor_name: str, changes: List[Dict]) -> str:
-        """Generate a strategic insight for a specific competitor's evolution."""
-        if not self.enabled or not changes:
-            return "No significant changes to analyze."
+    def generate_competitor_insight(self, competitor_name: str, changes: List[Dict], current_analysis: Optional[Dict] = None) -> str:
+        """Generate a strategic insight for a competitor's evolution or current posture."""
+        if not self.enabled:
+            return ""
+
+        if not changes:
+            if not current_analysis:
+                return "No significant changes or live data to analyze."
+            
+            # Fallback to Current State Analysis
+            prompt = f"""
+Analyze the current strategic posture of '{competitor_name}'.
+Live Site Signals: {json.dumps(current_analysis, indent=2)}
+
+Write a concise Strategic Comparison (1-2 paragraphs).
+Focus on:
+1. Current Positioning: What is their dominant market promise right now?
+2. Vulnerability: Based on their current tech stack and messaging, where are they vulnerable to a leaner, higher-utility competitor?
+3. The Gap: How should the target product message AGAINST them today?
+
+Return only the text, no markdown.
+"""
+            return self._generate_text(prompt)
 
         # Simplify changes for the prompt to save tokens and focus on strategy
         clean_changes = []
@@ -295,16 +315,17 @@ Be specific, cite competitor names and their actual data. Do not use markdown fo
             return "Stable strategy detected with no major pivots."
 
         prompt = f"""
-Analyze the evolution of '{competitor_name}'.
-Historical Changes: {json.dumps(clean_changes, indent=2)}
+Analyze the evolution and vulnerabilities of '{competitor_name}'.
+Historical Signal Changes: {json.dumps(clean_changes, indent=2)}
 
-Write a strategic analysis in 4-6 sentences covering:
-1. The Strategic Arc: What direction is this competitor heading?
-2. Key Pivots: Any significant shifts in messaging, pricing, or technology?
-3. Competitive Positioning: Are they moving upmarket, downmarket, or broadening?
-4. Growth Signals: Are they investing (adding tools, content) or retreating (dropping features)?
+Write a concise Strategic Insight (1-2 paragraphs) for the founder.
 
-Be specific, reference actual changes from the data. Do not use markdown formatting.
+Focus on:
+1. The Pivot: What was their most significant strategic messaging move? Identify the moment they shifted from X to Y.
+2. The Gap: Based on this evolution, what have they SACRIFICED or neglected? (e.g. have they become too complex, too enterprise, abandoned the 'easy for pros' angle?)
+3. The Counter-Move: How should the target product position AGAINST them right now? Recommend a specific messaging angle that exploits their current complexity or focus.
+
+Be extremely specific. Cite their actual H1s and pricing shifts. Do not use markdown.
 """
         return self._generate_text(prompt)
 
@@ -565,4 +586,59 @@ Keep each array to 2-4 items max. Be specific, cite competitor names. No markdow
                 return parsed
         except Exception as exc:
             logger.error("Failed to generate ROI analysis: %s", exc)
+        return {}
+    def generate_video_script(self, niche_name: str, competitors: List[Dict], breakthrough_story: Optional[str] = None) -> Dict:
+        """Generate a 60-second cinematic video script for the video engine."""
+        if not self.enabled:
+            return {}
+
+        context = {
+            "niche": niche_name,
+            "competitors": [c["name"] for c in competitors],
+            "story": breakthrough_story or "Generic market analysis summary."
+        }
+
+        prompt = f"""
+You are a Video Scriptwriter specializing in "High-Conviction Startup Vibe." Your goal is to write a 60-second video script for the '{niche_name}' space.
+
+Context: {json.dumps(context, indent=2)}
+
+Narrative Style: Imagine a "Forensic Documentary" - dramatic, data-driven, and high-stakes.
+Script Structure:
+1. Hook (0-10s): The problem/stagnation in the niche before the pivot.
+2. Discovery (10-30s): Uncovering the "invisible" messaging pivot of a market titan.
+3. Breakthrough (30-50s): Showcasing the real-world success of our project (e.g. LeadIdeal) using this insight.
+4. CTA (50-60s): Invite to get their own forensic scan.
+
+Return ONLY valid JSON with this structure:
+{{
+  "video_prompt": "Cinematic visual description for the entire video (used as a global style)",
+  "vibe": "technological | futuristic | documentary",
+  "recommended_visual_preset": "b2b | cinematic | modern",
+  "script_stages": [
+    {{"time": "0-10s", "text": "Voiceover line", "visual_prompt": "Specific visual for this scene"}},
+    {{"time": "10-50s", "text": "Voiceover lines", "visual_prompt": "Visuals"}},
+    {{"time": "50-60s", "text": "CTA line", "visual_prompt": "Visual"}}
+  ],
+  "full_voiceover": "The entire script text for TTS generation"
+}}
+
+No markdown, no explanations. Just the JSON.
+"""
+        try:
+            text = self._generate_text(prompt)
+            if not text:
+                return {}
+            text = text.strip()
+            if text.startswith("```json"):
+                text = text.replace("```json", "", 1)
+            if text.startswith("```"):
+                text = text.replace("```", "", 1)
+            if text.endswith("```"):
+                text = text[:-3]
+            parsed = json.loads(text.strip())
+            if isinstance(parsed, dict):
+                return parsed
+        except Exception as exc:
+            logger.error("Failed to generate video script: %s", exc)
         return {}

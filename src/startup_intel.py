@@ -194,6 +194,7 @@ def build_sprint_manifest(
     total_snapshots: int = 0,
     total_changes: int = 0,
     competitor_source: str = "discovery",
+    niche_narrative: str = "",
 ) -> Dict[str, Any]:
     sprint_context = sprint_context or {}
     key_findings = key_findings or []
@@ -244,6 +245,7 @@ def build_sprint_manifest(
         "schema_version": "startup-intel-v1",
         "generated_at": utc_now_iso(),
         "niche_name": niche_name,
+        "niche_narrative": niche_narrative,
         "startup": {
             "name": sprint_context.get("startup_name") or humanize_domain(target_url),
             "target_url": target_url,

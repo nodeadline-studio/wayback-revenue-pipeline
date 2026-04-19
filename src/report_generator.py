@@ -14,6 +14,7 @@ from markupsafe import Markup, escape
 from jinja2 import Environment, FileSystemLoader
 
 from .startup_intel import build_leadideal_handoff, render_internal_brief
+from .storage import Storage
 
 logger = logging.getLogger(__name__)
 
@@ -68,9 +69,8 @@ def _md_to_html(text, redact_rules=None):
 
 
 class ReportGenerator:
-    """Generates HTML reports from analysis data."""
-
     def __init__(self, templates_dir: str = TEMPLATES_DIR):
+        self.storage = Storage()
         self.env = Environment(
             loader=FileSystemLoader(templates_dir),
             autoescape=True,
@@ -90,6 +90,8 @@ class ReportGenerator:
         redactions: Optional[Dict[str, str]] = None,
         agent_tasks: Optional[List[Dict]] = None,
         breakthrough_story: Optional[str] = None,
+        video_script: Optional[Dict] = None,
+        is_paid: bool = False,
     ) -> str:
         """
         Generate an HTML competitive intelligence report.
@@ -150,50 +152,34 @@ class ReportGenerator:
             agent_tasks=agent_tasks or [],
             agent_json=json.dumps(agent_tasks or [], indent=2),
             breakthrough_story=breakthrough_story,
+            video_script=video_script or {},
+            video_script_json=json.dumps(video_script or {}, indent=2),
+            is_paid=is_paid,
         )
 
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(html)
+        # Save via Storage abstraction
+        return self.storage.save(html, output_path)
 
-        logger.info("Report written to %s (is_public=%s)", output_path, is_public)
-        return os.path.abspath(output_path)
-
-    def generate_json(self, niche_name: str, competitors: List[Dict], output_path: str) -> str:
+    def generate_json(self, niche_name: str, competitors: List[Dict], output_path: str, niche_narrative: str = "") -> str:
         """Also dump raw JSON data for programmatic use or API resale."""
         data = {
             "niche": niche_name,
+            "niche_narrative": niche_narrative,
             "generated_at": datetime.utcnow().isoformat(),
             "competitor_count": len(competitors),
             "competitors": competitors,
         }
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, default=str)
-        logger.info("JSON data written to %s", output_path)
-        return os.path.abspath(output_path)
+        return self.storage.save(json.dumps(data, indent=2, default=str), output_path, content_type='application/json')
 
     def generate_manifest(self, manifest: Dict, output_path: str) -> str:
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(manifest, f, indent=2, default=str)
-        logger.info("Sprint manifest written to %s", output_path)
-        return os.path.abspath(output_path)
+        return self.storage.save(json.dumps(manifest, indent=2, default=str), output_path, content_type='application/json')
 
     def generate_leadideal_handoff(self, manifest: Dict, output_path: str) -> str:
         handoff = build_leadideal_handoff(manifest)
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(handoff, f, indent=2, default=str)
-        logger.info("LeadIdeal handoff written to %s", output_path)
-        return os.path.abspath(output_path)
+        return self.storage.save(json.dumps(handoff, indent=2, default=str), output_path, content_type='application/json')
 
     def generate_json_blob(self, payload: Dict, output_path: str, label: str) -> str:
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(payload, f, indent=2, default=str)
-        logger.info("%s written to %s", label, output_path)
-        return os.path.abspath(output_path)
+        return self.storage.save(json.dumps(payload, indent=2, default=str), output_path, content_type='application/json')
 
     def generate_internal_brief(
         self,
@@ -209,8 +195,4 @@ class ReportGenerator:
             key_findings=key_findings,
             roi_analysis=roi_analysis,
         )
-        os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(content)
-        logger.info("Internal brief written to %s", output_path)
-        return os.path.abspath(output_path)
+        return self.storage.save(content, output_path, content_type='text/markdown')

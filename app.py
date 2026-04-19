@@ -21,6 +21,8 @@ from src.pipeline import Pipeline
 from src.narrator import StrategicNarrator, hydrate_gemini_key_from_video_gen_clean
 from src.startup_intel import build_sprint_context, record_approval_decision
 from src.startup_presets import apply_startup_preset, list_startup_presets
+from src.database import Database
+from src.email_engine import EmailEngine
 
 load_dotenv()
 hydrate_gemini_key_from_video_gen_clean(override=True)
@@ -31,40 +33,24 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__, static_folder='web', static_url_path='/', template_folder='templates')
+base_dir = os.path.dirname(os.path.abspath(__file__))
+template_dir = os.path.join(base_dir, 'templates')
+static_dir = os.path.join(base_dir, 'web')
+
+app = Flask(__name__, static_folder=static_dir, static_url_path='/', template_folder=template_dir)
 app.secret_key = os.getenv("APP_SECRET_KEY", "super_secret_for_mvp")
 CORS(app)
+
+db = Database()
+email_engine = EmailEngine()
 
 if stripe is not None:
     stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "sk_test_mock")
 else:
     logger.warning("stripe is not installed. Billing features remain disabled in local demo mode.")
 
-# --- DATABASE SETUP (Minimal Internal Auth) ---
-DB_FILE = 'saas.sqlite'
-
-def init_db():
-    with sqlite3.connect(DB_FILE) as conn:
-        conn.execute('''CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL,
-            is_paid BOOLEAN DEFAULT 0
-        )''')
-        conn.execute('''CREATE TABLE IF NOT EXISTS orders (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            paypal_order_id TEXT UNIQUE NOT NULL,
-            capture_id TEXT,
-            email TEXT NOT NULL,
-            package TEXT NOT NULL,
-            amount REAL NOT NULL,
-            status TEXT DEFAULT 'created',
-            target_url TEXT,
-            report_file TEXT,
-            created_at TEXT NOT NULL,
-            captured_at TEXT
-        )''')
-init_db()
+# --- DATABASE SETUP ---
+db = Database()
 
 # --- IN MEMORY JOBS ---
 JOBS = {}
@@ -324,6 +310,19 @@ def start_demo():
     return jsonify({"url": f"/api/status?job_id={job_id}", "job_id": job_id})
 
 
+@app.route('/api/user/reports', methods=['GET'])
+def get_user_reports():
+    email = request.args.get('email')
+    if not email:
+        return jsonify({"error": "Email required"}), 400
+    
+    reports = db.get_user_reports(email)
+    # Filter out reports without files
+    valid_reports = [r for r in reports if r.get('report_file')]
+    
+    return jsonify({"reports": valid_reports})
+
+
 @app.route('/api/startup-presets', methods=['GET'])
 def startup_presets():
     return jsonify({
@@ -561,12 +560,17 @@ def paypal_capture():
     if status != 'COMPLETED':
         return jsonify({'error': f'Unexpected status: {status}', 'status': status}), 400
 
-    # Update DB
-    with sqlite3.connect(DB_FILE) as conn:
-        conn.execute(
-            'UPDATE orders SET status = ?, capture_id = ?, captured_at = ? WHERE paypal_order_id = ?',
-            ('captured', capture_id, utc_now_iso(), order_id),
-        )
+    # Update DB using high-level methods
+    db.capture_order(order_id, status='captured', capture_id=capture_id, captured_at=utc_now_iso())
+    
+    order = db.fetch_one('SELECT email FROM orders WHERE paypal_order_id = ?', (order_id,))
+    if order and order['email']:
+        email = order['email']
+        existing_user = db.get_user(email)
+        if existing_user:
+            db.update_user_paid_status(email, is_paid=True)
+        else:
+            db.create_user(email, str(uuid.uuid4()), is_paid=True)
 
     return jsonify({
         'success': True,
@@ -635,45 +639,58 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
         )
         if competitor_source == 'fallback':
             pipeline.narrator.enabled = False
+        is_paid_user = False
+        email = job.get("email")
+        if email:
+            user = db.get_user(email)
+            if user and user['is_paid']:
+                is_paid_user = True
+        
+        # If it's a demo run, use the job's is_paid override if available, else check DB
+        final_is_paid = job.get("is_paid", is_paid_user)
+
         result = pipeline.process_niche(
             niche_name,
             urls,
-            OUTPUT_DIR,
-            locked_competitors=locked_competitors,
-            sprint_context=sprint_context,
-            competitor_source=competitor_source,
+            output_path=os.path.join(OUTPUT_DIR, "placeholder.html"), # Directory arg handling fix
             status_callback=lambda payload: update_job(
                 job_id,
                 status='processing',
                 **payload,
             ),
+            is_public=False, # We use the is_paid flag for internal gating now
+            is_paid=final_is_paid,
         )
 
         if not os.path.isfile(result['html']):
             raise FileNotFoundError(f"Report file was not written: {result['html']}")
 
-        html_file = os.path.basename(result['html'])
-        json_file = os.path.basename(result['json'])
-        manifest_file = os.path.basename(result['manifest'])
-        brief_file = os.path.basename(result['brief'])
-        handoff_file = os.path.basename(result['leadideal_handoff'])
-        preview_file = os.path.basename(result['leadideal_preview'])
-        approval_file = os.path.basename(result['approval_state'])
+        # Resolve relative paths from OUTPUT_DIR for nested folders
+        def get_rel(abs_path):
+            return os.path.relpath(abs_path, OUTPUT_DIR) if abs_path else ""
+
+        report_rel = get_rel(result['html'])
+        json_rel = get_rel(result['json'])
+        manifest_rel = get_rel(result['manifest'])
+        brief_rel = get_rel(result['brief'])
+        handoff_rel = get_rel(result['leadideal_handoff'])
+        preview_rel = get_rel(result['leadideal_preview'])
+        approval_rel = get_rel(result['approval_state'])
 
         update_job(
             job_id,
             status='completed',
             stage='report_ready',
             status_detail='Report generated successfully.',
-            report_url=f"/reports/{html_file}",
-            report_file=html_file,
-            data_url=f"/reports/{json_file}",
-            manifest_url=f"/reports/{manifest_file}",
-            brief_url=f"/reports/{brief_file}",
-            leadideal_handoff_url=f"/reports/{handoff_file}",
-            leadideal_preview_url=f"/reports/{preview_file}",
+            report_url=f"/reports/{report_rel}",
+            report_file=report_rel,
+            data_url=f"/reports/{json_rel}",
+            manifest_url=f"/reports/{manifest_rel}",
+            brief_url=f"/reports/{brief_rel}",
+            leadideal_handoff_url=f"/reports/{handoff_rel}",
+            leadideal_preview_url=f"/reports/{preview_rel}",
             leadideal_preview_status=result.get('leadideal_preview_status'),
-            approval_state_url=f"/reports/{approval_file}",
+            approval_state_url=f"/reports/{approval_rel}",
             approval_status=result.get('approval_status'),
             competitor_source=competitor_source,
             competitors_completed=len(urls),
@@ -683,11 +700,15 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
         # Sync back to DB if this was a paid order
         order_id = job.get("paypal_order_id")
         if order_id:
-            with sqlite3.connect(DB_FILE) as conn:
-                conn.execute(
-                    'UPDATE orders SET report_file = ? WHERE paypal_order_id = ?',
-                    (html_file, order_id)
-                )
+            db.update_order_report(order_id, report_rel)
+        
+        # Trigger email notification if email exists
+        user_email = job.get("email")
+        if user_email and email_engine.enabled:
+            # Construct public URL for email
+            base_url = os.getenv("APP_PUBLIC_DOMAIN", "https://bizspy.netlify.app")
+            full_report_url = f"{base_url}{report_rel if report_rel.startswith('/') else '/' + report_rel}"
+            email_engine.send_report_ready(user_email, target_url, full_report_url)
 
         logger.info("Pipeline job %s completed with report %s", job_id, html_file)
 

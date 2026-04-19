@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founder Dashboard | Business Spy Forensic Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050510;
+            --surface: #0a0a1a;
+            --border: rgba(124, 92, 252, 0.2);
+            --accent: #7c5cfc;
+            --accent-glow: rgba(124, 92, 252, 0.4);
+            --text: #ffffff;
+            --muted: #8888aa;
+            --gradient: linear-gradient(135deg, #7c5cfc, #ff6b6b);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .sub-header {
+            color: var(--muted);
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .report-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .report-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .report-info h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+        }
+
+        .report-meta {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-left: 1rem;
+        }
+
+        .badge-paid { background: rgba(52, 211, 153, 0.1); color: #34d399; }
+        .badge-free { background: rgba(136, 136, 170, 0.1); color: var(--muted); }
+
+        .btn-view {
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-view:hover { opacity: 0.9; }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: rgba(124, 92, 252, 0.05);
+            border: 1px dashed var(--border);
+            border-radius: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0.7;
+        }
+
+        .nav-links a:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Business Spy Forensic Studio</div>
+            <nav class="nav-links">
+                <a href="/">New Scan</a>
+                <a href="#" id="logout-btn">Logout</a>
+            </nav>
+        </header>
+
+        <section id="dashboard-content">
+            <h1>Forensic Archive</h1>
+            <p class="sub-header">Access your previous investigative reports and strategic playbooks.</p>
+            
+            <div id="reports-list" class="dashboard-grid">
+                <!-- Loaded via JS -->
+                <div style="text-align: center; padding: 2rem;">Loading archive...</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Netlify Identity Handling
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.open();
+                } else {
+                    loadDashboard();
+                }
+            });
+            window.netlifyIdentity.on("login", user => {
+                window.netlifyIdentity.close();
+                loadDashboard();
+            });
+            window.netlifyIdentity.on("logout", () => {
+                window.location.href = "/";
+            });
+        }
+
+        async function loadDashboard() {
+            const user = window.netlifyIdentity ? window.netlifyIdentity.currentUser() : null;
+            const email = user ? user.email : localStorage.getItem('user_email');
+            
+            if (!email) {
+                document.getElementById('reports-list').innerHTML = '<div style="text-align: center; padding: 2rem;">Please log in to access your forensic archive.</div>';
+                return;
+            }
+
+            try {
+                const resp = await fetch(`/api/user/reports?email=${encodeURIComponent(email)}`);
+                const data = await resp.json();
+                
+                const list = document.getElementById('reports-list');
+                if (!data.reports || data.reports.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <h3 style="margin-bottom: 0.5rem;">No intelligence on file</h3>
+                            <p style="color: var(--muted); margin-bottom: 2rem;">You haven't initiated any forensic scans for this email yet.</p>
+                            <a href="/" class="btn-view" style="background: var(--gradient);">Launch First Investigation</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = data.reports.map(report => `
+                    <div class="report-card">
+                        <div class="report-info">
+                            <h3>${report.target_url || 'Strategic Scan'} <span class="badge ${report.status === 'captured' ? 'badge-paid' : 'badge-free'}">${report.status === 'captured' ? 'Paid' : 'Demo'}</span></h3>
+                            <div class="report-meta">Generated: ${new Date(report.created_at).toLocaleDateString()} | Package: ${report.package || 'Starter'}</div>
+                        </div>
+                        <a href="/reports/${report.report_file}" target="_blank" class="btn-view">Access Intelligence</a>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('reports-list').innerHTML = '<div style="color: red;">Failed to connect to the Forensic Studio.</div>';
+            }
+        }
+
+        document.getElementById('logout-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('user_email');
+            window.location.href = '/';
+        });
+
+        loadDashboard();
+    </script>
+</body>
+</html>

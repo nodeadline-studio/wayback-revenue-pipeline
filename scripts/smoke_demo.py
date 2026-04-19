@@ -27,7 +27,7 @@ def http_text(url: str) -> Tuple[int, str]:
         return response.status, response.read().decode("utf-8")
 
 
-def poll_job(base_url: str, job_id: str, timeout_seconds: int, interval_seconds: float) -> Dict[str, Any]:
+def poll_job(base_url: str, job_id: str, timeout_seconds: int = 180, interval_seconds: float = 3.0) -> Dict[str, Any]:
     deadline = time.time() + timeout_seconds
     status_url = f"{base_url}/api/status_api/{job_id}"
 

@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Business Spy - Competitor Strategy Reports</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <style>
     :root {
       --bg: #050510;
@@ -271,12 +272,17 @@
   </div>
 
   <div class="ai-badge">
-    Strategic Pivot Forensics
+    Forensic Intelligence Studio 2026
   </div>
 
-  <div class="hero">
-    <h1>The Forensic Engine for <span style="color: var(--accent);">Founder Breakouts</span></h1>
-    <p>We analyze the hidden pivots of market leaders from their "no-name" beginnings. Replicate the messaging trajectory of the giants.</p>
+  <div class="header-nav" style="position: absolute; top: 2rem; right: 2rem; z-index: 100;">
+    <div data-netlify-identity-menu></div>
+    <a href="/dashboard.html" class="btn-forensic" style="padding: 0.5rem 1rem; font-size: 0.8rem; margin-left: 1rem; text-decoration: none;">Dashboard</a>
+  </div>
+
+  <div class="logo">
+    <h1>Replicate the Messaging Pivots <span style="color: var(--accent);">that Built Giants</span></h1>
+    <p>Stop guessing. Start winning. We dissect the forensic history of market leaders from their "no-name" beginnings. Identify the messaging shifts that secured their Series B.</p>
 
     <div style="display: flex; justify-content: center; margin-bottom: 3rem;">
       <form id="pipeline-form" class="glass-intake">
@@ -288,9 +294,9 @@
     <div class="bento-grid">
       <!-- Story 1: LeadIdeal -->
       <a href="/reports/case-study-leadideal-com.html" target="_blank" class="bento-card">
-        <span class="card-label">Pivot Strategy</span>
+        <span class="card-label">Forensic ROI</span>
         <div class="card-title">LeadIdeal Breakthrough</div>
-        <div class="card-meta">Deciphered Apollo's 2018 shift to unlock $10M messaging gap.</div>
+        <div class="card-meta">Identifying the messaging pivot that unlocked 400% growth for Apollo.</div>
         <div class="metric-visual">
           <div class="bar" style="height: 40%"></div>
           <div class="bar" style="height: 60%"></div>
@@ -326,12 +332,64 @@
       </a>
     </div>
 
+    <div style="margin-top: 4rem; max-width: 600px; margin-left: auto; margin-right: auto; padding: 2rem; border: 1px dashed var(--accent); border-radius: 20px; background: rgba(124, 92, 252, 0.05);">
+        <h3 style="color: white; font-size: 1.1rem; margin-bottom: 0.5rem;">The Competitive Gap</h3>
+        <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 0;">Market intelligence is broken. Most tools focus on "curiosity." We focus on <strong>Forensic Outcomes</strong>. Stop copying the giant they are today—copy the messaging moves that made them a giant in the first place.</p>
+    </div>
+
+    <!-- Pricing Bento -->
+    <div style="margin-top: 6rem; text-align: center;">
+      <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 3rem; background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.6) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Forensic Access Plans</h2>
+      
+      <div class="bento-grid" style="max-width: 800px; margin: 0 auto;">
+        <!-- Single Scan -->
+        <div class="bento-card" style="grid-column: span 1; text-align: left; border-color: rgba(124, 92, 252, 0.3);">
+          <span class="card-label">Strategic Depth</span>
+          <div class="card-title" style="font-size: 1.5rem;">Single Scan</div>
+          <div class="card-meta" style="font-size: 1.1rem; color: var(--accent2); font-weight: 800; margin-bottom: 1rem;">$49 <span style="font-size: 0.8rem; color: var(--muted); font-weight: 400;">/ report</span></div>
+          <ul style="color: var(--muted); font-size: 0.85rem; list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;">✓ Full Historical Pivot Analysis</li>
+            <li style="margin-bottom: 0.5rem;">✓ Unredacted Agent Playbook</li>
+            <li style="margin-bottom: 0.5rem;">✓ One-Click Forensic Video</li>
+            <li style="margin-bottom: 0.5rem;">✓ 5 Year Archive Depth</li>
+          </ul>
+          <button onclick="initiatePurchase('starter')" class="btn-forensic" style="width: 100%; margin-top: 2rem; padding: 0.75rem;">Unlock Intelligence</button>
+        </div>
+
+        <!-- Founder Pass -->
+        <div class="bento-card" style="grid-column: span 2; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(135deg, rgba(124, 92, 252, 0.1), transparent);">
+          <div>
+            <span class="card-label" style="color: var(--accent2);">Studio Priority</span>
+            <div class="card-title" style="font-size: 1.8rem;">Founder Pass</div>
+            <div class="card-meta" style="font-size: 1.1rem; color: var(--accent2); font-weight: 800; margin-bottom: 1rem;">$149 <span style="font-size: 0.8rem; color: var(--muted); font-weight: 400;">/ 5 reports</span></div>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Bulk forensic scans for agencies and venture studios. Includes priority studio rendering and 1:1 strategy handoff.</p>
+          </div>
+          <div style="display: flex; gap: 1rem; align-items: flex-end;">
+            <button onclick="initiatePurchase('pro')" class="btn-forensic" style="background: var(--gradient); box-shadow: 0 0 30px var(--accent-glow); flex: 1;">Get Access</button>
+            <div style="flex: 1; font-size: 0.75rem; color: var(--muted);">Recommended for high-stakes pivots. Save $96 vs single scans.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <p style="margin-top: 3rem; font-size: 0.9rem; color: var(--muted); opacity: 0.6;">
-      Forensic analysis powered by historical web archives and Gemini 2.0 Pro
+      Accelerated by the Business Spy Forensic Engine™ | Neural Analysis Cluster v4.28
     </p>
   </div>
 
   <script>
+    function initiatePurchase(packageId) {
+      const email = prompt("Enter your email to associate with this forensic license:");
+      if (!email) return;
+
+      // Redirect to the checkout page with package and email
+      const params = new URLSearchParams({
+        packageId: packageId,
+        email: email
+      });
+      window.location.href = `/checkout.html?${params.toString()}`;
+    }
+
     document.getElementById('pipeline-form').addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -350,6 +408,7 @@
         .then(res => res.json())
         .then(data => {
           if (data && data.url) {
+            // REDICT TO STATUS IMMEDIATELY (Async Hardening)
             window.location.href = data.url;
           } else {
             console.error('[Pipeline] Scan failed:', data);
@@ -367,6 +426,16 @@
           submitBtn.disabled = false;
         });
     });
+
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/dashboard.html";
+          });
+        }
+      });
+    }
   </script>
 </body>
 </html>

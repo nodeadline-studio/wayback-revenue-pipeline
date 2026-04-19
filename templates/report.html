@@ -420,6 +420,15 @@
       function rejectReport() { submitDecision('rejected'); }
     </script>
     {% endif %}
+    {% if not is_paid %}
+    <div style="margin: 1.5rem 0; background: linear-gradient(90deg, rgba(124, 92, 252, 0.2), rgba(0, 245, 255, 0.1)); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; text-align: center; position: relative; overflow: hidden;">
+        <div style="position: relative; z-index: 2;">
+            <h3 style="color: white; margin-bottom: 0.5rem; font-size: 1.2rem;">Detailed Forensic Evidence Locked</h3>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem;">This is a redacted Free Scan. Purchase a <strong>Forensic Unlock</strong> to access the full historical pivot data, unredacted AI Agent Playbooks, and 60s Forensic Video generation.</p>
+            <a href="/#pricing" style="display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 0.8rem 1.75rem; border-radius: 10px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 0 20px rgba(124, 92, 252, 0.3);">Unlock Full Intelligence</a>
+        </div>
+    </div>
+    {% endif %}
     <div class="subtitle" style="margin-top:0.5rem; font-size: 0.8rem;">Historical web data analysis</div>
   </div>
 
@@ -456,6 +465,10 @@
     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem;">
         <h2 style="border: none; margin: 0;">Agent Execution Playbook</h2>
         <div style="display: flex; gap: 0.5rem;">
+            <button id="video-btn" onclick="triggerVideoEngine()" style="background: var(--bg); color: var(--green); border: 1px solid var(--green); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;">
+                <span id="video-btn-icon">🎬</span>
+                <span id="video-btn-text">Generate Forensic Video</span>
+            </button>
             <button onclick="copyAgentJSON()" style="background: var(--surface2); color: var(--accent); border: 1px solid var(--accent); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy JSON Manifest</button>
             <button onclick="copyForAntigravity()" style="background: var(--accent); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy for Antigravity</button>
         </div>
@@ -472,15 +485,21 @@
         <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">{{ task.task }}</div>
         <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">{{ task.rationale }}</div>
         
-        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
-            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"{{ task.agent_prompt_snippet }}"</code>
-            <button onclick="copySnippet('{{ task.agent_prompt_snippet | replace("'", "\\'") }}')" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer;">Copy Prompt</button>
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            {% if not is_paid %}
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            {% endif %}
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"{{ 'LOCK-RED-XXXX-XXXX-XXXX' if not is_paid else task.agent_prompt_snippet }}"</code>
+            <button onclick="if(isPaid) { copySnippet('{{ task.agent_prompt_snippet | replace("'", "\\'") }}') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: {{ 1 if is_paid else 0.4 }};">Copy Prompt</button>
         </div>
       </div>
       {% endfor %}
     </div>
 
     <script>
+      const isPaid = {{ is_paid | lower }};
       const agentData = {{ agent_json | safe }};
       
       function copyToClipboard(text, msg) {
@@ -496,10 +515,74 @@
       }
 
       function copyForAntigravity() {
+        if (!isPaid) {
+          alert('Unlock the Forensic Playbook to access machine-readable prompts for your AI agents.');
+          return;
+        }
         const prompt = "I have analyzed my competitors using Business Spy. Here are the actionable tasks I need you to execute:\n\n" + 
           agentData.map(t => `- [${t.priority.toUpperCase()}] ${t.task}\n  Prompt: ${t.agent_prompt_snippet}`).join('\n\n') +
-          "\n\nPlease start with the high priority tasks.";
-        copyToClipboard(prompt, 'Formatted prompt for Antigravity copied!');
+          "\n\nStrategic Video Script Context:\n" + JSON.stringify(videoScriptData, null, 2);
+        copyToClipboard(prompt, 'Project context copied for Antigravity development!');
+      }
+
+      const videoScriptData = {{ video_script_json | safe }};
+      const VIDEO_ENGINE_URL = "https://lexicographic-venturesomely-angelita.ngrok-free.dev";
+
+      async function triggerVideoEngine() {
+        if (!isPaid) {
+          alert('Forensic Studio Locked. Upgrade to clear reports for one-click asset production.');
+          return;
+        }
+        const btn = document.getElementById('video-btn');
+        const btnText = document.getElementById('video-btn-text');
+        const btnIcon = document.getElementById('video-btn-icon');
+
+        if (!videoScriptData || !videoScriptData.full_voiceover) {
+            alert("No video script available for this report run.");
+            return;
+        }
+
+        try {
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btnText.innerText = "Dispatching to Studio...";
+            btnIcon.innerText = "🛰️";
+
+            const response = await fetch(`${VIDEO_ENGINE_URL}/api/saas/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    description: videoScriptData.full_voiceover,
+                    visual_preset: videoScriptData.recommended_visual_preset || "b2b",
+                    subject: `Strategic Forensic Summary: {{ niche_name }}`,
+                    speed_mode: "balanced",
+                    engine_overrides: {
+                        "vibe": videoScriptData.vibe || "technological"
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.text();
+                throw new Error(err || "Failed to trigger video engine");
+            }
+
+            const result = await response.json();
+            btnText.innerText = "Video Queued in Studio";
+            btnIcon.innerText = "✅";
+            btn.style.borderColor = "var(--green)";
+            alert(`Video generation started! Job ID: ${result.job_id || result.id}. Check local studio terminal for logs.`);
+        } catch (e) {
+            console.error(e);
+            btnText.innerText = "Dispatch Failed";
+            btnIcon.innerText = "❌";
+            btn.style.borderColor = "var(--accent2)";
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            alert(`Failed to trigger video engine: ${e.message}\n\nMake sure your local video engine is running on port 8001 and ngrok is active.`);
+        }
       }
     </script>
   </div>
@@ -519,9 +602,12 @@
       </h3>
       {% for item in roi_analysis.winning_strategies %}
       <div
-        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
         <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">{{ item.signal }}</div>
-        <div style="font-size: 0.9rem; color: var(--text);">{{ item.detail }}</div>
+        <div style="font-size: 0.9rem; color: var(--text); {% if not is_paid %}filter: blur(4px); opacity: 0.5; user-select: none;{% endif %}">{{ item.detail }}</div>
+        {% if not is_paid and loop.first %}
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--green); opacity: 0.8; letter-spacing: 0.05em;">UNPAID REDACTION</div>
+        {% endif %}
       </div>
       {% endfor %}
     </div>
@@ -532,9 +618,12 @@
       <h3 style="color: var(--orange); font-size: 1.1rem; margin-bottom: 0.75rem;">&#9660; Warning Signs</h3>
       {% for item in roi_analysis.failing_signals %}
       <div
-        style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
         <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">{{ item.signal }}</div>
-        <div style="font-size: 0.9rem; color: var(--text);">{{ item.detail }}</div>
+        <div style="font-size: 0.9rem; color: var(--text); {% if not is_paid %}filter: blur(4px); opacity: 0.5; user-select: none;{% endif %}">{{ item.detail }}</div>
+        {% if not is_paid and loop.first %}
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--orange); opacity: 0.8; letter-spacing: 0.05em;">UNPAID REDACTION</div>
+        {% endif %}
       </div>
       {% endfor %}
     </div>
@@ -565,9 +654,14 @@
   <!-- Tech Stack Overview -->
   <div class="section">
     <h2>Tech Stack Across Competitors</h2>
-    <div class="tech-grid">
+    <div class="tech-grid" style="position: relative;">
+      {% if not is_paid %}
+      <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px;">
+          <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 800; font-size: 0.7rem; box-shadow: 0 0 15px var(--accent-glow);">UNLOCK FULL TECH STACK</span>
+      </div>
+      {% endif %}
       {% for tech in all_tech %}
-      <div class="tech-chip">{{ tech }}</div>
+      <div class="tech-chip" style="{% if not is_paid and loop.index > 5 %}filter: blur(3px); opacity: 0.5;{% endif %}">{{ tech }}</div>
       {% endfor %}
     </div>
   </div>
@@ -621,34 +715,41 @@
 
       {% set current = comp.current_analysis or (comp.analyses[-1] if comp.analyses else none) %}
       {% if current %}
-      <div class="analysis-detail">
-        <strong>Current Source:</strong>
-        {% if comp.current_analysis_source == 'live_crawl' %}
-        Live website crawl <span class="source-pill">Homepage + sitemap + internal pages</span>
-        {% else %}
-        Latest archived snapshot <span class="source-pill">Wayback</span>
+      <div style="position: relative; margin-top: 1rem;">
+        {% if not is_paid %}
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        {% endif %}
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            {% if comp.current_analysis_source == 'live_crawl' %}
+            Live website crawl <span class="source-pill">Homepage + sitemap + internal pages</span>
+            {% else %}
+            Latest archived snapshot <span class="source-pill">Wayback</span>
+            {% endif %}
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> {{ current.title or 'N/A' }}</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> {{ current.h1 or 'N/A' }}</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> {{ current.meta_description or 'N/A' }}</div>
+        {% if current.cta_buttons %}
+        <div class="analysis-detail"><strong>CTAs:</strong> {{ current.cta_buttons | join(' | ') }}</div>
+        {% endif %}
+        {% if comp.live_site_summary %}
+        <div class="analysis-detail"><strong>Live Crawl Coverage:</strong> {{ comp.live_site_summary.page_count }} pages
+            analyzed across the current site.</div>
+        {% endif %}
+        {% if comp.live_site_summary and comp.live_site_summary.aggregate_tech_stack %}
+        <div class="analysis-detail"><strong>Sitewide Tech Stack:</strong>
+            {% for tech in comp.live_site_summary.aggregate_tech_stack %}<span class="change-tag tag-tech">{{ tech
+            }}</span>{% endfor %}
+        </div>
+        {% elif current.tech_stack %}
+        <div class="analysis-detail"><strong>Tech Stack:</strong>
+            {% for tech in current.tech_stack %}<span class="change-tag tag-tech">{{ tech }}</span>{% endfor %}
+        </div>
         {% endif %}
       </div>
-      <div class="analysis-detail"><strong>Current Title:</strong> {{ current.title or 'N/A' }}</div>
-      <div class="analysis-detail"><strong>Current H1:</strong> {{ current.h1 or 'N/A' }}</div>
-      <div class="analysis-detail"><strong>Current Meta:</strong> {{ current.meta_description or 'N/A' }}</div>
-      {% if current.cta_buttons %}
-      <div class="analysis-detail"><strong>CTAs:</strong> {{ current.cta_buttons | join(' | ') }}</div>
-      {% endif %}
-      {% if comp.live_site_summary %}
-      <div class="analysis-detail"><strong>Live Crawl Coverage:</strong> {{ comp.live_site_summary.page_count }} pages
-        analyzed across the current site.</div>
-      {% endif %}
-      {% if comp.live_site_summary and comp.live_site_summary.aggregate_tech_stack %}
-      <div class="analysis-detail"><strong>Sitewide Tech Stack:</strong>
-        {% for tech in comp.live_site_summary.aggregate_tech_stack %}<span class="change-tag tag-tech">{{ tech
-          }}</span>{% endfor %}
-      </div>
-      {% elif current.tech_stack %}
-      <div class="analysis-detail"><strong>Tech Stack:</strong>
-        {% for tech in current.tech_stack %}<span class="change-tag tag-tech">{{ tech }}</span>{% endfor %}
-      </div>
-      {% endif %}
       {% endif %}
 
       {% if comp.live_site_summary and comp.live_site_summary.sample_pages %}
@@ -666,9 +767,14 @@
       <!-- Change Timeline -->
       {% if comp.changes %}
       <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
-      <div class="snapshot-timeline">
+      <div class="snapshot-timeline" style="position: relative;">
+        {% if not is_paid %}
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--gradient); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        {% endif %}
         {% for change in comp.changes %}
-        <div class="timeline-item">
+        <div class="timeline-item" style="{% if not is_paid %}filter: blur(2px); opacity: 0.6; pointer-events: none;{% endif %}">
           <div class="timeline-date">
             {{ change.from_ts }} &#8594; {{ change.to_ts }}
             {% if change.snapshot_url %}

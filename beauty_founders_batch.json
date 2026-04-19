@@ -1,22 +1,122 @@
 [
-  { "company": "Gisou", "founder": "Negin Mirsalehi", "category": "Beauty & Skincare", "url": "gisou.com" },
-  { "company": "GoPure", "founder": "Alex Keyan", "category": "Beauty & Skincare", "url": "gopurebeauty.com" },
-  { "company": "Merit Beauty", "founder": "Katherine Power", "category": "Beauty & Skincare", "url": "meritbeauty.com" },
-  { "company": "OneSkin", "founder": "Carolina Reis Oliveira", "category": "Beauty & Skincare", "url": "oneskin.co" },
-  { "company": "Blume", "founder": "Taran Ghatrora", "category": "Beauty & Skincare", "url": "blume.com" },
-  { "company": "Versed", "founder": "Katherine Power", "category": "Beauty & Skincare", "url": "versedskin.com" },
-  { "company": "Maëlys", "founder": "Rom Gissin", "category": "Beauty & Skincare", "url": "maelysonline.com" },
-  { "company": "Trinny London", "founder": "Trinny Woodall", "category": "Beauty & Skincare", "url": "trinnylondon.com" },
-  { "company": "Glossier", "founder": "Emily Weiss", "category": "Beauty & Skincare", "url": "glossier.com" },
-  { "company": "Function of Beauty", "founder": "Zahir Dossa", "category": "Beauty & Skincare", "url": "functionofbeauty.com" },
-  { "company": "K18", "founder": "Suveen Sahib", "category": "Beauty & Skincare", "url": "k18hair.com" },
-  { "company": "Rhode", "founder": "Hailey Bieber", "category": "Beauty & Skincare", "url": "rhodeskin.com" },
-  { "company": "UOMA Beauty", "founder": "Sharon Chuter", "category": "Beauty & Skincare", "url": "uomabeauty.com" },
-  { "company": "Topicals", "founder": "Olamide Olowe", "category": "Beauty & Skincare", "url": "mytopicals.com" },
-  { "company": "Kosas", "founder": "Sheena Zadeh-Daly", "category": "Beauty & Skincare", "url": "kosas.com" },
-  { "company": "Tower 28", "founder": "Amy Liu", "category": "Beauty & Skincare", "url": "tower28beauty.com" },
-  { "company": "Hero Cosmetics", "founder": "Ju Rhyu", "category": "Beauty & Skincare", "url": "herocosmetics.us" },
-  { "company": "Summer Fridays", "founder": "Marianna Hewitt", "category": "Beauty & Skincare", "url": "summerfridays.com" },
-  { "company": "Necessaire", "founder": "Randi Christiansen", "category": "Beauty & Skincare", "url": "necessaire.com" },
-  { "company": "Augustinus Bader", "founder": "Charles Rosier", "category": "Beauty & Skincare", "url": "augustinusbader.com" }
+  {
+    "company": "Glossier",
+    "founder": "Emily Weiss",
+    "category": "Beauty",
+    "url": "glossier.com"
+  },
+  {
+    "company": "Drunk Elephant",
+    "founder": "Tiffany Masterson",
+    "category": "Skincare",
+    "url": "drunkelephant.com"
+  },
+  {
+    "company": "The Ordinary",
+    "founder": "Nicola Kilner",
+    "category": "Skincare",
+    "url": "theordinary.com"
+  },
+  {
+    "company": "Fenty Beauty",
+    "founder": "Rihanna",
+    "category": "Makeup",
+    "url": "fentybeauty.com"
+  },
+  {
+    "company": "Tatcha",
+    "founder": "Vicky Tsai",
+    "category": "Skincare",
+    "url": "tatcha.com"
+  },
+  {
+    "company": "Hero Cosmetics",
+    "founder": "Ju Rhyu",
+    "category": "Skincare",
+    "url": "herocosmetics.us"
+  },
+  {
+    "company": "Sol de Janeiro",
+    "founder": "Heela Yang",
+    "category": "Body Care",
+    "url": "soldejaneiro.com"
+  },
+  {
+    "company": "Summer Fridays",
+    "founder": "Marianna Hewitt",
+    "category": "Skincare",
+    "url": "summerfridays.com"
+  },
+  {
+    "company": "Rare Beauty",
+    "founder": "Selena Gomez",
+    "category": "Makeup",
+    "url": "rarebeauty.com"
+  },
+  {
+    "company": "Nutrafol",
+    "founder": "Giorgos Tsetis",
+    "category": "Haircare",
+    "url": "nutrafol.com"
+  },
+  {
+    "company": "Olaplex",
+    "founder": "JuE Wong",
+    "category": "Haircare",
+    "url": "olaplex.com"
+  },
+  {
+    "company": "Briogeo",
+    "founder": "Nancy Twine",
+    "category": "Haircare",
+    "url": "briogeohair.com"
+  },
+  {
+    "company": "Glow Recipe",
+    "founder": "Sarah Lee",
+    "category": "Skincare",
+    "url": "glowrecipe.com"
+  },
+  {
+    "company": "Sunday Riley",
+    "founder": "Sunday Riley",
+    "category": "Skincare",
+    "url": "sundayriley.com"
+  },
+  {
+    "company": "KraveBeauty",
+    "founder": "Liah Yoo",
+    "category": "Skincare",
+    "url": "kravebeauty.com"
+  },
+  {
+    "company": "UOMA Beauty",
+    "founder": "Sharon Chuter",
+    "category": "Makeup",
+    "url": "uomabeauty.com"
+  },
+  {
+    "company": "Augustinus Bader",
+    "founder": "Augustinus Bader",
+    "category": "Skincare",
+    "url": "augustinusbader.com"
+  },
+  {
+    "company": "Skinfix",
+    "founder": "Amy Gordinier",
+    "category": "Skincare",
+    "url": "skinfix.com"
+  },
+  {
+    "company": "Function of Beauty",
+    "founder": "Zahir Dossa",
+    "category": "Haircare",
+    "url": "functionofbeauty.com"
+  },
+  {
+    "company": "Ouai",
+    "founder": "Jen Atkin",
+    "category": "Haircare",
+    "url": "theouai.com"
+  }
 ]
