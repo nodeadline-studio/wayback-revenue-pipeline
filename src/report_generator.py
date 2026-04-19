@@ -76,6 +76,7 @@ class ReportGenerator:
             autoescape=True,
         )
         self.env.filters['md'] = _md_to_html
+        self.video_engine_url = os.getenv("VIDEO_ENGINE_URL", "")
 
     def generate(
         self,
@@ -155,6 +156,7 @@ class ReportGenerator:
             video_script=video_script or {},
             video_script_json=json.dumps(video_script or {}, indent=2),
             is_paid=is_paid,
+            video_engine_url=self.video_engine_url or os.getenv("VIDEO_ENGINE_URL", ""),
         )
 
         # Save via Storage abstraction

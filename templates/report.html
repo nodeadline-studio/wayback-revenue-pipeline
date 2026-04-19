@@ -526,7 +526,7 @@
       }
 
       const videoScriptData = {{ video_script_json | safe }};
-      const VIDEO_ENGINE_URL = "https://lexicographic-venturesomely-angelita.ngrok-free.dev";
+      const VIDEO_ENGINE_URL = "{{ video_engine_url }}";
 
       async function triggerVideoEngine() {
         if (!isPaid) {

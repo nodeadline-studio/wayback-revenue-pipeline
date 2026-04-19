@@ -5,9 +5,11 @@ import re
 from typing import List, Dict
 
 # Config
-OUTREACH_DIR = "output/creatorpacks-outreach"
+OUTREACH_DIR = "web/reports/beauty"
 FOUNDERS_FILE = "beauty_founders_batch.json"
 RESULTS_FILE = "beauty_batch_results.json"
+BASE_DOMAIN = "https://bizspy.netlify.app"
+REPORT_URL_PREFIX = "/reports/beauty"
 TEMPLATE_A_PATH = "/Users/tommykuznets/.gemini/antigravity/brain/4e07ac22-6470-4672-9896-a41db055216c/beauty_outreach_template.md"
 TEMPLATE_B_PATH = "/Users/tommykuznets/.gemini/antigravity/brain/4e07ac22-6470-4672-9896-a41db055216c/outreach_variant_b.md"
 OUTPUT_DRAFTS_FILE = os.path.join(OUTREACH_DIR, "beauty_outreach_drafts.md")
@@ -58,12 +60,17 @@ def generate_drafts():
         
         target_slug = slugify(target_url)
         manifest_path = None
+        report_filename = None
         
         # Search for any manifest file containing the slug
         for f in all_files:
-            if target_slug in f and f.endswith("-manifest.json"):
-                manifest_path = os.path.join(OUTREACH_DIR, f)
-                break
+            if target_slug in f:
+                if f.endswith("-manifest.json"):
+                    manifest_path = os.path.join(OUTREACH_DIR, f)
+                elif f.endswith("-report.html"):
+                    # Use the first matching report we find (preferring beauty- prefix if possible)
+                    if not report_filename or f.startswith("beauty-"):
+                        report_filename = f
 
         if manifest_path and os.path.exists(manifest_path):
             with open(manifest_path, 'r') as f:
@@ -83,7 +90,12 @@ def generate_drafts():
             # Variant A Draft
             draft_a = template_a.replace("[Founder Name]", founder)
             draft_a = draft_a.replace("[Company]", company)
-            draft_a = draft_a.replace("[Link to Business Spy Report]", f"https://reports.bizspy.ai/creatorpacks-outreach/free-report-{slugify(target_url)}-report.html")
+            
+            # Use discovered report_filename or fallback to slug-based
+            final_report_file = report_filename if report_filename else f"free-report-{target_slug}-report.html"
+            report_url = f"{BASE_DOMAIN}{REPORT_URL_PREFIX}/{final_report_file}"
+            
+            draft_a = draft_a.replace("[Link to Business Spy Report]", report_url)
             draft_a = draft_a.replace("[Link to CreatorPacks]", "https://creatorpacks.store/checkout?packageId=beauty-25")
             draft_a = draft_a.replace("[Your Name]", "Tommy") # Founder persona
             

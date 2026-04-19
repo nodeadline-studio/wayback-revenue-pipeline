@@ -38,7 +38,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 4rem 2rem;
+      padding: 0 2rem 4rem;
     }
 
     /* Radial Glows */
@@ -78,18 +78,23 @@
       max-width: 900px;
       margin-bottom: 4rem;
       position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .hero h1 {
       font-family: 'Inter', sans-serif;
       font-weight: 800;
-      font-size: 4rem;
+      font-size: 3.5rem;
       letter-spacing: -0.04em;
       line-height: 1.1;
       margin-bottom: 1.5rem;
       background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      width: 100%;
     }
 
     .hero p {
@@ -98,6 +103,7 @@
       max-width: 650px;
       margin: 0 auto 2.5rem;
       line-height: 1.6;
+      text-align: center;
     }
 
     .glass-intake {
@@ -214,6 +220,74 @@
       letter-spacing: 0.1em;
     }
 
+    .logo {
+      margin-top: 4rem;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text);
+      opacity: 0.8;
+      background: rgba(124, 92, 252, 0.1);
+      padding: 0.5rem 1.25rem;
+      border-radius: 50px;
+      border: 1px solid var(--surface-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-nav {
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      background: rgba(10, 10, 30, 0.6);
+      padding: 0.5rem 1rem;
+      border-radius: 100px;
+      border: 1px solid var(--surface-border);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Target the injected Netlify UI more specifically */
+    .header-nav ul, 
+    .header-nav .netlify-identity-menu {
+      list-style: none !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 1rem !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .header-nav li {
+      display: inline-flex !important;
+      margin: 0 !important;
+    }
+
+    .header-nav a.netlify-identity-button {
+      color: var(--muted) !important;
+      text-decoration: none !important;
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+      transition: color 0.2s !important;
+    }
+
+    .header-nav a.netlify-identity-button:hover {
+      color: white !important;
+    }
+
+    .header-nav .btn-forensic {
+      margin-left: 0.5rem;
+    }
+
     .card-title {
       font-size: 1.1rem;
       font-weight: 700;
@@ -271,18 +345,18 @@
     <div class="glow-2"></div>
   </div>
 
-  <div class="ai-badge">
-    Forensic Intelligence Studio 2026
-  </div>
-
-  <div class="header-nav" style="position: absolute; top: 2rem; right: 2rem; z-index: 100;">
+  <div class="header-nav">
     <div data-netlify-identity-menu></div>
-    <a href="/dashboard.html" class="btn-forensic" style="padding: 0.5rem 1rem; font-size: 0.8rem; margin-left: 1rem; text-decoration: none;">Dashboard</a>
+    <a id="dashboard-link" href="/dashboard.html" class="btn-forensic" style="display: none; padding: 0.5rem 1rem; font-size: 0.8rem; text-decoration: none; border-radius: 8px;">Dashboard</a>
   </div>
 
   <div class="logo">
-    <h1>Replicate the Messaging Pivots <span style="color: var(--accent);">that Built Giants</span></h1>
-    <p>Stop guessing. Start winning. We dissect the forensic history of market leaders from their "no-name" beginnings. Identify the messaging shifts that secured their Series B.</p>
+    Forensic Intelligence Studio 2026
+  </div>
+
+  <div class="hero">
+    <h1>The Forensic Engine for <span style="color: var(--accent);">Founder Breakouts</span></h1>
+    <p>We analyze the hidden pivots of market leaders from their "no-name" beginnings. Replicate the messaging trajectory of the giants.</p>
 
     <div style="display: flex; justify-content: center; margin-bottom: 3rem;">
       <form id="pipeline-form" class="glass-intake">
@@ -428,12 +502,31 @@
     });
 
     if (window.netlifyIdentity) {
+      const dashboardLink = document.getElementById('dashboard-link');
+      
+      const updateAuthUI = (user) => {
+        if (user) {
+          dashboardLink.style.display = 'inline-flex';
+          // Netlify Identity widget handles hiding its own login/signup buttons if configured, 
+          // but we can also force style adjustments here if needed.
+        } else {
+          dashboardLink.style.display = 'none';
+        }
+      };
+
       window.netlifyIdentity.on("init", user => {
+        updateAuthUI(user);
         if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/dashboard.html";
+          window.netlifyIdentity.on("login", (user) => {
+            updateAuthUI(user);
+            window.location.href = "/dashboard.html";
           });
         }
+      });
+
+      window.netlifyIdentity.on("logout", () => {
+        updateAuthUI(null);
+        window.location.href = "/";
       });
     }
   </script>

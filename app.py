@@ -283,6 +283,11 @@ def start_demo():
         return jsonify({"error": "Target URL required"}), 400
 
     sprint_context = build_sprint_context(data, target_url)
+    
+    # Extract overrides for forensic intelligence
+    from_date = data.get("from_date")
+    to_date = data.get("to_date")
+    video_engine_url = data.get("video_engine_url")
 
     job_id = str(uuid.uuid4())
     JOBS[job_id] = {
@@ -301,6 +306,9 @@ def start_demo():
         "preset_id": sprint_context.get("preset_id"),
         "selection_mode": sprint_context.get("selection_mode"),
         "sprint_context": sprint_context,
+        "from_date": from_date,
+        "to_date": to_date,
+        "video_engine_url": video_engine_url,
     }
 
     # Run logic in background
@@ -637,6 +645,12 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
             enable_narrative=DEMO_ENABLE_NARRATIVE,
             analyze_live_target=True,
         )
+        
+        # Override video engine if provided
+        video_engine_url = job.get("video_engine_url") or os.getenv("VIDEO_ENGINE_URL")
+        if video_engine_url:
+            pipeline.reporter.video_engine_url = video_engine_url
+
         if competitor_source == 'fallback':
             pipeline.narrator.enabled = False
         is_paid_user = False
@@ -652,6 +666,8 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
         result = pipeline.process_niche(
             niche_name,
             urls,
+            from_date=job.get("from_date") or "20180101",
+            to_date=job.get("to_date"),
             output_path=os.path.join(OUTPUT_DIR, "placeholder.html"), # Directory arg handling fix
             status_callback=lambda payload: update_job(
                 job_id,

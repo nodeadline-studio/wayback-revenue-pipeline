@@ -4,7 +4,7 @@ import shutil
 import glob
 
 OUTPUT_DIR = "output"
-TARGET_DIR = os.path.join(OUTPUT_DIR, "creatorpacks-outreach")
+TARGET_DIR = "web/reports/beauty"
 
 def consolidate():
     if not os.path.exists(TARGET_DIR):
@@ -32,20 +32,20 @@ def consolidate():
             except Exception as e:
                 print(f"Error moving {basename}: {e}")
 
-    # 2. Handle nested folders (new logic)
-    # New pipeline saves to output/{safe_name}/...
-    # We want to flatten these into output/creatorpacks-outreach/
+    # 2. Handle nested folders and migration from old outreach folder
     subdirs = [d for d in os.listdir(OUTPUT_DIR) if os.path.isdir(os.path.join(OUTPUT_DIR, d))]
     for d in subdirs:
-        if d == "creatorpacks-outreach" or d == "public":
+        if d == "public":
             continue
             
         subdir_path = os.path.join(OUTPUT_DIR, d)
         for f in os.listdir(subdir_path):
-            # Rename file to include parent dir name for uniqueness if needed, 
-            # but usually it's report.html, data.json etc.
-            # Let's map them to {safe_name}-{filename}
-            new_name = f"{d}-{f}"
+            # Avoid double-prefixing if moving from the old outreach folder
+            if d == "creatorpacks-outreach":
+                new_name = f
+            else:
+                new_name = f"{d}-{f}"
+                
             dest = os.path.join(TARGET_DIR, new_name)
             try:
                 shutil.move(os.path.join(subdir_path, f), dest)
