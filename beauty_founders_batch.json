@@ -3,120 +3,140 @@
     "company": "Glossier",
     "founder": "Emily Weiss",
     "category": "Beauty",
-    "url": "glossier.com"
+    "url": "glossier.com",
+    "email": "emily@glossier.com"
   },
   {
     "company": "Drunk Elephant",
     "founder": "Tiffany Masterson",
     "category": "Skincare",
-    "url": "drunkelephant.com"
+    "url": "drunkelephant.com",
+    "email": "tiffany@drunkelephant.com"
   },
   {
     "company": "The Ordinary",
     "founder": "Nicola Kilner",
     "category": "Skincare",
-    "url": "theordinary.com"
+    "url": "theordinary.com",
+    "email": "nicola@deciem.com"
   },
   {
     "company": "Fenty Beauty",
     "founder": "Rihanna",
     "category": "Makeup",
-    "url": "fentybeauty.com"
+    "url": "fentybeauty.com",
+    "email": "DRAFT_PIPELINE"
   },
   {
     "company": "Tatcha",
     "founder": "Vicky Tsai",
     "category": "Skincare",
-    "url": "tatcha.com"
+    "url": "tatcha.com",
+    "email": "vicky@tatcha.com"
   },
   {
     "company": "Hero Cosmetics",
     "founder": "Ju Rhyu",
     "category": "Skincare",
-    "url": "herocosmetics.us"
+    "url": "herocosmetics.us",
+    "email": "ju@herocosmetics.com"
   },
   {
     "company": "Sol de Janeiro",
     "founder": "Heela Yang",
     "category": "Body Care",
-    "url": "soldejaneiro.com"
+    "url": "soldejaneiro.com",
+    "email": "heela@soldejaneiro.com"
   },
   {
     "company": "Summer Fridays",
     "founder": "Marianna Hewitt",
     "category": "Skincare",
-    "url": "summerfridays.com"
+    "url": "summerfridays.com",
+    "email": "marianna@summerfridays.com"
   },
   {
     "company": "Rare Beauty",
     "founder": "Selena Gomez",
     "category": "Makeup",
-    "url": "rarebeauty.com"
+    "url": "rarebeauty.com",
+    "email": "press@rarebeauty.com"
   },
   {
     "company": "Nutrafol",
     "founder": "Giorgos Tsetis",
     "category": "Haircare",
-    "url": "nutrafol.com"
+    "url": "nutrafol.com",
+    "email": "DRAFT_PIPELINE"
   },
   {
     "company": "Olaplex",
     "founder": "JuE Wong",
     "category": "Haircare",
-    "url": "olaplex.com"
+    "url": "olaplex.com",
+    "email": "DRAFT_PIPELINE"
   },
   {
     "company": "Briogeo",
     "founder": "Nancy Twine",
     "category": "Haircare",
-    "url": "briogeohair.com"
+    "url": "briogeohair.com",
+    "email": "nancy@briogeohair.com"
   },
   {
     "company": "Glow Recipe",
     "founder": "Sarah Lee",
     "category": "Skincare",
-    "url": "glowrecipe.com"
+    "url": "glowrecipe.com",
+    "email": "sarah@glowrecipe.com"
   },
   {
     "company": "Sunday Riley",
     "founder": "Sunday Riley",
     "category": "Skincare",
-    "url": "sundayriley.com"
+    "url": "sundayriley.com",
+    "email": "DRAFT_PIPELINE"
   },
   {
     "company": "KraveBeauty",
     "founder": "Liah Yoo",
     "category": "Skincare",
-    "url": "kravebeauty.com"
+    "url": "kravebeauty.com",
+    "email": "liah@kravebeauty.com"
   },
   {
     "company": "UOMA Beauty",
     "founder": "Sharon Chuter",
     "category": "Makeup",
-    "url": "uomabeauty.com"
+    "url": "uomabeauty.com",
+    "email": "sharon@uomabeauty.com"
   },
   {
     "company": "Augustinus Bader",
     "founder": "Augustinus Bader",
     "category": "Skincare",
-    "url": "augustinusbader.com"
+    "url": "augustinusbader.com",
+    "email": "DRAFT_PIPELINE"
   },
   {
     "company": "Skinfix",
     "founder": "Amy Gordinier",
     "category": "Skincare",
-    "url": "skinfix.com"
+    "url": "skinfix.com",
+    "email": "amy@skinfix.com"
   },
   {
     "company": "Function of Beauty",
     "founder": "Zahir Dossa",
     "category": "Haircare",
-    "url": "functionofbeauty.com"
+    "url": "functionofbeauty.com",
+    "email": "DRAFT_PIPELINE"
   },
   {
     "company": "Ouai",
     "founder": "Jen Atkin",
     "category": "Haircare",
-    "url": "theouai.com"
+    "url": "theouai.com",
+    "email": "jen@theouai.com"
   }
 ]

@@ -54,6 +54,8 @@ def execute_leadideal_preview(handoff: Dict[str, Any], timeout: int = 20) -> Dic
                     "industry": preview_request.get("industry", ""),
                     "location": preview_request.get("location", ""),
                     "job_title": preview_request.get("job_title", ""),
+                    "forensic_context": handoff.get("forensic_context", ""),
+                    "bizspy_report_url": handoff.get("bizspy_report_url", ""),
                 },
                 headers={"Content-Type": "application/json"},
                 timeout=timeout,

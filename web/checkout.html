@@ -125,7 +125,8 @@
           if (details.success) {
             document.getElementById('status').innerText = "Clearance Granted. Redirecting to your Studio...";
             setTimeout(() => {
-              window.location.href = '/reports/free-report-bizspy-ai-report.html'; // Fallback for demo verification
+              // Redirect to the unlocked report if provided, else fallback
+              window.location.href = details.report_url || '/';
             }, 2000);
           } else {
             alert('Forensic capture failed: ' + details.error);

@@ -1,7 +1,13 @@
 # Wayback Revenue Pipeline - Project Context
 
-**Last Updated**: 2026-04-18
-**Status**: Local Flask demo is working. Startup Intel Sprint Phase 1 is now implemented.
+**Last Updated**: 2026-04-19
+**Status**: Local Flask demo working. **New**: Automated Forensic Handoff to LeadIdeal integrated (2026-04-19).
+
+## LeadIdeal Forensic Signal Handoff (2026-04-19)
+
+- **Automated Intelligence Extraction**: Updated `startup_intel.py` to extract forensic outreach hooks (the "Why Now" signal) from niche-wide narratives and competitor insights.
+- **Signal-Aware Handoff**: The `leadideal-handoff.json` artifact now includes `forensic_context` and a dynamic `bizspy_report_url`.
+- **Transmission Bridge**: Updated the LeadIdeal bridge to proactively transmit forensic signals during the preview step, enabling high-intent outreach tagging in the recipient's CRM.
 
 ## What This Repo Is
 

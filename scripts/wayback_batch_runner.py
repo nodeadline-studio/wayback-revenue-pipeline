@@ -9,10 +9,10 @@ from typing import List, Dict
 from run_startup_preset import http_json, poll_job
 
 # Config
-BASE_URL = "http://127.0.0.1:8890"
-BATCH_FILE = "beauty_founders_batch.json"
-RESULTS_FILE = "beauty_batch_results.json"
-PRESET_ID = "beauty-parallels"
+BASE_URL = os.getenv("BATCH_BASE_URL", "http://127.0.0.1:8890")
+BATCH_FILE = os.getenv("BATCH_FILE", "beauty_founders_batch.json")
+RESULTS_FILE = os.getenv("BATCH_RESULTS", "beauty_batch_results.json")
+PRESET_ID = os.getenv("BATCH_PRESET", "beauty-parallels")
 COOLDOWN_SECONDS = 5
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")

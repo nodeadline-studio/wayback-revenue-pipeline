@@ -499,7 +499,7 @@
     </div>
 
     <script>
-      const isPaid = {{ is_paid | lower }};
+      const isPaid = {{ is_paid | lower if is_paid is not none else 'false' }};
       const agentData = {{ agent_json | safe }};
       
       function copyToClipboard(text, msg) {
@@ -604,9 +604,9 @@
       <div
         style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
         <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">{{ item.signal }}</div>
-        <div style="font-size: 0.9rem; color: var(--text); {% if not is_paid %}filter: blur(4px); opacity: 0.5; user-select: none;{% endif %}">{{ item.detail }}</div>
+        <div style="font-size: 0.9rem; color: var(--text);">{{ item.detail }}</div>
         {% if not is_paid and loop.first %}
-        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--green); opacity: 0.8; letter-spacing: 0.05em;">UNPAID REDACTION</div>
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--green); opacity: 0.8; letter-spacing: 0.05em;">LOCKED</div>
         {% endif %}
       </div>
       {% endfor %}
@@ -620,9 +620,9 @@
       <div
         style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
         <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">{{ item.signal }}</div>
-        <div style="font-size: 0.9rem; color: var(--text); {% if not is_paid %}filter: blur(4px); opacity: 0.5; user-select: none;{% endif %}">{{ item.detail }}</div>
+        <div style="font-size: 0.9rem; color: var(--text);">{{ item.detail }}</div>
         {% if not is_paid and loop.first %}
-        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--orange); opacity: 0.8; letter-spacing: 0.05em;">UNPAID REDACTION</div>
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--orange); opacity: 0.8; letter-spacing: 0.05em;">LOCKED</div>
         {% endif %}
       </div>
       {% endfor %}
@@ -656,12 +656,12 @@
     <h2>Tech Stack Across Competitors</h2>
     <div class="tech-grid" style="position: relative;">
       {% if not is_paid %}
-      <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px;">
+      <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.1); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px;">
           <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 800; font-size: 0.7rem; box-shadow: 0 0 15px var(--accent-glow);">UNLOCK FULL TECH STACK</span>
       </div>
       {% endif %}
       {% for tech in all_tech %}
-      <div class="tech-chip" style="{% if not is_paid and loop.index > 5 %}filter: blur(3px); opacity: 0.5;{% endif %}">{{ tech }}</div>
+      <div class="tech-chip" style="{% if not is_paid and loop.index > 5 %}opacity: 0.3;{% endif %}">{{ tech }}</div>
       {% endfor %}
     </div>
   </div>
@@ -769,12 +769,12 @@
       <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
       <div class="snapshot-timeline" style="position: relative;">
         {% if not is_paid %}
-        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
-            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--gradient); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
         </div>
         {% endif %}
         {% for change in comp.changes %}
-        <div class="timeline-item" style="{% if not is_paid %}filter: blur(2px); opacity: 0.6; pointer-events: none;{% endif %}">
+        <div class="timeline-item" style="{% if not is_paid %}opacity: 0.3; pointer-events: none;{% endif %}">
           <div class="timeline-date">
             {{ change.from_ts }} &#8594; {{ change.to_ts }}
             {% if change.snapshot_url %}

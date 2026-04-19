@@ -7,6 +7,7 @@ import os
 import re
 import json
 import logging
+import copy
 from typing import List, Dict, Optional
 from datetime import datetime
 
@@ -96,19 +97,8 @@ class ReportGenerator:
     ) -> str:
         """
         Generate an HTML competitive intelligence report.
-
-        Args:
-            niche_name: Display name of the niche (e.g. "SaaS Project Management")
-            competitors: List of competitor analysis dicts
-            output_path: Where to write the HTML file
-            niche_narrative: AI-generated strategic summary
-            key_findings: List of key finding strings
-            roi_analysis: Market impact analysis dict
-            is_public: If True, renders as a public case study (redacted, no upgrade CTAs)
-            redactions: Dict mapping regex patterns to replacement strings (e.g. {"@.+": "[REDACTED]"})
-            agent_tasks: List of machine-readable tasks for AI agents
-            breakthrough_story: Narrative describing a real-world success story powered by this report
         """
+        is_paid = bool(is_paid)
         template = self.env.get_template("report.html")
 
         # Update environment filters for this run if redactions present
@@ -120,6 +110,18 @@ class ReportGenerator:
         # Build summary stats
         total_snapshots = sum(c.get("snapshot_count", 0) for c in competitors)
         total_changes = sum(len(c.get("changes", [])) for c in competitors)
+
+        # Apply redactions to data if not paid
+        if not is_paid:
+            competitors = self._redact_competitors(competitors)
+            if roi_analysis:
+                roi_analysis = self._redact_roi(roi_analysis)
+            if agent_tasks:
+                agent_tasks = self._redact_tasks(agent_tasks)
+            if breakthrough_story:
+                breakthrough_story = "[PREMIUM CONTENT LOCKED] Upgrade to unlock the full breakthrough narrative."
+            if video_script:
+                video_script = {"full_voiceover": "Forensic Studio analysis locked. Upgrade to generate your cinematic strategy trailer."}
 
         # Collect all tech stacks across all competitors and snapshots
         all_tech = set()
@@ -198,3 +200,56 @@ class ReportGenerator:
             roi_analysis=roi_analysis,
         )
         return self.storage.save(content, output_path, content_type='text/markdown')
+
+    def _redact_competitors(self, competitors: List[Dict]) -> List[Dict]:
+        """Strip sensitive historical data from competitors."""
+        redacted = []
+        for comp in competitors:
+            c = copy.deepcopy(comp)
+            # Strip historical changes detail
+            if "changes" in c:
+                redacted_changes = []
+                for change in c["changes"]:
+                    ch = copy.deepcopy(change)
+                    redacted_diffs = {}
+                    for k, v in ch.get("diffs", {}).items():
+                        if k == "word_count":
+                            redacted_diffs[k] = {"from": 0, "to": 0, "delta": 0}
+                        elif k in ["tech_stack", "cta_buttons", "pricing"]:
+                            redacted_diffs[k] = {"added": ["[LOCKED]"], "removed": ["[LOCKED]"]}
+                        else:
+                            redacted_diffs[k] = {"from": "[LOCKED]", "to": "[LOCKED]"}
+                    ch["diffs"] = redacted_diffs
+                    redacted_changes.append(ch)
+                c["changes"] = redacted_changes
+            # Limit tech stack visibility
+            if "analyses" in c:
+                for analysis in c["analyses"]:
+                    if "tech_stack" in analysis:
+                        analysis["tech_stack"] = (analysis["tech_stack"] or [])[:5] + ["... [LOCKED]"]
+            redacted.append(c)
+        return redacted
+
+    def _redact_roi(self, roi: Dict) -> Dict:
+        """Strip specific details from ROI analysis."""
+        r = dict(roi)
+        for key in ["winning_strategies", "failing_signals"]:
+            if key in r:
+                r[key] = [
+                    {"signal": item.get("signal"), "detail": "[PREMIUM REDACTION] Upgrade to unlock tactical details."}
+                    for item in r[key]
+                ]
+        return r
+
+    def _redact_tasks(self, tasks: List[Dict]) -> List[Dict]:
+        """Strip machine-readable prompts from agent tasks."""
+        return [
+            {
+                "category": t.get("category"),
+                "priority": t.get("priority"),
+                "task": t.get("task"),
+                "rationale": t.get("rationale"),
+                "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+            }
+            for t in tasks
+        ]

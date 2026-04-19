@@ -1,0 +1,12 @@
+[
+  { "company": "Lead Forensics", "founder": "Paul Sells", "category": "Forensic Intelligence", "url": "leadforensics.com", "from_date": "20150101" },
+  { "company": "Dealfront", "founder": "Bastian Karsten", "category": "Sales Intelligence", "url": "dealfront.com", "from_date": "20230101" },
+  { "company": "RB2B", "founder": "Adam Robinson", "category": "Intent Data", "url": "rb2b.com", "from_date": "20230101" },
+  { "company": "Warmly", "founder": "Max Greenwald", "category": "Revenue Orchestration", "url": "warmly.ai", "from_date": "20200101" },
+  { "company": "Koala", "founder": "Tido Carriero", "category": "Intent Signal", "url": "getkoala.com", "from_date": "20210101" },
+  { "company": "Qualified", "founder": "Kraig Swensrud", "category": "Pipeline Generation", "url": "qualified.com", "from_date": "20180101" },
+  { "company": "Clearbit", "founder": "Alex MacCaw", "category": "Data Enrichment", "url": "clearbit.com", "from_date": "20140101" },
+  { "company": "Apollo", "founder": "Tim Zheng", "category": "SDR Orchestration", "url": "apollo.io", "from_date": "20160101" },
+  { "company": "Cognism", "founder": "James Isilay", "category": "Premium Data", "url": "cognism.com", "from_date": "20170101" },
+  { "company": "Lusha", "founder": "Yoni Tserruya", "category": "Sales Intelligence", "url": "lusha.com", "from_date": "20160101" }
+]

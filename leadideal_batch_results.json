@@ -1,0 +1,77 @@
+[
+  {
+    "company": "Lead Forensics",
+    "url": "leadforensics.com",
+    "job_id": "a5737ce4-80cc-4170-ae48-a08d04ae7e6b",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-19T17:29:40Z"
+  },
+  {
+    "company": "Dealfront",
+    "url": "dealfront.com",
+    "job_id": "32363625-12cb-43fd-ba66-1ff6e43ddfe8",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-19T17:37:05Z"
+  },
+  {
+    "company": "RB2B",
+    "url": "rb2b.com",
+    "job_id": "282cbf7f-9094-4f4c-82ea-2d975ddab81d",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-19T17:44:31Z"
+  },
+  {
+    "company": "Warmly",
+    "url": "warmly.ai",
+    "job_id": "b02fc32b-b4d2-473f-bcfc-d0e4cb05e353",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-19T17:52:36Z"
+  },
+  {
+    "company": "Koala",
+    "url": "getkoala.com",
+    "job_id": "7daa7d68-e925-48a5-96be-824293d934b5",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-19T17:59:32Z"
+  },
+  {
+    "company": "Qualified",
+    "url": "qualified.com",
+    "status": "error",
+    "error": "Timed out waiting for job 41eab7ed-cb64-4960-9e09-475aa3a73f0a after 600 seconds",
+    "timestamp": "2026-04-19T18:09:37Z"
+  },
+  {
+    "company": "Clearbit",
+    "url": "clearbit.com",
+    "status": "error",
+    "error": "[Errno 5] Input/output error",
+    "timestamp": "2026-04-19T18:13:42Z"
+  },
+  {
+    "company": "Apollo",
+    "url": "apollo.io",
+    "status": "error",
+    "error": "[Errno 5] Input/output error",
+    "timestamp": "2026-04-19T18:13:47Z"
+  },
+  {
+    "company": "Cognism",
+    "url": "cognism.com",
+    "status": "error",
+    "error": "[Errno 5] Input/output error",
+    "timestamp": "2026-04-19T18:13:52Z"
+  },
+  {
+    "company": "Lusha",
+    "url": "lusha.com",
+    "status": "error",
+    "error": "[Errno 5] Input/output error",
+    "timestamp": "2026-04-19T18:13:57Z"
+  }
+]

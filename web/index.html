@@ -11,6 +11,7 @@
     const SUPABASE_URL = "https://qylvmjncfblcsucfzdan.supabase.co";
     const SUPABASE_KEY = "sb_publishable_vWP7QIxV2ZUzMm8wGuefJw_0h_67DXo";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log("[Forensic Bridge] Identity engine initialized.");
   </script>
   <style>
     :root {
@@ -498,8 +499,8 @@
           }
         })
         .catch(err => {
-          alert("Terminal connection lost.");
-          console.error(err);
+          console.error('[Pipeline Error]', err);
+          alert(`Forensic Connection Error: ${err.message || 'Server timeout or route mismatch'}. Check console for details.`);
           submitBtn.innerText = "Initiate Scan";
           submitBtn.style.opacity = "1";
           submitBtn.disabled = false;

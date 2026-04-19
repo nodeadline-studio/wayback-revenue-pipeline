@@ -5,13 +5,13 @@ import re
 from typing import List, Dict
 
 # Config
-OUTREACH_DIR = "web/reports/beauty"
+OUTREACH_DIR = "output"
 FOUNDERS_FILE = "beauty_founders_batch.json"
 RESULTS_FILE = "beauty_batch_results.json"
 BASE_DOMAIN = "https://bizspy.netlify.app"
 REPORT_URL_PREFIX = "/reports/beauty"
-TEMPLATE_A_PATH = "/Users/tommykuznets/.gemini/antigravity/brain/4e07ac22-6470-4672-9896-a41db055216c/beauty_outreach_template.md"
-TEMPLATE_B_PATH = "/Users/tommykuznets/.gemini/antigravity/brain/4e07ac22-6470-4672-9896-a41db055216c/outreach_variant_b.md"
+TEMPLATE_A_PATH = "scripts/templates/beauty_outreach_template.md"
+TEMPLATE_B_PATH = "scripts/templates/outreach_variant_b.md"
 OUTPUT_DRAFTS_FILE = os.path.join(OUTREACH_DIR, "beauty_outreach_drafts.md")
 
 def slugify(text: str) -> str:
@@ -106,7 +106,8 @@ def generate_drafts():
             draft_b = draft_b.replace("[Link to CreatorPacks]", "https://creatorpacks.store/checkout?packageId=beauty-25")
             draft_b = draft_b.replace("[Your Name]", "Tommy")
 
-            drafts.append(f"## Target: {company} ({founder})\n")
+            email_str = f" (**{entry['email']}**)" if entry.get('email') and entry['email'] != "DRAFT_PIPELINE" else " (**MISSING EMAIL**)"
+            drafts.append(f"## Target: {company} ({founder}){email_str}\n")
             drafts.append(f"### Variant A: Historical Parallel\n")
             drafts.append(draft_a + "\n")
             drafts.append(f"### Variant B: SaaS Bloat Check\n")

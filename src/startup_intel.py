@@ -158,6 +158,17 @@ def build_leadideal_handoff(manifest: Dict[str, Any]) -> Dict[str, Any]:
             }
         )
 
+    # Derive forensic context from niche narrative or first competitor insight
+    niche_narrative = manifest.get("niche_narrative") or ""
+    forensic_context = niche_narrative[:1000] if niche_narrative else ""
+    
+    # Construct BizSpy report URL (assumes production domain + slugified niche)
+    def _local_slugify(value: str) -> str:
+        return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+        
+    safe_niche = _local_slugify(manifest.get("niche_name") or "report")
+    bizspy_report_url = f"https://bizspy.netlify.app/gallery/{safe_niche}/report.html"
+
     return {
         "schema_version": "leadideal-handoff-v1",
         "generated_at": manifest.get("generated_at") or utc_now_iso(),
@@ -174,6 +185,8 @@ def build_leadideal_handoff(manifest: Dict[str, Any]) -> Dict[str, Any]:
         "roles": roles,
         "locations": locations,
         "job_title": job_title,
+        "forensic_context": forensic_context,
+        "bizspy_report_url": bizspy_report_url,
         "suggested_next_step": "Run Lead Finder preview for the first location, then escalate to fresh mining if preview depth is weak.",
         "preview_requests": preview_requests,
         "notes": {
