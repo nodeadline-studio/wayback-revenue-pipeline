@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Report: herocosmetics.us - Competitive Intelligence Report</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --surface2: #24243a;
+      --border: #2e2e4a;
+      --text: #e4e4f0;
+      --muted: #8888aa;
+      --accent: #7c5cfc;
+      --accent2: #ff6b6b;
+      --green: #34d399;
+      --orange: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .header .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-card .label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+
+    .competitor-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .competitor-card h3 {
+      color: var(--accent);
+      font-size: 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .competitor-card .url {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .snapshot-timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 1rem 0;
+    }
+
+    .snapshot-timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--surface2);
+      border-radius: 8px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.75rem;
+      top: 1.25rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .timeline-date {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .change-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin: 0.15rem 0.25rem 0.15rem 0;
+    }
+
+    .tag-added {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--green);
+    }
+
+    .tag-removed {
+      background: rgba(255, 107, 107, 0.15);
+      color: var(--accent2);
+    }
+
+    .tag-changed {
+      background: rgba(124, 92, 252, 0.15);
+      color: var(--accent);
+    }
+
+    .tag-tech {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--orange);
+    }
+
+    .tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .tech-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+    }
+
+    .price-table th,
+    .price-table td {
+      padding: 0.6rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .price-table th {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .snapshot-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.8rem;
+    }
+
+    .snapshot-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .diff-block {
+      margin: 0.5rem 0;
+    }
+
+    .diff-from {
+      color: var(--accent2);
+      text-decoration: line-through;
+      font-size: 0.9rem;
+    }
+
+    .diff-to {
+      color: var(--green);
+      font-size: 0.9rem;
+    }
+
+    .analysis-detail {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .analysis-detail strong {
+      color: var(--accent);
+    }
+
+    .source-pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      margin-left: 0.5rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(52, 211, 153, 0.08);
+    }
+
+    .page-list {
+      margin-top: 0.75rem;
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .page-list a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .page-list a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .page-label {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .ai-insight {
+      background: linear-gradient(135deg, rgba(124, 92, 252, 0.1), rgba(255, 107, 107, 0.05));
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-insight::before {
+      content: 'AI INSIGHT';
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      opacity: 0.5;
+    }
+
+    .ai-insight h2,
+    .ai-insight h4 {
+      border: none !important;
+      color: var(--accent) !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    .ai-insight p {
+      font-style: italic;
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+
+      .header h1 {
+        font-size: 1.4rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .competitor-card {
+        padding: 1rem;
+      }
+
+      .timeline-item {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+
+      .diff-from,
+      .diff-to {
+        font-size: 0.8rem;
+        word-break: break-word;
+      }
+
+      .price-table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .snapshot-timeline {
+        padding-left: 1.5rem;
+      }
+
+      .analysis-detail {
+        word-break: break-word;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <!-- Hero / Niche Title -->
+    <div class="hero-section">
+      
+      <span class="source-pill" style="margin-left: 0; background: var(--accent); color: white; border: none; margin-bottom: 1rem;">PUBLIC CASE STUDY: REAL BREAKOUT</span>
+      
+      <h1>Free Report: herocosmetics.us</h1>
+      <p>Strategic Intelligence Report &mdash; Generated on 2026-04-20 05:50 UTC</p>
+    </div>
+
+    
+    
+    <div style="margin: 1.5rem 0; background: linear-gradient(90deg, rgba(124, 92, 252, 0.2), rgba(0, 245, 255, 0.1)); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; text-align: center; position: relative; overflow: hidden;">
+        <div style="position: relative; z-index: 2;">
+            <h3 style="color: white; margin-bottom: 0.5rem; font-size: 1.2rem;">Detailed Forensic Evidence Locked</h3>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem;">This is a redacted Free Scan. Purchase a <strong>Forensic Unlock</strong> to access the full historical pivot data, unredacted AI Agent Playbooks, and 60s Forensic Video generation.</p>
+            <a href="/#pricing" style="display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 0.8rem 1.75rem; border-radius: 10px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 0 20px rgba(124, 92, 252, 0.3);">Unlock Full Intelligence</a>
+        </div>
+    </div>
+    
+    <div class="subtitle" style="margin-top:0.5rem; font-size: 0.8rem;">Historical web data analysis</div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="number">4</div>
+      <div class="label">Competitors Tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">219</div>
+      <div class="label">Snapshots Analyzed</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">12</div>
+      <div class="label">Changes Detected</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">7</div>
+      <div class="label">Tech Tools Found</div>
+    </div>
+  </div>
+
+  <!-- AI Strategic Summary -->
+  
+
+  <!-- Agent Execution Playbook -->
+  
+  <div class="section">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem;">
+        <h2 style="border: none; margin: 0;">Agent Execution Playbook</h2>
+        <div style="display: flex; gap: 0.5rem;">
+            <button id="video-btn" onclick="triggerVideoEngine()" style="background: var(--bg); color: var(--green); border: 1px solid var(--green); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;">
+                <span id="video-btn-icon">🎬</span>
+                <span id="video-btn-text">Generate Forensic Video</span>
+            </button>
+            <button onclick="copyAgentJSON()" style="background: var(--surface2); color: var(--accent); border: 1px solid var(--accent); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy JSON Manifest</button>
+            <button onclick="copyForAntigravity()" style="background: var(--accent); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy for Antigravity</button>
+        </div>
+    </div>
+    <p style="color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">The following tasks are optimized for AI agents. Hand these instructions to your AI developer or growth agent for immediate execution based on this intelligence run.</p>
+    
+    <div style="display: grid; gap: 1rem;">
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">POSITIONING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Develop and deploy a primary hero headline that precisely articulates a single, high-pain customer problem your product uniquely solves, mirroring Hero Cosmetics&#39; foundational &#39;Got a pimple emergency?&#39; pivot.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Hero Cosmetics dramatically shifted from a &#39;no-name&#39; to a &#39;category leader&#39; by identifying and owning a specific customer pain point, demonstrating clear market understanding and creating immediate resonance.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Design and integrate a prominent Call-to-Action (CTA) for a loyalty or community program (e.g., &#39;Join [Your Brand] Squad&#39;) on key landing pages, replicating Hero Cosmetics&#39; &#39;Join Skin Squad&#39; strategy to foster customer retention and brand evangelism.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Hero Cosmetics&#39; shift to community-driven CTAs signifies a strategic move beyond transactional sales to building a loyal customer base, securing long-term value and word-of-mouth growth.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Configure the e-commerce platform to support recurring product subscriptions and implement &#39;Subscribe Now&#39; CTAs on relevant product pages, replicating Hero Cosmetics&#39; early adoption of subscription models for predictable revenue.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">The introduction of &#39;Subscribe Now&#39; by Hero Cosmetics is a critical growth signal, indicating a focus on recurring revenue and customer lifetime value (CLTV) by offering convenience and value.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--muted); letter-spacing: 0.05em;">MEDIUM PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Integrate dynamic pricing display logic into product pages and Add to Cart CTAs to showcase &#39;original price crossed out, new price displayed&#39; (e.g., &#39;$57.97 $35 Add to Cart&#39;), mirroring Hero Cosmetics&#39; consistent use of promotional tactics.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Hero Cosmetics&#39; frequent use of crossed-out pricing in CTAs signals an aggressive, data-driven approach to sales promotions, value perception, and conversion rate optimization.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--muted); letter-spacing: 0.05em;">MEDIUM PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Set up a dedicated landing page with an email capture form for &#39;Sign Up for Waitlist&#39; for an upcoming product, with clear messaging emphasizing scarcity and early access benefits, as observed in Hero Cosmetics&#39; demand generation tactics.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">&#39;Sign Up for Waitlist&#39; is a powerful tactic for building anticipation, validating market demand, and creating an engaged audience prior to new product launches, a key growth signal for Hero Cosmetics.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">TECHNICAL</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Verify and, if necessary, re-integrate a robust, scalable payment gateway (e.g., Stripe, Shopify Payments) to ensure seamless and secure transaction processing, mirroring The Ordinary&#39;s foundational tech stack addition of Stripe.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">The addition of Stripe by The Ordinary highlights the critical importance of a stable, secure, and scalable payment infrastructure as a fundamental de-risking step for any growing e-commerce business.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">TECHNICAL</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--muted); letter-spacing: 0.05em;">MEDIUM PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Implement Google Tag Manager (GTM) across the entire website to centralize and manage all marketing and analytics tags, enabling agile deployment and optimization of data collection, similar to Hero Cosmetics&#39; initial GTM adoption.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Hero Cosmetics&#39; initial move to GTM, despite later shifts, indicates an early recognition of the need for sophisticated, agile tracking capabilities crucial for understanding customer journeys and optimizing marketing spend at scale.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+    </div>
+
+    <script>
+      const isPaid = false;
+      const agentData = [
+  {
+    "category": "positioning",
+    "priority": "high",
+    "task": "Develop and deploy a primary hero headline that precisely articulates a single, high-pain customer problem your product uniquely solves, mirroring Hero Cosmetics' foundational 'Got a pimple emergency?' pivot.",
+    "rationale": "Hero Cosmetics dramatically shifted from a 'no-name' to a 'category leader' by identifying and owning a specific customer pain point, demonstrating clear market understanding and creating immediate resonance.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "high",
+    "task": "Design and integrate a prominent Call-to-Action (CTA) for a loyalty or community program (e.g., 'Join [Your Brand] Squad') on key landing pages, replicating Hero Cosmetics' 'Join Skin Squad' strategy to foster customer retention and brand evangelism.",
+    "rationale": "Hero Cosmetics' shift to community-driven CTAs signifies a strategic move beyond transactional sales to building a loyal customer base, securing long-term value and word-of-mouth growth.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "high",
+    "task": "Configure the e-commerce platform to support recurring product subscriptions and implement 'Subscribe Now' CTAs on relevant product pages, replicating Hero Cosmetics' early adoption of subscription models for predictable revenue.",
+    "rationale": "The introduction of 'Subscribe Now' by Hero Cosmetics is a critical growth signal, indicating a focus on recurring revenue and customer lifetime value (CLTV) by offering convenience and value.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "medium",
+    "task": "Integrate dynamic pricing display logic into product pages and Add to Cart CTAs to showcase 'original price crossed out, new price displayed' (e.g., '$57.97 $35 Add to Cart'), mirroring Hero Cosmetics' consistent use of promotional tactics.",
+    "rationale": "Hero Cosmetics' frequent use of crossed-out pricing in CTAs signals an aggressive, data-driven approach to sales promotions, value perception, and conversion rate optimization.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "medium",
+    "task": "Set up a dedicated landing page with an email capture form for 'Sign Up for Waitlist' for an upcoming product, with clear messaging emphasizing scarcity and early access benefits, as observed in Hero Cosmetics' demand generation tactics.",
+    "rationale": "'Sign Up for Waitlist' is a powerful tactic for building anticipation, validating market demand, and creating an engaged audience prior to new product launches, a key growth signal for Hero Cosmetics.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "technical",
+    "priority": "high",
+    "task": "Verify and, if necessary, re-integrate a robust, scalable payment gateway (e.g., Stripe, Shopify Payments) to ensure seamless and secure transaction processing, mirroring The Ordinary's foundational tech stack addition of Stripe.",
+    "rationale": "The addition of Stripe by The Ordinary highlights the critical importance of a stable, secure, and scalable payment infrastructure as a fundamental de-risking step for any growing e-commerce business.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "technical",
+    "priority": "medium",
+    "task": "Implement Google Tag Manager (GTM) across the entire website to centralize and manage all marketing and analytics tags, enabling agile deployment and optimization of data collection, similar to Hero Cosmetics' initial GTM adoption.",
+    "rationale": "Hero Cosmetics' initial move to GTM, despite later shifts, indicates an early recognition of the need for sophisticated, agile tracking capabilities crucial for understanding customer journeys and optimizing marketing spend at scale.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  }
+];
+      
+      function copyToClipboard(text, msg) {
+        navigator.clipboard.writeText(text).then(() => alert(msg || 'Copied to clipboard!'));
+      }
+
+      function copyAgentJSON() {
+        copyToClipboard(JSON.stringify(agentData, null, 2), 'Agent JSON Manifest copied!');
+      }
+
+      function copySnippet(text) {
+        copyToClipboard(text, 'Agent prompt snippet copied!');
+      }
+
+      function copyForAntigravity() {
+        if (!isPaid) {
+          alert('Unlock the Forensic Playbook to access machine-readable prompts for your AI agents.');
+          return;
+        }
+        const prompt = "I have analyzed my competitors using Business Spy. Here are the actionable tasks I need you to execute:\n\n" + 
+          agentData.map(t => `- [${t.priority.toUpperCase()}] ${t.task}\n  Prompt: ${t.agent_prompt_snippet}`).join('\n\n') +
+          "\n\nStrategic Video Script Context:\n" + JSON.stringify(videoScriptData, null, 2);
+        copyToClipboard(prompt, 'Project context copied for Antigravity development!');
+      }
+
+      const videoScriptData = {
+  "full_voiceover": "Forensic Studio analysis locked. Upgrade to generate your cinematic strategy trailer."
+};
+      const VIDEO_ENGINE_URL = "https://lexicographic-venturesomely-angelita.ngrok-free.dev";
+
+      async function triggerVideoEngine() {
+        if (!isPaid) {
+          alert('Forensic Studio Locked. Upgrade to clear reports for one-click asset production.');
+          return;
+        }
+        const btn = document.getElementById('video-btn');
+        const btnText = document.getElementById('video-btn-text');
+        const btnIcon = document.getElementById('video-btn-icon');
+
+        if (!videoScriptData || !videoScriptData.full_voiceover) {
+            alert("No video script available for this report run.");
+            return;
+        }
+
+        try {
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btnText.innerText = "Dispatching to Studio...";
+            btnIcon.innerText = "🛰️";
+
+            const response = await fetch(`${VIDEO_ENGINE_URL}/api/saas/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    description: videoScriptData.full_voiceover,
+                    visual_preset: videoScriptData.recommended_visual_preset || "b2b",
+                    subject: `Strategic Forensic Summary: Free Report: herocosmetics.us`,
+                    speed_mode: "balanced",
+                    engine_overrides: {
+                        "vibe": videoScriptData.vibe || "technological"
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.text();
+                throw new Error(err || "Failed to trigger video engine");
+            }
+
+            const result = await response.json();
+            btnText.innerText = "Video Queued in Studio";
+            btnIcon.innerText = "✅";
+            btn.style.borderColor = "var(--green)";
+            alert(`Video generation started! Job ID: ${result.job_id || result.id}. Check local studio terminal for logs.`);
+        } catch (e) {
+            console.error(e);
+            btnText.innerText = "Dispatch Failed";
+            btnIcon.innerText = "❌";
+            btn.style.borderColor = "var(--accent2)";
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            alert(`Failed to trigger video engine: ${e.message}\n\nMake sure your local video engine is running on port 8001 and ngrok is active.`);
+        }
+      }
+    </script>
+  </div>
+  
+
+  <!-- Market Impact Analysis -->
+  
+  <div class="section">
+    <h2>Market Impact Analysis</h2>
+    <p style="color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Strategic signals derived from competitor
+      behavior patterns. Growth and decline indicators are inferred from tech investments, messaging pivots, and pricing
+      moves.</p>
+
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="color: var(--green); font-size: 1.1rem; margin-bottom: 0.75rem;">&#9650; What's Working in This Market
+      </h3>
+      
+      <div
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">Strategic Pricing Expansion</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--green); opacity: 0.8; letter-spacing: 0.05em;">LOCKED</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">Community-Driven Loyalty &amp; Brand Building</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">Dynamic Product Innovation &amp; Demand Generation</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">Aggressive Promotional Strategy</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="color: var(--orange); font-size: 1.1rem; margin-bottom: 0.75rem;">&#9660; Warning Signs</h3>
+      
+      <div
+        style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">Inconsistent Analytics Infrastructure</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--orange); opacity: 0.8; letter-spacing: 0.05em;">LOCKED</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">Volatile Pricing &amp; Brand Positioning</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">Missed Messaging Opportunities</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.75rem;">Market Trends</h3>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">DTC Beauty Brands Prioritize Community &amp; Lifestyle: Successful brands differentiate by building strong customer communities and lifestyle associations, extending beyond product features to foster loyalty and emotional connection.</div>
+      </div>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">Dynamic Pricing and Value-Driven Promotions: The highly competitive beauty market demands agile pricing strategies, including frequent discounts, bundles, and value-based offers, to attract and retain customers effectively.</div>
+      </div>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">Data-Driven Growth, Yet Implementation Challenges Persist: While crucial for optimization, establishing and maintaining a stable, comprehensive analytics infrastructure remains an operational challenge for many growth-stage DTC companies.</div>
+      </div>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">Expansion Across Price Segments: Brands are increasingly adopting a multi-tiered pricing strategy, offering products at various price points from entry-level to premium, to capture a broader market share and diversify revenue streams.</div>
+      </div>
+      
+    </div>
+    
+
+    
+    <div
+      style="background: linear-gradient(135deg, rgba(124, 92, 252, 0.1), rgba(52, 211, 153, 0.08)); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; margin-top: 1rem;">
+      <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.5rem;">&#x1F3AF; Your Opportunity</h3>
+      <div style="font-size: 0.95rem; line-height: 1.6;"><p>[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] consistent, [NAME REDACTED] [NAME REDACTED] analysis, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a clear, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. [NAME REDACTED] &#39;[NAME REDACTED] [NAME REDACTED]&#39; [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] as a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED].</p></div>
+    </div>
+    
+  </div>
+  
+
+  <!-- Tech Stack Overview -->
+  <div class="section">
+    <h2>Tech Stack Across Competitors</h2>
+    <div class="tech-grid" style="position: relative;">
+      
+      <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.1); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px;">
+          <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 800; font-size: 0.7rem; box-shadow: 0 0 15px var(--accent-glow);">UNLOCK FULL TECH STACK</span>
+      </div>
+      
+      
+      <div class="tech-chip" style="">... [LOCKED]</div>
+      
+      <div class="tech-chip" style="">Facebook Pixel</div>
+      
+      <div class="tech-chip" style="">Google Analytics</div>
+      
+      <div class="tech-chip" style="">Google Tag Manager</div>
+      
+      <div class="tech-chip" style="">Segment</div>
+      
+      <div class="tech-chip" style="opacity: 0.3;">Shopify</div>
+      
+      <div class="tech-chip" style="opacity: 0.3;">Stripe</div>
+      
+    </div>
+  </div>
+
+  <!-- Pricing Overview -->
+  
+  <div class="section">
+    <h2>Pricing Signals Detected</h2>
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>Competitor</th>
+          <th>Prices Found</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>Herocosmetics (Target)</td>
+          <td>$0.00, $1, $12.99, $17.99, $19.99, $20, $21.99, $25, $26.33, $28, $28.03, $29, $29.99, $30, $30.98, $31.97, $32, $32.28, $32.98, $33.95, $35, $35.98, $37.98, $38.97, $45.98, $46.97, $48.98, $57.97, $6.99</td>
+        </tr>
+        
+        <tr>
+          <td>Hero Cosmetics (Historical: 2017-2019)</td>
+          <td>$1, $12.99, $17.99, $25</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+
+  <!-- Per-Competitor Deep Dive -->
+  <div class="section">
+    <h2>Competitor Evolution</h2>
+
+    
+    <div class="competitor-card">
+      <h3>Herocosmetics (Target)</h3>
+      <div class="url">
+        herocosmetics.us
+        
+        - 9 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>[NAME REDACTED] Narrative: [NAME REDACTED] Vulnerabilities</p>
+<p>[NAME REDACTED] executed a [NAME REDACTED] evolution, [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] space. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]:</p>
+<p>[NAME REDACTED]: Initially, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] points ($[REDACTED], $[REDACTED]) around 2018-2020. [NAME REDACTED] of 2021-2023 saw a [NAME REDACTED] upmarket, [NAME REDACTED] [NAME REDACTED] lower-[NAME REDACTED] ($[REDACTED], $[REDACTED], $[REDACTED]) [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] ($[REDACTED], $[REDACTED], $[REDACTED], etc.). [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. By 2023-2024, [NAME REDACTED] [NAME REDACTED] re-[NAME REDACTED] [NAME REDACTED] points ($[REDACTED], $[REDACTED]) [NAME REDACTED] [NAME REDACTED] ($[REDACTED], $[REDACTED], $[REDACTED]), suggesting a [NAME REDACTED] capture a [NAME REDACTED] [NAME REDACTED] entry-[NAME REDACTED] [NAME REDACTED]. [NAME REDACTED] phase (2024-2026) shows a [NAME REDACTED] a mid-to-high, [NAME REDACTED] range ($[REDACTED], $[REDACTED], $[REDACTED], $[REDACTED]), [NAME REDACTED] by A/B [NAME REDACTED] [NAME REDACTED] analysis, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. [NAME REDACTED] a [NAME REDACTED] mass-[NAME REDACTED] [NAME REDACTED] [NAME REDACTED].</p>
+<p>[NAME REDACTED]: [NAME REDACTED] messaging (2018-2020) [NAME REDACTED] product-[NAME REDACTED] functional: &#34;[NAME REDACTED] Patches... [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] spots.&#34; [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED] functional &#34;[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]... Cruelty-free, vegan-[NAME REDACTED] [NAME REDACTED].&#34; [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] 2020-03-06 and 2021-01-01. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] mission: &#34;[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. That’s [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] challenge. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] &amp; [NAME REDACTED] — [NAME REDACTED] cult-[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] Balm, [NAME REDACTED] [NAME REDACTED], [NAME REDACTED]!&#34; [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED] of &#34;[NAME REDACTED].&#34; [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] building (&#39;[NAME REDACTED] Squad&#39;) [NAME REDACTED] innovation (&#39;[NAME REDACTED] [NAME REDACTED]&#39;).</p>
+<p>[NAME REDACTED]: The &#34;launch&#34; [NAME REDACTED] &#34;[NAME REDACTED] toolkits&#34; messaging (2020-2021) signaled a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] solutions. [NAME REDACTED] of &#39;[NAME REDACTED] Squad&#39; CTAs (2021-2023) indicates a [NAME REDACTED] [NAME REDACTED] building, loyalty, [NAME REDACTED] retention. The &#39;[NAME REDACTED] [NAME REDACTED]&#39; CTA (2024-2026) is a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] a [NAME REDACTED].</p>
+<p>[NAME REDACTED]: [NAME REDACTED] [NAME REDACTED] abundant. [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] from &#39;[NAME REDACTED]&#39; [NAME REDACTED] price-based &#39;[NAME REDACTED] Cart&#39; and &#39;[NAME REDACTED]&#39; [NAME REDACTED] e-[NAME REDACTED]. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] periods, from 582 to 1749 words, signifies a [NAME REDACTED] [NAME REDACTED] marketing, [NAME REDACTED], [NAME REDACTED] storytelling – [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] engagement. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] tiers, [NAME REDACTED] initiatives (&#39;[NAME REDACTED] Squad&#39;) [NAME REDACTED] [NAME REDACTED] (&#39;[NAME REDACTED] [NAME REDACTED]&#39;), [NAME REDACTED] to a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. The &#39;[NAME REDACTED]&#39; [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED].</p>
+<p>[NAME REDACTED]-risking (No-[NAME REDACTED] [NAME REDACTED]): [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a &#34;no-name&#34; [NAME REDACTED] a &#34;[NAME REDACTED]&#34; [NAME REDACTED] 2020-03-06 and 2021-01-01. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] gun. [NAME REDACTED] from a descriptive, [NAME REDACTED] (&#34;[NAME REDACTED] [NAME REDACTED] pimples... [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED].&#34;) to a visionary, inclusive, [NAME REDACTED] [NAME REDACTED] intent: &#34;[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. That’s [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] challenge... [NAME REDACTED] cult-[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] Balm, [NAME REDACTED] [NAME REDACTED], [NAME REDACTED]!&#34; [NAME REDACTED] from a [NAME REDACTED] to a &#34;toolkit&#34; for &#34;[NAME REDACTED] challenge&#34; and &#34;[NAME REDACTED] &amp; [NAME REDACTED],&#34; [NAME REDACTED] mentioning a &#34;cult-fave&#34; [NAME REDACTED] [NAME REDACTED] innovation (&#34;[NAME REDACTED]!&#34;), [NAME REDACTED] [NAME REDACTED] definitive, [NAME REDACTED] provider, de-[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] care.</p>
+<p>[NAME REDACTED] [NAME REDACTED] Founder:</p>
+<p>[NAME REDACTED] [NAME REDACTED] from a single-[NAME REDACTED] to a category-defining &#34;[NAME REDACTED]&#34; leader, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED] ecosystem. They’[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] bundles, [NAME REDACTED], [NAME REDACTED] [NAME REDACTED]. However, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] solutions, [NAME REDACTED] [NAME REDACTED] a vulnerability: [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] wants a direct, [NAME REDACTED]. Their &#34;toolkits,&#34; [NAME REDACTED] (e.g., &#39;$[REDACTED] $[REDACTED] [NAME REDACTED] Cart&#39;), and &#39;[NAME REDACTED] [NAME REDACTED]&#39; CTAs, [NAME REDACTED] growth, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] demanding a [NAME REDACTED] [NAME REDACTED] user, [NAME REDACTED] seeking a quick, no-[NAME REDACTED].</p>
+<p>[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] Herocosmetics&#39; [NAME REDACTED] [NAME REDACTED] &#34;[NAME REDACTED]&#34; and &#34;Immediate, [NAME REDACTED].&#34; [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a specific, [NAME REDACTED] need, [NAME REDACTED] offering a [NAME REDACTED] [NAME REDACTED] simple, one-[NAME REDACTED] [NAME REDACTED] direct, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] an &#34;[NAME REDACTED].&#34; [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED], [NAME REDACTED] [NAME REDACTED]: &#34;[NAME REDACTED] &#39;toolkits&#39;? [NAME REDACTED] with [[NAME REDACTED]] – [NAME REDACTED]-[NAME REDACTED] [NAME REDACTED] skin, guaranteed. [NAME REDACTED] routines, [NAME REDACTED] results, [NAME REDACTED].&#34; [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] fatigue, [NAME REDACTED], speed, [NAME REDACTED] effectiveness, [NAME REDACTED] [NAME REDACTED]&#39; &#34;toolkit&#34; and &#34;waitlist&#34; narrative, which, [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] consumer. [NAME REDACTED] a direct, no-[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED].</p></div>
+      </div>
+      
+
+      
+      
+      <div style="position: relative; margin-top: 1rem;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            
+            Latest archived snapshot <span class="source-pill">Wayback</span>
+            
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> Hero Cosmetics | Empowering Acne Prone Skin</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> N/A</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> Everyone deserves to feel amazing in their skin. That’s why we make customizable acne toolkits to handle any pimple challenge. Seriously effective solutions with powerfully clean ingredients for all ages &amp; skin types — from our cult-fave hydrocolloid Mighty Patch to Rescue Balm, Micropoint for Dark Spots, and beyond!</div>
+        
+        <div class="analysis-detail"><strong>CTAs:</strong> Join Skin Squad | Contact Us | $28.03 $32.98 Add to Cart | $32.28 $37.98 Add to Cart | $26.33 $30.98 Add to Cart | $12.99 Add to Cart | $21.99 Add to Cart | $17.99 Add to Cart | $29.99 Add to Cart | $19.99 Add to Cart | Sign Up for Waitlist | Learn More | Contact us. | Sign Up</div>
+        
+        
+        
+        <div class="analysis-detail"><strong>Tech Stack:</strong>
+            <span class="change-tag tag-tech">Shopify</span>
+        </div>
+        
+      </div>
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
+      <div class="snapshot-timeline" style="position: relative;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-06-18 &#8594; 2020-03-06
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20200306105018/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2020-03-06 &#8594; 2021-01-01
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20210101095231/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2021-01-01 &#8594; 2023-01-03
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20230103185530/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2023-01-03 &#8594; 2024-01-01
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20240101173115/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2024-01-01 &#8594; 2026-01-05
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20260105193703/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+    <div class="competitor-card">
+      <h3>Glossier (Historical: 2014-2016)</h3>
+      <div class="url">
+        glossier.com
+        
+        - 0 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED].</p></div>
+      </div>
+      
+
+      
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <p style="color: var(--muted); margin-top: 1rem;">No significant archived changes detected between the sampled
+        snapshots.</p>
+      
+    </div>
+    
+    <div class="competitor-card">
+      <h3>The Ordinary (Historical: 2016-2018)</h3>
+      <div class="url">
+        theordinary.com
+        
+        - 151 snapshots
+        
+      </div>
+
+      
+
+      
+      
+      <div style="position: relative; margin-top: 1rem;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            
+            Latest archived snapshot <span class="source-pill">Wayback</span>
+            
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> The Ordinary | Clinical Formulations with Integrity.</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> N/A</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> N/A</div>
+        
+        
+        
+        <div class="analysis-detail"><strong>Tech Stack:</strong>
+            <span class="change-tag tag-tech">Stripe</span>
+        </div>
+        
+      </div>
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
+      <div class="snapshot-timeline" style="position: relative;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-03-10 &#8594; 2018-05-13
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20180513175317/theordinary.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-05-13 &#8594; 2018-08-11
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20180811071756/theordinary.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+    <div class="competitor-card">
+      <h3>Hero Cosmetics (Historical: 2017-2019)</h3>
+      <div class="url">
+        herocosmetics.us
+        
+        - 59 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>[NAME REDACTED] (2017-2019) [NAME REDACTED] Analysis</p>
+<p><strong>[NAME REDACTED]:</strong> [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], adding $[REDACTED] and $[REDACTED] [NAME REDACTED] mid-2018. [NAME REDACTED] represented a [NAME REDACTED] and a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. [NAME REDACTED] 2019, [NAME REDACTED] [NAME REDACTED] direct-to-[NAME REDACTED] at $[REDACTED] and $[REDACTED], [NAME REDACTED] outliers. [NAME REDACTED] signals a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. [NAME REDACTED] laser-[NAME REDACTED] accessible, impulse-[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED].</p>
+<p><strong>[NAME REDACTED]:</strong> [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] 2018 [NAME REDACTED] 2019. [NAME REDACTED] [NAME REDACTED] a generic, [NAME REDACTED] to a [NAME REDACTED], problem-[NAME REDACTED]. [NAME REDACTED] [NAME REDACTED] H1 &#39;Got a [NAME REDACTED]?&#39; [NAME REDACTED] into a [NAME REDACTED] point, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] solution. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] &#39;[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]&#39;, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] &#39;Cruelty-free, vegan-[NAME REDACTED] [NAME REDACTED] [NAME REDACTED].&#39; [NAME REDACTED] [NAME REDACTED] from a [NAME REDACTED] a trusted, [NAME REDACTED]-solver.</p>
+<p><strong>[NAME REDACTED]:</strong> [NAME REDACTED] [NAME REDACTED] is a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. Initially &#39;[NAME REDACTED]&#39;, [NAME REDACTED] to &#39;[NAME REDACTED] Cart&#39; and &#39;[NAME REDACTED]&#39;, [NAME REDACTED] e-[NAME REDACTED] a [NAME REDACTED] effort. [NAME REDACTED] of &#39;[NAME REDACTED]&#39; [NAME REDACTED]-2019 was a [NAME REDACTED] play, indicating a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. [NAME REDACTED] like &#39;[NAME REDACTED]&#39; [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] long-[NAME REDACTED] relationships, [NAME REDACTED] [NAME REDACTED] into a subscription-based, [NAME REDACTED] service.</p>
+<p><strong>[NAME REDACTED]:</strong> [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]-2018 [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]-[NAME REDACTED] [NAME REDACTED]. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] e-[NAME REDACTED], [NAME REDACTED], [NAME REDACTED] engagement (&#39;[NAME REDACTED]&#39;) [NAME REDACTED] [NAME REDACTED] of a scaling D2C [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]. However, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] June 2019 is a [NAME REDACTED] flag, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED] a [NAME REDACTED] system, [NAME REDACTED] [NAME REDACTED]-[NAME REDACTED].</p>
+<p><strong>[NAME REDACTED]-risking / [NAME REDACTED]:</strong> [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]-[NAME REDACTED] a &#34;no-name&#34; [NAME REDACTED] a &#34;[NAME REDACTED]&#34; [NAME REDACTED] between 2018-11-06 and 2019-02-14. [NAME REDACTED] [NAME REDACTED] H1 like &#39;Got a [NAME REDACTED]?&#39; [NAME REDACTED] [NAME REDACTED] declaring &#39;[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]&#39; [NAME REDACTED] just a [NAME REDACTED]; [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED]. [NAME REDACTED]&#39;t [NAME REDACTED] a patch; [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] age-[NAME REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] urgent-[NAME REDACTED]. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a direct, [NAME REDACTED].</p>
+<p>***</p>
+<p><strong>[NAME REDACTED] [NAME REDACTED] Founder:</strong></p>
+<p>[NAME REDACTED]&#39; [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] addressing a [NAME REDACTED] [NAME REDACTED] their H1 &#39;Got a [NAME REDACTED]?&#39; [NAME REDACTED] [NAME REDACTED] as &#39;[NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]&#39; [NAME REDACTED] 2018 [NAME REDACTED] 2019. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] &#39;[NAME REDACTED]&#39;, [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], establishing a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] D2C space. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED].</p>
+<p>However, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] &#34;[NAME REDACTED]&#34; and D2C [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] $[REDACTED] and $[REDACTED], [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] a holistic, preventative, [NAME REDACTED]-[NAME REDACTED]. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] the *symptom* – [NAME REDACTED] pimple – [NAME REDACTED] the *cause* [NAME REDACTED] long-[NAME REDACTED] health, [NAME REDACTED] [NAME REDACTED] dermatologists, estheticians, [NAME REDACTED] seeking a [NAME REDACTED] regimen. Furthermore, [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED]-2019, [NAME REDACTED] a [NAME REDACTED], [NAME REDACTED] a [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] blind.</p>
+<p>[NAME REDACTED] counter-[NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED] to a [NAME REDACTED] *proactive, preventative, [NAME REDACTED] [NAME REDACTED]*. [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] solutions: &#34;[NAME REDACTED] [NAME REDACTED]: [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] [NAME REDACTED] system.&#34; [NAME REDACTED] [NAME REDACTED] backing, long-[NAME REDACTED], and a multi-[NAME REDACTED] that *prevents* the &#39;[NAME REDACTED]&#39; [NAME REDACTED] occurring, [NAME REDACTED] [NAME REDACTED] it. [NAME REDACTED] [NAME REDACTED] feature a [NAME REDACTED] regimen (e.g., &#34;$[REDACTED] for a [NAME REDACTED] kit&#34;) [NAME REDACTED]-[NAME REDACTED] [NAME REDACTED], [NAME REDACTED] [NAME REDACTED]&#39;s acute-care, impulse-[NAME REDACTED] pricing. [NAME REDACTED] addresses &#39;Got a [NAME REDACTED]?&#39;, [NAME REDACTED] [NAME REDACTED] of &#39;Never *having* a [NAME REDACTED] again&#39;, targeting a [NAME REDACTED], results-[NAME REDACTED].</p></div>
+      </div>
+      
+
+      
+      
+      <div style="position: relative; margin-top: 1rem;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            
+            Latest archived snapshot <span class="source-pill">Wayback</span>
+            
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> Hero Cosmetics | Best-Selling Acne Patches - Mighty Patch by Hero Cosmetics</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> N/A</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> Absorbs pus while protecting pimples for faster healing. The new way to treat your acne breakouts. Cruelty-free, vegan-friendly and super gentle on skin.</div>
+        
+        <div class="analysis-detail"><strong>CTAs:</strong> Subscribe Now | Learn More | $12.99 Add to Cart | $17.99 Add to Cart | Join Now</div>
+        
+        
+        
+        <div class="analysis-detail"><strong>Tech Stack:</strong>
+            <span class="change-tag tag-tech">Google Tag Manager</span><span class="change-tag tag-tech">Shopify</span>
+        </div>
+        
+      </div>
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
+      <div class="snapshot-timeline" style="position: relative;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-06-18 &#8594; 2018-11-06
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20181106075321/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-11-06 &#8594; 2019-02-14
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20190214144706/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2019-02-14 &#8594; 2019-06-02
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20190602223516/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2019-06-02 &#8594; 2019-07-15
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20190715014226/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2019-07-15 &#8594; 2019-12-28
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20191228052858/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+
+    <!-- MVP DEMO LOCK: Show Locked Competitors -->
+    
+
+    
+    <div style="margin-top: 3rem; text-align: center; border-top: 1px solid var(--border); padding-top: 2rem; color: var(--muted);">
+       <p>This is a public case study. High-confidentiality internal insights have been redacted.</p>
+    </div>
+    
+
+  </div>
+
+  <div class="footer">
+    <p>Business Spy - Competitive Intelligence Engine</p>
+    <p>Historical web data analysis for strategic research purposes.</p>
+  </div>
+
+</body>
+
+</html>

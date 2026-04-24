@@ -92,3 +92,95 @@ def execute_leadideal_preview(handoff: Dict[str, Any], timeout: int = 20) -> Dic
         artifact["status"] = "failed"
 
     return artifact
+
+
+def execute_leadideal_bulk(industry: str, location: str = "United States",
+                          job_title: Optional[str] = None,
+                          company_size: Optional[str] = None,
+                          timeout: int = 60) -> Dict[str, Any]:
+    """Execute bulk mining for SlopRadar super tier via LeadIdeal internal API.
+
+    Calls LeadIdeal's /api/internal/mine endpoint to get 20 ICP leads + QA + POW dry-run.
+
+    Args:
+        industry: Target industry for mining
+        location: Target location (default: "United States")
+        job_title: Optional job title filter
+        company_size: Optional company size filter
+        timeout: Request timeout in seconds
+
+    Returns:
+        Dict with mining results, QA stats, and outreach email samples
+    """
+    base_url = os.getenv("LEADIDEAL_BASE_URL", "https://leadideal.com").rstrip("/")
+    api_key = os.getenv("LEADIDEAL_API_KEY", "").strip()
+
+    if not api_key:
+        return {
+            "schema_version": "leadideal-bulk-artifact-v1",
+            "executed": False,
+            "status": "failed",
+            "error": "LEADIDEAL_API_KEY environment variable not set",
+            "base_url": base_url,
+        }
+
+    endpoint = f"{base_url}/api/internal/mine"
+    artifact = {
+        "schema_version": "leadideal-bulk-artifact-v1",
+        "executed": True,
+        "status": "pending",
+        "base_url": base_url,
+        "endpoint": endpoint,
+        "request": {
+            "industry": industry,
+            "location": location,
+            "job_title": job_title,
+            "company_size": company_size,
+        },
+    }
+
+    try:
+        response = requests.post(
+            endpoint,
+            json={
+                "industry": industry,
+                "location": location,
+                "job_title": job_title,
+                "company_size": company_size,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "X-API-Key": api_key,
+            },
+            timeout=timeout,
+        )
+
+        artifact["http_status"] = response.status_code
+
+        try:
+            data = response.json()
+        except ValueError:
+            data = {"success": False, "error": response.text[:500]}
+
+        if response.ok and data.get("success"):
+            artifact["status"] = "completed"
+            artifact["results"] = {
+                "leads_mined": data.get("leads_mined", 0),
+                "qa_results": data.get("qa_results", {}),
+                "outreach_emails_generated": data.get("outreach_emails_generated", 0),
+                "sample_emails": data.get("sample_emails", []),
+                "leads": data.get("leads", []),
+            }
+        else:
+            artifact["status"] = "failed"
+            artifact["error"] = data.get("error", f"HTTP {response.status_code}: {response.text[:200]}")
+
+    except requests.exceptions.Timeout:
+        artifact["status"] = "failed"
+        artifact["error"] = f"Request timed out after {timeout} seconds"
+    except Exception as exc:
+        logger.error("LeadIdeal bulk mining execution failed: %s", exc)
+        artifact["status"] = "failed"
+        artifact["error"] = str(exc)
+
+    return artifact

@@ -13,10 +13,33 @@ BASE_URL = os.getenv("BATCH_BASE_URL", "http://127.0.0.1:8890")
 BATCH_FILE = os.getenv("BATCH_FILE", "beauty_founders_batch.json")
 RESULTS_FILE = os.getenv("BATCH_RESULTS", "beauty_batch_results.json")
 PRESET_ID = os.getenv("BATCH_PRESET", "beauty-parallels")
-COOLDOWN_SECONDS = 5
+COOLDOWN_SECONDS = 10
+POLL_INTERVAL = 10
+MAX_WAIT_SECONDS = 900  # 15 minutes max per target
+RETRY_ATTEMPTS = 3
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
+
+# --- INSTANCE LOCKING ---
+def acquire_instance_lock():
+    import sys
+    pid_file = "batch_runner.pid"
+    if os.path.exists(pid_file):
+        try:
+            with open(pid_file, "r") as f:
+                old_pid = int(f.read().strip())
+            os.kill(old_pid, 0)
+            logger.error(f"FATAL: Batch runner is already running (PID {old_pid}). Aborting.")
+            sys.exit(1)
+        except (OSError, ValueError):
+            pass
+    with open(pid_file, "w") as f:
+        f.write(str(os.getpid()))
+    import atexit
+    atexit.register(lambda: os.path.exists(pid_file) and os.remove(pid_file))
+
+acquire_instance_lock()
 
 def run_batch():
     if not os.path.exists(BATCH_FILE):
@@ -80,10 +103,12 @@ def run_batch():
             with open(RESULTS_FILE, "w") as f:
                 json.dump(results, f, indent=2)
 
-            if final_data.get("status") == "completed":
+            if final_data.get("status") == "completed" and final_data.get("report_url"):
                 logger.info(f"✅ Completed: {company}. Report: {result['report_url']}")
             else:
-                logger.warning(f"❌ Failed: {company}. Status: {final_data.get('status')}")
+                logger.warning(f"❌ Failed or Timed Out: {company}. Status: {final_data.get('status')}")
+                # Ensure we don't count it as complete if report_url is missing
+                result["status"] = "failed"
 
         except Exception as e:
             logger.error(f"💥 Error processing {company}: {e}")

@@ -1,3 +1,5 @@
+import hmac
+import hashlib
 import importlib
 import json
 import logging
@@ -5,6 +7,7 @@ import re
 import os
 import sqlite3
 import threading
+import time
 import uuid
 from datetime import datetime, timezone
 from urllib.parse import urlparse
@@ -38,6 +41,30 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 template_dir = os.path.join(base_dir, 'templates')
 static_dir = os.path.join(base_dir, 'web')
 
+# --- INSTANCE LOCKING ---
+def acquire_instance_lock(lock_name="app"):
+    import sys
+    # Use /tmp so the service user (bizspy) can always write regardless of app dir ownership
+    pid_file = os.path.join("/tmp", f"bizspy-{lock_name}.pid")
+    if os.path.exists(pid_file):
+        try:
+            with open(pid_file, "r") as f:
+                old_pid = int(f.read().strip())
+            # Check if process is still running on Unix
+            os.kill(old_pid, 0)
+            logger.error(f"FATAL: Instance of {lock_name} is already running (PID {old_pid}). Aborting to prevent corruption.")
+            sys.exit(1)
+        except (OSError, ValueError):
+            # Process not running or invalid PID file, we can take it
+            pass
+
+    with open(pid_file, "w") as f:
+        f.write(str(os.getpid()))
+    import atexit
+    atexit.register(lambda: os.path.exists(pid_file) and os.remove(pid_file))
+
+acquire_instance_lock("app")
+
 app = Flask(__name__, static_folder=static_dir, static_url_path='/', template_folder=template_dir)
 app.secret_key = os.getenv("APP_SECRET_KEY", "super_secret_for_mvp")
 CORS(app)
@@ -65,7 +92,50 @@ DEMO_ENABLE_NARRATIVE = True
 PACKAGES = {
     "starter": {"name": "Starter Report", "price": 49, "competitors": 3, "history_months": 3},
     "pro": {"name": "Pro Report", "price": 149, "competitors": 5, "history_months": 48},
+    "super": {"name": "Super Tier", "price": 499, "competitors": 5, "history_months": 48, "includes_bulk_mining": True},
 }
+
+
+def is_unlimited(email: str) -> bool:
+    """Return True if email is in UNLIMITED_USERS env list or has tier='unlimited' in DB."""
+    if not email:
+        return False
+    unlimited_list = [
+        e.strip().lower()
+        for e in os.getenv("UNLIMITED_USERS", "").split(",")
+        if e.strip()
+    ]
+    if email.lower() in unlimited_list:
+        return True
+    try:
+        user = db.get_user(email)
+        return bool(user and user.get("tier") == "unlimited")
+    except Exception:
+        return False
+
+
+def is_super_paid(order: dict) -> bool:
+    """Return True if order is for super tier package."""
+    return order.get('package') == 'super'
+
+
+def _make_share_token(slug: str, expiry: int) -> str:
+    secret = os.getenv("SHARE_SECRET") or app.secret_key
+    msg = f"{slug}:{expiry}"
+    sig = hmac.new(secret.encode(), msg.encode(), hashlib.sha256).hexdigest()[:40]
+    return f"{expiry}.{sig}"
+
+
+def _verify_share_token(slug: str, token: str) -> bool:
+    try:
+        expiry_str, sig = token.split(".", 1)
+        expiry = int(expiry_str)
+    except (ValueError, AttributeError):
+        return False
+    if expiry != 0 and time.time() > expiry:
+        return False
+    expected = _make_share_token(slug, expiry)
+    return hmac.compare_digest(token, expected)
 
 
 def utc_now_iso() -> str:
@@ -105,6 +175,14 @@ def update_job(job_id: str, **fields) -> None:
 
     job.update(fields)
     job["updated_at"] = utc_now_iso()
+
+    # Persistent Sync
+    user_email = job.get("email")
+    if user_email:
+        try:
+            db.upsert_job(job_id, user_email, job)
+        except Exception as e:
+            logger.warning(f"Failed to persist job {job_id} for {user_email}: {e}")
 
 
 def humanize_domain(value: str) -> str:
@@ -201,6 +279,8 @@ def build_stage_label(job: dict) -> str:
         return "Writing final output"
     if stage == "report_ready":
         return "Report ready"
+    if stage == "brief_ready":
+        return "Brief ready"
     if stage == "failed":
         return "Processing failed"
     return "Processing"
@@ -224,7 +304,34 @@ def build_status_response(job: dict) -> dict:
         "ai_blended": "Gemini + fallback discovery",
         "fallback": "Domain-aware fallback discovery",
     }.get(job.get("competitor_source"), "Initializing discovery")
+
+    # Phase E: Add super bulk mining status
+    payload["super_bulk_status"] = _get_super_bulk_status(job)
+
     return payload
+
+
+def _get_super_bulk_status(job: dict) -> str:
+    """Get super bulk mining status for jobs with super tier orders."""
+    order_id = job.get("paypal_order_id")
+    if not order_id:
+        return "not_applicable"
+
+    try:
+        order = db.get_order(order_id)
+        if not order or not is_super_paid(order):
+            return "not_applicable"
+
+        order_status = order.get("status", "")
+        if order_status == "super_bulk_completed":
+            return "completed"
+        elif job.get("status") == "completed":
+            return "in_progress"  # Main report done, bulk mining should be running
+        else:
+            return "pending"
+    except Exception as e:
+        print(f"Exception in _get_super_bulk_status: {e}")
+        return "unknown"
 
 
 def resolve_output_path(report_url: str) -> str:
@@ -235,6 +342,112 @@ def resolve_output_path(report_url: str) -> str:
 @app.route('/reports/<path:filename>')
 def serve_reports(filename):
     return send_from_directory(OUTPUT_DIR, filename)
+
+@app.route('/brief/<slug>')
+def serve_brief(slug):
+    import re
+    if not re.match(r'^[a-z0-9-]+$', slug):
+        return "Not found", 404
+    payload_path = os.path.join(OUTPUT_DIR, slug, "render-payload.json")
+    if not os.path.isfile(payload_path):
+        return "Not found", 404
+    with open(payload_path) as f:
+        brief_data = json.load(f)
+    insights = _derive_brief_insights(brief_data)
+    return render_template('brief.html', brief=brief_data, insights=insights, slug=slug)
+
+
+def _derive_brief_insights(brief: dict) -> dict:
+    """Extract free-tier insights from raw evidence quotes (heuristic, no LLM)."""
+    import re
+    quotes = brief.get("evidence_quotes") or []
+
+    def _find(section_prefix):
+        for q in quotes:
+            if (q.get("section") or "").startswith(section_prefix):
+                return q
+        return None
+
+    positioning = _find("homepage_h1")
+    value_prop = _find("homepage_meta")
+    h2 = _find("homepage_h2")
+
+    pillars = []
+    seen = set()
+    for q in quotes:
+        text = (q.get("quote") or "").strip()
+        sect = (q.get("section") or "").lower()
+        if not text or len(text) > 140 or len(text) < 8:
+            continue
+        if sect in {"homepage_h1", "homepage_meta"}:
+            continue
+        key = text.lower()[:60]
+        if key in seen:
+            continue
+        # Skip boilerplate
+        if any(b in text.lower() for b in ["privacy policy", "terms of service", "cookie", "all rights reserved"]):
+            continue
+        seen.add(key)
+        pillars.append(text)
+        if len(pillars) >= 5:
+            break
+
+    combined_text = " ".join((q.get("quote") or "") for q in quotes)
+
+    # ICP detection
+    icp_patterns = [
+        r"for\s+([a-z][a-z0-9,\s\-&/]+?(?:teams?|agencies|agenc[yi]|companies|businesses|brands?|professionals?|founders?|startups?|smbs?|enterprises?|msps?|operators?))",
+    ]
+    icp = None
+    for pat in icp_patterns:
+        m = re.search(pat, combined_text, re.IGNORECASE)
+        if m:
+            icp = m.group(1).strip().rstrip(".,")
+            if len(icp) < 120:
+                break
+            icp = None
+
+    # Price anchors
+    price_anchors = sorted(set(re.findall(r"\$\d[\d,]*(?:\.\d+)?(?:/[a-z]+)?", combined_text)))[:3]
+
+    # Proof points: quotes with a leading number
+    proof_points = []
+    for q in quotes:
+        text = (q.get("quote") or "").strip()
+        if re.match(r"^\s*[\d,]{2,}", text) and len(text) < 140:
+            proof_points.append(text)
+        if len(proof_points) >= 3:
+            break
+
+    # Locale hints
+    locales = set()
+    for q in quotes:
+        url = (q.get("url") or "").lower()
+        for code in ["/he/", "/es/", "/fr/", "/de/", "/it/", "/pt/", "/ru/", "/zh/", "/ja/", "/ar/"]:
+            if code in url:
+                locales.add(code.strip("/").upper())
+
+    # Competitive wedge phrases
+    wedge_phrases = []
+    for phrase in ["no platform", "without the", "unlike", "replace", "alternative to", "instead of"]:
+        m = re.search(r"([^.]*\b" + re.escape(phrase) + r"\b[^.]*)", combined_text, re.IGNORECASE)
+        if m:
+            wedge_phrases.append(m.group(1).strip()[:160])
+    wedge_phrases = list(dict.fromkeys(wedge_phrases))[:2]
+
+    return {
+        "positioning": (positioning or {}).get("quote"),
+        "value_prop": (value_prop or {}).get("quote"),
+        "headline_hook": (h2 or {}).get("quote"),
+        "messaging_pillars": pillars,
+        "icp": icp,
+        "price_anchors": price_anchors,
+        "proof_points": proof_points,
+        "locales": sorted(locales),
+        "wedge_phrases": wedge_phrases,
+        "evidence_count": len(quotes),
+    }
+
 
 @app.route('/checkout')
 def checkout_page():
@@ -276,27 +489,53 @@ def health():
         "jobs_in_memory": len(JOBS),
     })
 
+
+@app.route('/api/config', methods=['GET'])
+def api_config():
+    return jsonify({
+        "brand": os.getenv("APP_BRAND_NAME", "slopradar"),
+    })
+
 @app.route('/api/demo', methods=['POST'])
 def start_demo():
     data = apply_startup_preset(request.get_json(silent=True) or {})
+    logger.info(f"Demo request data: {data}")
     target_url = normalize_target_url(data.get('target_url'))
     if not target_url:
         return jsonify({"error": "Target URL required"}), 400
 
+    # Link to authenticated user if available
+    email = data.get('email') or 'demo@founder.com'
     sprint_context = build_sprint_context(data, target_url)
-    
+
     # Extract overrides for forensic intelligence
     from_date = data.get("from_date")
     to_date = data.get("to_date")
     video_engine_url = data.get("video_engine_url")
+    paypal_order_id = data.get("paypal_order_id")  # For testing super tier
+    logger.info(f"PayPal order ID extracted: {paypal_order_id}")
+
+    # Capture acquisition signals (from frontend body or HTTP headers)
+    referrer = data.get('referrer') or request.headers.get('Referer') or None
+    utm_source = data.get('utm_source') or None
+    utm_medium = data.get('utm_medium') or None
+    utm_campaign = data.get('utm_campaign') or None
+    user_agent = request.headers.get('User-Agent') or None
 
     job_id = str(uuid.uuid4())
     JOBS[job_id] = {
+        "id": job_id,
+        "email": email,
         "status": "processing",
         "stage": "queued",
-        "status_detail": "Demo request accepted.",
+        "status_detail": "Archival Initialization",
         "target_url": target_url,
         "type": "demo",
+        "referrer": referrer,
+        "utm_source": utm_source,
+        "utm_medium": utm_medium,
+        "utm_campaign": utm_campaign,
+        "user_agent": user_agent,
         "competitors_total": 0,
         "competitors_completed": 0,
         "snapshots_total": 0,
@@ -310,7 +549,15 @@ def start_demo():
         "from_date": from_date,
         "to_date": to_date,
         "video_engine_url": video_engine_url,
+        "paypal_order_id": paypal_order_id,  # For testing super tier
+        "is_paid": is_unlimited(email),  # unlimited users get full report immediately
     }
+
+    # Initial Sync to Database
+    try:
+        db.upsert_job(job_id, email, JOBS[job_id])
+    except Exception as e:
+        logger.warning(f"Initial job persistence failed for {job_id}: {e}")
 
     # Run logic in background
     thread = threading.Thread(target=run_demo_pipeline, args=(job_id,), daemon=True)
@@ -319,17 +566,96 @@ def start_demo():
     return jsonify({"url": f"/api/status?job_id={job_id}", "job_id": job_id})
 
 
+@app.route('/api/signal', methods=['POST'])
+def start_signal():
+    data = apply_startup_preset(request.get_json(silent=True) or {})
+    target_url = normalize_target_url(data.get('target_url'))
+    if not target_url:
+        return jsonify({"error": "Target URL required"}), 400
+
+    # Link to authenticated user if available
+    email = data.get('email') or 'demo@founder.com'
+    sprint_context = build_sprint_context(data, target_url)
+
+    # Capture acquisition signals
+    referrer = data.get('referrer') or request.headers.get('Referer') or None
+    utm_source = data.get('utm_source') or None
+    utm_medium = data.get('utm_medium') or None
+    utm_campaign = data.get('utm_campaign') or None
+    user_agent = request.headers.get('User-Agent') or None
+
+    job_id = str(uuid.uuid4())
+    JOBS[job_id] = {
+        "id": job_id,
+        "email": email,
+        "status": "processing",
+        "stage": "queued",
+        "status_detail": "Outreach Brief Initialization",
+        "target_url": target_url,
+        "type": "signal",
+        "referrer": referrer,
+        "utm_source": utm_source,
+        "utm_medium": utm_medium,
+        "utm_campaign": utm_campaign,
+        "user_agent": user_agent,
+        "competitors_total": 1,  # Only the target
+        "competitors_completed": 0,
+        "snapshots_total": 0,
+        "snapshots_completed": 0,
+        "created_at": utc_now_iso(),
+        "updated_at": utc_now_iso(),
+        "startup_name": sprint_context.get("startup_name"),
+        "preset_id": sprint_context.get("preset_id"),
+        "selection_mode": sprint_context.get("selection_mode"),
+        "sprint_context": sprint_context,
+        "is_paid": is_unlimited(email),  # unlimited users get full brief immediately
+    }
+
+    # Initial Sync to Database
+    try:
+        db.upsert_job(job_id, email, JOBS[job_id])
+    except Exception as e:
+        logger.warning(f"Initial job persistence failed for {job_id}: {e}")
+
+    # Run logic in background
+    thread = threading.Thread(target=run_signal_pipeline, args=(job_id,), daemon=True)
+    thread.start()
+
+    return jsonify({"url": f"/api/status?job_id={job_id}", "job_id": job_id})
+
+
+@app.route('/api/me', methods=['GET'])
+def get_me():
+    """Return tier info for an authenticated email. Used by dashboard for UI gating."""
+    email = (request.args.get('email') or '').strip().lower()
+    if not email:
+        return jsonify({"error": "email required"}), 400
+    if is_unlimited(email):
+        tier = "unlimited"
+    else:
+        try:
+            user = db.get_user(email)
+            tier = "paid" if user and user.get('is_paid') else "free"
+        except Exception:
+            tier = "free"
+    return jsonify({"email": email, "tier": tier})
+
+
 @app.route('/api/user/reports', methods=['GET'])
 def get_user_reports():
     email = request.args.get('email')
     if not email:
         return jsonify({"error": "Email required"}), 400
-    
-    reports = db.get_user_reports(email)
-    # Filter out reports without files
-    valid_reports = [r for r in reports if r.get('report_file')]
-    
-    return jsonify({"reports": valid_reports})
+
+    results = db.get_user_forensics(email)
+
+    # For unlimited users, mark all historical reports as paid so the
+    # dashboard shows full-access badges without re-purchasing.
+    if is_unlimited(email):
+        for row in results:
+            row['status'] = row.get('status') or 'captured'
+
+    return jsonify({"reports": results})
 
 
 @app.route('/api/startup-presets', methods=['GET'])
@@ -337,6 +663,350 @@ def startup_presets():
     return jsonify({
         "presets": list_startup_presets(),
     })
+
+
+# --- AGENT REPORT CONTRACT (bizspy.report.agent.v1) ---
+# Stable JSON endpoint any IDE agent with project access can fetch.
+# Premium fields are redacted when is_paid=false (matches HTML report gating).
+
+def _slug_for_target(target_url: str) -> str:
+    norm = normalize_target_url(target_url)
+    return re.sub(r"[^a-z0-9]+", "-", norm.lower()).strip("-") if norm else ""
+
+
+@app.route('/api/agent/<slug>', methods=['GET'])
+def get_agent_report(slug):
+    """Return the report.agent.json for a given slug.
+
+    Query params:
+      mode=share|full|redacted  (default: return stored file as-is)
+      format=md                 (return markdown instead of JSON)
+    """
+    safe_slug = re.sub(r"[^a-zA-Z0-9_-]+", "", slug)
+    if not safe_slug:
+        return jsonify({"error": "invalid slug"}), 400
+
+    fmt = request.args.get('format', 'json')
+    mode = request.args.get('mode', '')
+
+    path = os.path.join(OUTPUT_DIR, safe_slug, "report.agent.json")
+    if not os.path.isfile(path):
+        return jsonify({
+            "error": "report not found",
+            "slug": safe_slug,
+            "hint": "Run POST /api/demo {target_url} first, then poll /api/status_api/<job_id> until status=completed.",
+        }), 404
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception as exc:
+        logger.error("Failed to read agent report %s: %s", path, exc)
+        return jsonify({"error": "failed to load report"}), 500
+
+    # If a specific redaction mode is requested, re-apply on the fly
+    if mode in ('share', 'free') and data.get('is_paid'):
+        payload_path = os.path.join(OUTPUT_DIR, safe_slug, "render-payload.json")
+        if os.path.isfile(payload_path):
+            try:
+                with open(payload_path, 'r', encoding='utf-8') as f:
+                    payload = json.load(f)
+                from src.report_generator import ReportGenerator
+                reporter = ReportGenerator()
+                tmp_path = f"{safe_slug}/_tmp_mode_{mode}.json"
+                reporter.generate_agent_report(
+                    tmp_path,
+                    target_url=payload.get('target_url', ''),
+                    niche_name=payload.get('niche_name', ''),
+                    competitors=payload.get('competitors', []),
+                    is_paid=False,
+                    redaction_mode=mode,
+                    niche_narrative=payload.get('niche_narrative', ''),
+                    key_findings=payload.get('key_findings', []),
+                    roi_analysis=payload.get('roi_analysis', {}),
+                    agent_tasks=payload.get('agent_tasks', []),
+                    video_script=payload.get('video_script', {}),
+                    competitor_source=payload.get('competitor_source', ''),
+                )
+                tmp_full = os.path.join(OUTPUT_DIR, tmp_path)
+                if os.path.isfile(tmp_full):
+                    with open(tmp_full, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+            except Exception as exc:
+                logger.warning("Mode re-render failed for %s: %s", safe_slug, exc)
+
+    if fmt == 'md':
+        from jinja2 import Environment, FileSystemLoader
+        md_env = Environment(loader=FileSystemLoader(template_dir))
+        try:
+            md = md_env.get_template('agent_report.md.j2').render(**data)
+            return md, 200, {"Content-Type": "text/markdown; charset=utf-8"}
+        except Exception as exc:
+            logger.error("MD render failed for %s: %s", safe_slug, exc)
+            return ("# Agent Report: " + safe_slug + "\n\nMarkdown template unavailable."), 200, {"Content-Type": "text/markdown; charset=utf-8"}
+
+    return jsonify(data)
+
+
+@app.route('/api/agent/resolve', methods=['POST'])
+def resolve_agent_report():
+    data = request.get_json(silent=True) or {}
+    target_url = normalize_target_url(data.get('target_url'))
+    if not target_url:
+        return jsonify({"error": "target_url required"}), 400
+    candidates = [
+        f"report-{_slug_for_target(target_url)}",
+        f"free-report-{_slug_for_target(target_url)}",
+        _slug_for_target(target_url),
+    ]
+    for slug in candidates:
+        if not slug:
+            continue
+        path = os.path.join(OUTPUT_DIR, slug, "report.agent.json")
+        if os.path.isfile(path):
+            return jsonify({
+                "slug": slug,
+                "agent_report_url": f"/reports/{slug}/report.agent.json",
+                "api_url": f"/api/agent/{slug}",
+            })
+    return jsonify({"error": "no report found for target", "target_url": target_url, "tried": candidates}), 404
+
+
+@app.route('/api/admin/unlock', methods=['POST'])
+def admin_unlock():
+    """Force a paid re-render for a given target_url. Requires X-Admin-Token
+    header matching ADMIN_UNLOCK_TOKEN env. Used for QA and manual support."""
+    expected = os.getenv("ADMIN_UNLOCK_TOKEN", "")
+    provided = request.headers.get("X-Admin-Token", "")
+    if not expected or provided != expected:
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(silent=True) or {}
+    target_url = normalize_target_url(data.get('target_url'))
+    order_id = data.get('order_id') or f"admin-{uuid.uuid4()}"
+    if not target_url:
+        return jsonify({"error": "target_url required"}), 400
+    ok = fulfill_order(order_id, target_url)
+    if not ok:
+        return jsonify({"error": "no render-payload.json or data.json found for slug", "target_url": target_url}), 404
+    slug = re.sub(r"[^a-z0-9]+", "-", target_url.lower()).strip("-")
+    return jsonify({
+        "ok": True,
+        "report_url": f"/reports/{slug}/report.html",
+        "agent_report_url": f"/reports/{slug}/report.agent.json",
+    })
+
+
+@app.route('/api/admin/grant_unlimited', methods=['POST'])
+def grant_unlimited():
+    """Grant unlimited tier to an email. Requires X-Admin-Token header."""
+    expected = os.getenv("ADMIN_UNLOCK_TOKEN", "")
+    provided = request.headers.get("X-Admin-Token", "")
+    if not expected or provided != expected:
+        return jsonify({"error": "unauthorized"}), 401
+    data = request.get_json(silent=True) or {}
+    email = (data.get('email') or '').strip().lower()
+    if not email:
+        return jsonify({"error": "email required"}), 400
+    db.upgrade_user_tier(email, "unlimited")
+    logger.info("Granted unlimited tier to %s", email)
+    return jsonify({"ok": True, "email": email, "tier": "unlimited"})
+
+
+@app.route('/api/admin/jobs', methods=['GET'])
+def admin_list_jobs():
+    """Return recent forensic_jobs for ops/analytics. Requires X-Admin-Token header."""
+    expected = os.getenv("ADMIN_UNLOCK_TOKEN", "")
+    provided = request.headers.get("X-Admin-Token", "")
+    if not expected or provided != expected:
+        return jsonify({"error": "unauthorized"}), 401
+    try:
+        limit = min(int(request.args.get('limit', 200)), 1000)
+    except (ValueError, TypeError):
+        limit = 200
+    jobs = db.list_jobs(limit)
+    # Summary stats
+    total = len(jobs)
+    by_status = {}
+    by_type = {}
+    distinct_targets = set()
+    for j in jobs:
+        s = j.get('status') or 'unknown'
+        by_status[s] = by_status.get(s, 0) + 1
+        t = j.get('job_type') or j.get('type') or 'demo'
+        by_type[t] = by_type.get(t, 0) + 1
+        if j.get('target_url'):
+            distinct_targets.add(j['target_url'])
+    return jsonify({
+        "total": total,
+        "distinct_targets": len(distinct_targets),
+        "by_status": by_status,
+        "by_type": by_type,
+        "jobs": jobs,
+    })
+
+
+@app.route('/api/admin/qa_set_job_state', methods=['POST'])
+def admin_qa_set_job_state():
+    """QA-only: Set an in-memory job state (or update DB fallback).
+
+    Requires `X-Admin-Token` header to match `ADMIN_UNLOCK_TOKEN` env var.
+    Payload: { job_id, status?, stage_label?, progress_percent?, super_bulk_status?, trigger_bulk?: bool }
+    If `trigger_bulk` is true and the job has a super-tier order, this will spawn the
+    `_execute_super_bulk_mining` background thread (safe for QA).
+    """
+    expected = os.getenv("ADMIN_UNLOCK_TOKEN", "")
+    provided = request.headers.get("X-Admin-Token", "")
+    if not expected or provided != expected:
+        return jsonify({"error": "unauthorized"}), 401
+
+    data = request.get_json(silent=True) or {}
+    job_id = data.get('job_id')
+    if not job_id:
+        return jsonify({"error": "job_id required"}), 400
+
+    # Fields we accept
+    new_status = data.get('status')
+    new_stage = data.get('stage_label')
+    new_progress = data.get('progress_percent')
+    new_super = data.get('super_bulk_status')
+    trigger_bulk = bool(data.get('trigger_bulk', False))
+
+    job = JOBS.get(job_id)
+    updated = False
+
+    if job:
+        if new_status is not None:
+            job['status'] = new_status
+        if new_stage is not None:
+            job['stage_label'] = new_stage
+        if new_progress is not None:
+            try:
+                job['progress_percent'] = int(new_progress)
+            except Exception:
+                job['progress_percent'] = 0
+        if new_super is not None:
+            job['super_bulk_status'] = new_super
+        job['updated_at'] = utc_now_iso()
+        updated = True
+    else:
+        # Fallback: update persistent DB row if job not present in-memory
+        fields = []
+        params = []
+        if new_status is not None:
+            fields.append('status = ?')
+            params.append(new_status)
+        if new_stage is not None:
+            fields.append('stage_label = ?')
+            params.append(new_stage)
+        if new_progress is not None:
+            fields.append('progress = ?')
+            params.append(int(new_progress))
+        if not fields:
+            return jsonify({"error": "job not in memory and no update fields provided"}), 400
+        params.append(utc_now_iso())
+        params.append(job_id)
+        set_clause = ", ".join(fields) + ", updated_at = ?"
+        sql = f"UPDATE forensic_jobs SET {set_clause} WHERE id = ?"
+        try:
+            db.execute(sql, tuple(params))
+        except Exception as e:
+            logger.error("QA set job DB update failed: %s", e)
+            return jsonify({"error": "db update failed", "detail": str(e)}), 500
+        # pull row into memory for return
+        row = db.fetch_one('SELECT * FROM forensic_jobs WHERE id = ?', (job_id,))
+        if row:
+            JOBS[job_id] = row
+            job = JOBS[job_id]
+            updated = True
+
+    if not updated:
+        return jsonify({"error": "job not found"}), 404
+
+    # Optionally trigger super bulk mining thread (QA only)
+    if job.get('status') == 'completed' and trigger_bulk:
+        order_id = job.get('paypal_order_id')
+        if order_id:
+            order = db.get_order(order_id)
+            if order and is_super_paid(order):
+                try:
+                    threading.Thread(
+                        target=_execute_super_bulk_mining,
+                        args=(job_id, order, job.get('startup_name') or job.get('target_url', ''), job.get('competitor_source', 'ai')),
+                        daemon=True,
+                    ).start()
+                except Exception as e:
+                    logger.error("Failed to spawn QA bulk thread: %s", e)
+
+    return jsonify({"ok": True, "job": job})
+
+
+@app.route('/api/public/reports', methods=['GET'])
+def list_public_reports():
+    """Return slugs for completed reports with a public-demo.html file.
+    Used at Netlify build time to populate sitemap.xml."""
+    results = []
+    if os.path.isdir(OUTPUT_DIR):
+        for slug in sorted(os.listdir(OUTPUT_DIR)):
+            slug_dir = os.path.join(OUTPUT_DIR, slug)
+            if not os.path.isdir(slug_dir):
+                continue
+            # Only expose slugs that have a public HTML or render-payload
+            if os.path.isfile(os.path.join(slug_dir, "public-demo.html")) or \
+               os.path.isfile(os.path.join(slug_dir, "render-payload.json")):
+                results.append({"slug": slug})
+    return jsonify(results)
+
+
+@app.route('/api/share/<slug>', methods=['POST'])
+def mint_share_link(slug):
+    """Mint a 30-day HMAC share token for a given report slug."""
+    safe_slug = re.sub(r"[^a-zA-Z0-9_-]+", "", slug)
+    if not safe_slug:
+        return jsonify({"error": "invalid slug"}), 400
+    if not os.path.isfile(os.path.join(OUTPUT_DIR, safe_slug, "render-payload.json")):
+        return jsonify({"error": "report not found"}), 404
+    expiry = int(time.time()) + 30 * 86400
+    token = _make_share_token(safe_slug, expiry)
+    base = request.url_root.rstrip('/')
+    share_url = f"{base}/api/share/{safe_slug}/view?token={token}"
+    return jsonify({"share_url": share_url, "expires_in_days": 30})
+
+
+@app.route('/api/share/<slug>/view', methods=['GET'])
+def view_share(slug):
+    """Validate a share token and render the report with share-mode (light) redaction."""
+    safe_slug = re.sub(r"[^a-zA-Z0-9_-]+", "", slug)
+    token = request.args.get('token', '')
+    if not safe_slug or not _verify_share_token(safe_slug, token):
+        return render_template('status.html',
+            job_id='', initial_state=json.dumps({"status": "error", "error": "Invalid or expired share link."})
+        ), 403
+    payload_path = os.path.join(OUTPUT_DIR, safe_slug, "render-payload.json")
+    if not os.path.isfile(payload_path):
+        return "Report data not found", 404
+    with open(payload_path, 'r', encoding='utf-8') as f:
+        payload = json.load(f)
+    from src.report_generator import ReportGenerator
+    reporter = ReportGenerator()
+    share_rel = f"{safe_slug}/share.html"
+    reporter.generate(
+        payload["niche_name"],
+        payload["competitors"],
+        share_rel,
+        niche_narrative=payload.get("niche_narrative", ""),
+        key_findings=payload.get("key_findings", []),
+        roi_analysis=payload.get("roi_analysis", {}),
+        agent_tasks=payload.get("agent_tasks", []),
+        video_script=payload.get("video_script", {}),
+        is_paid=False,
+        is_share_preview=True,
+    )
+    share_fs_path = os.path.join(OUTPUT_DIR, share_rel)
+    if not os.path.isfile(share_fs_path):
+        return "Share render failed", 500
+    with open(share_fs_path, 'r', encoding='utf-8') as f:
+        html = f.read()
+    return html, 200, {"Content-Type": "text/html; charset=utf-8"}
+
 
 @app.route('/api/status', methods=['GET'])
 def check_status_page():
@@ -366,9 +1036,9 @@ def update_approval_state(job_id):
 
     # If job is still processing, allow partial status updates but block final completion
     is_processing = job.get("status") in ("processing", "analyzing")
-    
+
     decision = request.get_json(silent=True) or {}
-    
+
     # Handle matrix approvals
     job["approval_matrix"] = {
         "mining": decision.get("mining_approved", False),
@@ -376,10 +1046,10 @@ def update_approval_state(job_id):
         "handoff": decision.get("handoff_approved", False),
         "dispatch": decision.get("dispatch_approved", False),
     }
-    
+
     # Logic: Only set status to 'approved' if all matrix items are true AND job is completed
     all_matrix_approved = all(job["approval_matrix"].values())
-    
+
     if all_matrix_approved:
         if is_processing:
             # We record the matrix state but don't mark as 'approved' yet
@@ -400,14 +1070,14 @@ def update_approval_state(job_id):
             if os.path.isfile(approval_path):
                 with open(approval_path, 'r', encoding='utf-8') as f:
                     approval_state = json.load(f)
-                
+
                 # Update underlying state
                 approval_state.update({
                     "matrix": job["approval_matrix"],
                     "status": job["approval_status"],
                     "updated_at": job["updated_at"]
                 })
-                
+
                 with open(approval_path, 'w', encoding='utf-8') as f:
                     json.dump(approval_state, f, indent=2, default=str)
         except Exception as e:
@@ -571,7 +1241,7 @@ def paypal_capture():
 
     # Update DB using high-level methods
     db.capture_order(order_id, status='captured', capture_id=capture_id, captured_at=utc_now_iso())
-    
+
     order = db.fetch_one('SELECT email, target_url FROM orders WHERE paypal_order_id = ?', (order_id,))
     if order:
         email = order['email']
@@ -581,13 +1251,22 @@ def paypal_capture():
             db.update_user_paid_status(email, is_paid=True)
         else:
             db.create_user(email, str(uuid.uuid4()), is_paid=True)
-        
+
     # Trigger report fulfillment (unlock full version)
     fulfill_order(order_id, target_url)
 
     # Fetch updated report URL from DB if available
     order_updated = db.fetch_one('SELECT report_file FROM orders WHERE paypal_order_id = ?', (order_id,))
     report_url = f"/reports/{order_updated['report_file']}" if order_updated and order_updated['report_file'] else "/"
+
+    # Send confirmation email with full report link to the buyer
+    if order and email_engine.enabled:
+        try:
+            base_url = os.getenv('APP_PUBLIC_DOMAIN', 'https://bizspy.netlify.app')
+            full_report_url = f"{base_url}{report_url}"
+            email_engine.send_report_ready(order['email'], order['target_url'] or 'your scan', full_report_url)
+        except Exception as email_exc:
+            logger.warning('paypal_capture: buyer email failed: %s', email_exc)
 
     return jsonify({
         'success': True,
@@ -602,19 +1281,19 @@ def confirm_order_manual():
     data = request.get_json(silent=True) or {}
     order_id = data.get('orderId')
     target_url = data.get('targetUrl')
-    
+
     if not order_id:
         return jsonify({"error": "orderId required"}), 400
-        
+
     db.capture_order(order_id, status='captured', captured_at=utc_now_iso())
     fulfill_order(order_id, target_url)
-    
+
     # Fetch updated report URL
     order_updated = db.fetch_one('SELECT report_file FROM orders WHERE paypal_order_id = ?', (order_id,))
     report_url = f"/reports/{order_updated['report_file']}" if order_updated and order_updated['report_file'] else "/"
-    
+
     return jsonify({
-        "success": True, 
+        "success": True,
         "message": "Order confirmed manually (Mock)",
         "report_url": report_url
     })
@@ -625,21 +1304,21 @@ def fulfill_order(paypal_order_id, target_url):
     Attempts to re-render the existing demo scan with full data.
     """
     logger.info(f"Fulfilling order {paypal_order_id} for {target_url}")
-    
+
     # Check if we have an active job or an existing data.json for this URL
     # Slugify to find directory
     slug = re.sub(r"[^a-z0-9]+", "-", (target_url or "").lower()).strip("-")
+    render_path = os.path.join(OUTPUT_DIR, slug, "render-payload.json")
     data_path = os.path.join(OUTPUT_DIR, slug, "data.json")
-    
-    if os.path.exists(data_path):
+    source_path = render_path if os.path.exists(render_path) else data_path
+
+    if os.path.exists(source_path):
         try:
-            with open(data_path, 'r', encoding='utf-8') as f:
+            with open(source_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-            
-            # Re-initialize reporter and process re-rendering
             from src.report_generator import ReportGenerator
             reporter = ReportGenerator()
-            
+
             # Extract variables from stored data
             niche_name = data.get("niche_name") or f"Report: {target_url}"
             competitors = data.get("competitors") or []
@@ -648,7 +1327,7 @@ def fulfill_order(paypal_order_id, target_url):
             roi_analysis = data.get("roi_analysis") or {}
             agent_tasks = data.get("agent_tasks") or []
             video_script = data.get("video_script") or {}
-            
+
             # Render FULL report (overwrite or new path)
             report_rel = f"{slug}/report.html"
             reporter.generate(
@@ -660,21 +1339,50 @@ def fulfill_order(paypal_order_id, target_url):
                 video_script=video_script,
                 is_paid=True
             )
-            
+
+            # Re-emit the agent-readable JSON uncensored so any IDE agent
+            # fetching /reports/<slug>/report.agent.json now sees full content.
+            agent_rel = f"{slug}/report.agent.json"
+            try:
+                reporter.generate_agent_report(
+                    agent_rel,
+                    target_url=target_url or data.get("target_url", ""),
+                    niche_name=niche_name,
+                    competitors=competitors,
+                    is_paid=True,
+                    niche_narrative=niche_narrative,
+                    key_findings=key_findings,
+                    roi_analysis=roi_analysis,
+                    agent_tasks=agent_tasks,
+                    video_script=video_script,
+                    sprint_manifest=data.get("sprint_manifest") or {},
+                    leadideal_preview=data.get("leadideal_preview") or {},
+                    approval_state=data.get("approval_state") or {},
+                    related_links={
+                        "html": f"/reports/{report_rel}",
+                        "raw_data": f"/reports/{slug}/data.json",
+                        "self": f"/reports/{agent_rel}",
+                    },
+                    competitor_source=data.get("competitor_source", ""),
+                )
+            except Exception as agent_exc:
+                logger.warning("fulfill_order: agent JSON regen failed: %s", agent_exc)
+
             db.update_order_report(paypal_order_id, report_rel)
-            
+
             # Also update any active job in memory
             for j in JOBS.values():
                 if j.get('target_url') == target_url:
                     j['is_paid'] = True
                     j['report_url'] = f"/reports/{report_rel}"
+                    j['agent_report_url'] = f"/reports/{agent_rel}"
                     j['stage_label'] = "Full Report Unlocked"
-            
+
             logger.info(f"Successfully fulfilled premium report for {target_url}")
             return True
         except Exception as e:
             logger.error(f"Failed to fulfill report re-rendering: {e}")
-    
+
     return False
 
 
@@ -695,20 +1403,21 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
         )
         narrator = StrategicNarrator()
         seeded_competitors = sprint_context.get("seeded_competitors") or []
+        wedge = sprint_context.get("wedge") or None
         if seeded_competitors:
             all_competitors = list(seeded_competitors)
             competitor_source = 'seeded'
         else:
             # 1. AI discovers competitors automatically
-            all_competitors = [c for c in narrator.find_competitors(target_url) if c and c != target_url]
+            all_competitors = [c for c in narrator.find_competitors(target_url, wedge=wedge) if c and c != target_url]
             if not all_competitors:
-                all_competitors = narrator.get_fallback_competitors(target_url)
+                all_competitors = narrator.get_fallback_competitors(target_url, wedge=wedge)
                 competitor_source = 'fallback'
             else:
                 competitor_source = narrator.discovery_source
 
         if not all_competitors:
-            all_competitors = narrator.get_fallback_competitors(target_url)
+            all_competitors = narrator.get_fallback_competitors(target_url, wedge=wedge)
             competitor_source = 'fallback'
 
         unlocked_competitors = all_competitors[:unlocked_limit]
@@ -736,7 +1445,7 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
             enable_narrative=DEMO_ENABLE_NARRATIVE,
             analyze_live_target=True,
         )
-        
+
         # Override video engine if provided
         video_engine_url = job.get("video_engine_url") or os.getenv("VIDEO_ENGINE_URL")
         if video_engine_url:
@@ -747,10 +1456,13 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
         is_paid_user = False
         email = job.get("email")
         if email:
-            user = db.get_user(email)
-            if user and user['is_paid']:
+            if is_unlimited(email):
                 is_paid_user = True
-        
+            else:
+                user = db.get_user(email)
+                if user and user['is_paid']:
+                    is_paid_user = True
+
         # If it's a demo run, use the job's is_paid override if available, else check DB
         final_is_paid = job.get("is_paid", is_paid_user)
 
@@ -767,14 +1479,29 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
             ),
             is_public=False, # We use the is_paid flag for internal gating now
             is_paid=final_is_paid,
+            sprint_context=sprint_context,
+            locked_competitors=locked_competitors,
+            competitor_source=competitor_source,
         )
 
-        if not os.path.isfile(result['html']):
-            raise FileNotFoundError(f"Report file was not written: {result['html']}")
+        # storage.save() returns a URL like "/reports/<slug>/report.html" while
+        # the file is written under OUTPUT_DIR/<slug>/report.html. Normalise both.
+        def _to_fs(path):
+            if not path:
+                return ""
+            if path.startswith("/reports/"):
+                return os.path.join(OUTPUT_DIR, path[len("/reports/"):])
+            if os.path.isabs(path):
+                return path
+            return os.path.join(OUTPUT_DIR, path)
 
-        # Resolve relative paths from OUTPUT_DIR for nested folders
+        html_fs = _to_fs(result['html'])
+        if not os.path.isfile(html_fs):
+            raise FileNotFoundError(f"Report file was not written: {result['html']} (fs={html_fs})")
+
         def get_rel(abs_path):
-            return os.path.relpath(abs_path, OUTPUT_DIR) if abs_path else ""
+            fs = _to_fs(abs_path)
+            return os.path.relpath(fs, OUTPUT_DIR) if fs else ""
 
         report_rel = get_rel(result['html'])
         public_rel = get_rel(result.get('public_html') or result.get('public_demo'))
@@ -784,6 +1511,7 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
         handoff_rel = get_rel(result['leadideal_handoff'])
         preview_rel = get_rel(result['leadideal_preview'])
         approval_rel = get_rel(result['approval_state'])
+        agent_report_rel = get_rel(result.get('agent_report'))
 
         update_job(
             job_id,
@@ -800,41 +1528,184 @@ def run_demo_pipeline(job_id, unlocked_count=None, max_snapshots=None):
             leadideal_preview_status=result.get('leadideal_preview_status'),
             approval_state_url=f"/reports/{approval_rel}",
             approval_status=result.get('approval_status'),
+            agent_report_url=f"/reports/{agent_report_rel}" if agent_report_rel else "",
             competitor_source=competitor_source,
             competitors_completed=len(urls),
             finished_at=utc_now_iso(),
         )
 
+        # Phase D: Pipeline hook - spawn super bulk mining thread for super tier
+        order_id = job.get("paypal_order_id")
+        if order_id:
+            order = db.get_order(order_id)
+            if order and is_super_paid(order):
+                logger.info(f"🚀 Spawning super bulk mining thread for order {order_id}")
+                threading.Thread(
+                    target=_execute_super_bulk_mining,
+                    args=(job_id, order, niche_name, competitor_source),
+                    daemon=True
+                ).start()
+
         # Sync back to DB if this was a paid order
         order_id = job.get("paypal_order_id")
         if order_id:
             db.update_order_report(order_id, report_rel, public_report_file=public_rel)
-        
+
         # Trigger email notification if email exists
         user_email = job.get("email")
+        base_url = os.getenv("APP_PUBLIC_DOMAIN", "https://slopradar.netlify.app")
+        public_path = public_rel if public_rel.startswith('/') else '/' + public_rel
+        outreach_url = f"{base_url}/reports{public_path}"
         if user_email and email_engine.enabled:
-            # Construct PUBLIC URL for acquisition (Strategic Teaser)
-            base_url = os.getenv("APP_PUBLIC_DOMAIN", "https://bizspy.netlify.app")
-            # Ensure path is valid
-            public_path = public_rel if public_rel.startswith('/') else '/' + public_rel
-            outreach_url = f"{base_url}/reports{public_path}"
-            
             email_engine.send_report_ready(user_email, niche_name, outreach_url)
+        # Always notify admin (lead capture)
+        email_engine.send_admin_lead(user_email or "", job.get("target_url", ""), outreach_url, mode="demo")
 
-        logger.info("Pipeline job %s completed with report %s", job_id, html_file)
+        logger.info("Pipeline job %s completed successfully", job_id)
 
     except Exception as e:
         import traceback
+        logger.error(f"💥 CRITICAL: run_demo_pipeline {job_id} failed: {e}")
+        traceback.print_exc()
+        try:
+            update_job(
+                job_id,
+                status='failed',
+                stage='failed',
+                status_detail=f'Pipeline execution failed: {str(e)}',
+                error=str(e),
+                finished_at=utc_now_iso(),
+            )
+        except Exception as update_err:
+            logger.error(f"Failed to update job status to 'failed': {update_err}")
+
+
+def run_signal_pipeline(job_id):
+    job = JOBS[job_id]
+    target_url = job['target_url']
+    sprint_context = job.get('sprint_context') or {}
+
+    try:
         update_job(
             job_id,
-            status='failed',
-            stage='failed',
-            status_detail='Pipeline execution failed.',
-            error=str(e),
+            stage='analyzing_target',
+            status_detail=f'Crawling prospect website for {target_url}.',
+            started_at=utc_now_iso(),
+        )
+
+        urls = build_demo_urls(target_url, [])  # Only target, no competitors
+        niche_name = f"Outreach Brief: {target_url}"
+
+        pipeline = Pipeline(
+            max_snapshots_per_url=DEMO_MAX_SNAPSHOTS,
+            enable_narrative=DEMO_ENABLE_NARRATIVE,
+            analyze_live_target=True,
+        )
+
+        is_paid_user = False
+        email = job.get("email")
+        if email:
+            if is_unlimited(email):
+                is_paid_user = True
+            else:
+                user = db.get_user(email)
+                if user and user['is_paid']:
+                    is_paid_user = True
+
+        # If it's a signal run, use the job's is_paid override if available, else check DB
+        final_is_paid = job.get("is_paid", is_paid_user)
+
+        result = pipeline.process_niche(
+            niche_name,
+            urls,
+            from_date=job.get("from_date") or "20180101",
+            to_date=job.get("to_date"),
+            output_path=os.path.join(OUTPUT_DIR, "placeholder.json"),  # Directory arg handling fix
+            status_callback=lambda payload: update_job(
+                job_id,
+                status='processing',
+                **payload,
+            ),
+            is_public=False,
+            is_paid=final_is_paid,
+            sprint_context=sprint_context,
+            mode="signal",  # Enable signal mode
+        )
+
+        # storage.save() returns a URL like "/reports/<slug>/report.signal.json"
+        def _to_fs(path):
+            if not path:
+                return ""
+            if path.startswith("/reports/"):
+                return os.path.join(OUTPUT_DIR, path[len("/reports/"):])
+            if os.path.isabs(path):
+                return path
+            return os.path.join(OUTPUT_DIR, path)
+
+        signal_json_fs = _to_fs(result['signal_json'])
+        if not os.path.isfile(signal_json_fs):
+            raise FileNotFoundError(f"Signal report file was not written: {result['signal_json']} (fs={signal_json_fs})")
+
+        def get_rel(abs_path):
+            fs = _to_fs(abs_path)
+            return os.path.relpath(fs, OUTPUT_DIR) if fs else ""
+
+        signal_rel = get_rel(result['signal_json'])
+        brief_slug = os.path.dirname(signal_rel)
+        brief_url = f"/brief/{brief_slug}"
+
+        update_job(
+            job_id,
+            status='completed',
+            stage='brief_ready',
+            status_detail='Outreach brief generated successfully.',
+            signal_url=f"/reports/{signal_rel}",
+            signal_file=signal_rel,
+            report_url=brief_url,
             finished_at=utc_now_iso(),
         )
-        logger.exception("Pipeline job %s failed", job_id)
+
+        # Phase D: Pipeline hook - spawn super bulk mining thread for super tier
+        order_id = job.get("paypal_order_id")
+        if order_id:
+            order = db.get_order(order_id)
+            if order and is_super_paid(order):
+                logger.info(f"🚀 Spawning super bulk mining thread for order {order_id}")
+                threading.Thread(
+                    target=_execute_super_bulk_mining,
+                    args=(job_id, order, niche_name, "signal"),
+                    daemon=True
+                ).start()
+
+        # Send completion email
+        job_snapshot = JOBS.get(job_id, {})
+        user_email = job_snapshot.get("email", "")
+        target_url = job_snapshot.get("target_url", "")
+        base_url = os.getenv("APP_PUBLIC_DOMAIN", "https://slopradar.netlify.app")
+        full_brief_url = f"{base_url}{brief_url}"
+        if user_email and user_email != "demo@founder.com":
+            email_engine.send_report_ready(user_email, target_url, full_brief_url)
+        # Always notify admin (lead capture)
+        email_engine.send_admin_lead(user_email, target_url, full_brief_url, mode="signal")
+
+        logger.info("Signal pipeline job %s completed successfully", job_id)
+
+    except Exception as e:
+        import traceback
+        logger.error(f"💥 CRITICAL: run_signal_pipeline {job_id} failed: {e}")
         traceback.print_exc()
+        try:
+            update_job(
+                job_id,
+                status='failed',
+                stage='failed',
+                status_detail=f'Pipeline execution failed: {str(e)}',
+                error=str(e),
+                finished_at=utc_now_iso(),
+            )
+        except Exception as update_err:
+            logger.error(f"Failed to update job status to 'failed': {update_err}")
+
 
 @app.route('/api/orders', methods=['POST'])
 def confirm_order():
@@ -895,6 +1766,142 @@ def confirm_order():
         'job_id': job_id,
         'status_url': f"/api/status?job_id={job_id}" if job_id else None
     })
+
+
+def _execute_super_bulk_mining(job_id: str, order: dict, niche_name: str, competitor_source: str):
+    """Execute bulk mining for super tier orders in background thread.
+
+    Called after pipeline completion for super tier orders.
+    Mines 20 ICP leads and sends delivery email.
+    """
+    try:
+        logger.info(f"🔍 Starting super bulk mining for job {job_id}, order {order.get('paypal_order_id')}")
+
+        # Extract industry from the niche name or target URL
+        target_url = order.get('target_url', '')
+        industry = _infer_industry_from_niche(niche_name, target_url)
+
+        if not industry:
+            logger.warning(f"Could not infer industry for super bulk mining: niche='{niche_name}', url='{target_url}'")
+            return
+
+        # Execute bulk mining via LeadIdeal bridge
+        from src.leadideal_bridge import execute_leadideal_bulk
+
+        bulk_result = execute_leadideal_bulk(
+            industry=industry,
+            location="United States",  # Default to US for now
+            timeout=120  # Longer timeout for bulk mining
+        )
+
+        if bulk_result.get('status') == 'completed':
+            leads_count = bulk_result.get('results', {}).get('leads_mined', 0)
+            qa_pass_rate = bulk_result.get('results', {}).get('qa_results', {}).get('pass_rate', 0)
+
+            logger.info(f"✅ Super bulk mining completed: {leads_count} leads, QA pass rate {qa_pass_rate:.1f}%")
+
+            # Send delivery email with bulk results
+            user_email = order.get('email')
+            if user_email:
+                _send_super_bulk_delivered_email(
+                    user_email=user_email,
+                    customer_name=order.get('customer_name', 'Customer'),
+                    niche_name=niche_name,
+                    bulk_results=bulk_result,
+                    competitor_source=competitor_source
+                )
+
+            # Update order with bulk mining completion
+            order_id = order.get('paypal_order_id')
+            if order_id:
+                db.capture_order(order_id, status='super_bulk_completed')
+
+        else:
+            logger.error(f"❌ Super bulk mining failed: {bulk_result.get('error')}")
+            # Could send failure notification here
+
+    except Exception as e:
+        logger.error(f"💥 Super bulk mining thread failed: {e}")
+        import traceback
+        traceback.print_exc()
+
+
+def _infer_industry_from_niche(niche_name: str, target_url: str) -> str:
+    """Infer industry from niche name or target URL for bulk mining."""
+    # Simple heuristics - could be enhanced with AI
+    niche_lower = niche_name.lower()
+    url_lower = target_url.lower()
+
+    # Check for common industry keywords
+    industries = {
+        'dental': ['dental', 'dentist', 'dentistry', 'teeth', 'oral'],
+        'medical': ['medical', 'healthcare', 'clinic', 'doctor', 'hospital'],
+        'legal': ['law', 'legal', 'attorney', 'lawyer', 'firm'],
+        'finance': ['finance', 'financial', 'bank', 'investment', 'wealth'],
+        'real estate': ['real estate', 'property', 'realtor', 'homes'],
+        'ecommerce': ['ecommerce', 'shop', 'store', 'retail', 'commerce'],
+        'saas': ['saas', 'software', 'app', 'platform', 'tool'],
+        'consulting': ['consulting', 'consultant', 'advisory', 'advisor'],
+        'marketing': ['marketing', 'agency', 'advertising', 'promo'],
+        'fitness': ['fitness', 'gym', 'health', 'workout', 'training'],
+    }
+
+    for industry, keywords in industries.items():
+        if any(kw in niche_lower or kw in url_lower for kw in keywords):
+            return industry
+
+    # Default fallback
+    return 'technology'
+
+
+def _send_super_bulk_delivered_email(user_email: str, customer_name: str, niche_name: str,
+                                   bulk_results: dict, competitor_source: str):
+    """Send email notification that super bulk mining is complete."""
+    try:
+        subject = f"Your Super Tier Report + 20 ICP Prospects is Ready"
+
+        results = bulk_results.get('results', {})
+        leads_count = results.get('leads_mined', 0)
+        qa_results = results.get('qa_results', {})
+        pass_rate = qa_results.get('pass_rate', 0)
+
+        body = f"""Hi {customer_name},
+
+Your Super Tier SlopRadar report for "{niche_name}" has been enhanced with bulk prospect mining!
+
+🎯 **Competitor Analysis Complete**
+- Discovery method: {competitor_source.replace('_', ' ')}
+- Analysis: Wayback Machine + AI-powered insights
+
+⛏️ **Bulk Prospect Mining Complete**
+- Industry: {bulk_results.get('request', {}).get('industry', 'N/A')}
+- Leads mined: {leads_count}
+- Quality pass rate: {pass_rate:.1f}%
+
+Your report now includes:
+✅ Full competitor intelligence report
+✅ 20 high-quality ICP prospects
+✅ QA-verified lead data
+✅ Sample outreach email templates
+
+Access your enhanced report at: [Report Link]
+
+The prospect data is ready for your outreach campaigns!
+
+Best,
+SlopRadar Team
+"""
+
+        email_engine.send_custom_email(
+            to_email=user_email,
+            subject=subject,
+            body=body
+        )
+
+        logger.info(f"📧 Sent super bulk delivery email to {user_email}")
+
+    except Exception as e:
+        logger.error(f"Failed to send super bulk delivery email: {e}")
 
 
 if __name__ == '__main__':

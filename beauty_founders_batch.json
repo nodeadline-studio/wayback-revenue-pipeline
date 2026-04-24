@@ -14,27 +14,6 @@
     "email": "tiffany@drunkelephant.com"
   },
   {
-    "company": "The Ordinary",
-    "founder": "Nicola Kilner",
-    "category": "Skincare",
-    "url": "theordinary.com",
-    "email": "nicola@deciem.com"
-  },
-  {
-    "company": "Fenty Beauty",
-    "founder": "Rihanna",
-    "category": "Makeup",
-    "url": "fentybeauty.com",
-    "email": "DRAFT_PIPELINE"
-  },
-  {
-    "company": "Tatcha",
-    "founder": "Vicky Tsai",
-    "category": "Skincare",
-    "url": "tatcha.com",
-    "email": "vicky@tatcha.com"
-  },
-  {
     "company": "Hero Cosmetics",
     "founder": "Ju Rhyu",
     "category": "Skincare",
@@ -67,14 +46,14 @@
     "founder": "Giorgos Tsetis",
     "category": "Haircare",
     "url": "nutrafol.com",
-    "email": "DRAFT_PIPELINE"
+    "email": "hello@nutrafol.com"
   },
   {
     "company": "Olaplex",
     "founder": "JuE Wong",
     "category": "Haircare",
     "url": "olaplex.com",
-    "email": "DRAFT_PIPELINE"
+    "email": "support@olaplex.com"
   },
   {
     "company": "Briogeo",
@@ -95,7 +74,7 @@
     "founder": "Sunday Riley",
     "category": "Skincare",
     "url": "sundayriley.com",
-    "email": "DRAFT_PIPELINE"
+    "email": "hello@sundayriley.com"
   },
   {
     "company": "KraveBeauty",
@@ -116,7 +95,7 @@
     "founder": "Augustinus Bader",
     "category": "Skincare",
     "url": "augustinusbader.com",
-    "email": "DRAFT_PIPELINE"
+    "email": "contact@augustinusbader.com"
   },
   {
     "company": "Skinfix",
@@ -130,7 +109,7 @@
     "founder": "Zahir Dossa",
     "category": "Haircare",
     "url": "functionofbeauty.com",
-    "email": "DRAFT_PIPELINE"
+    "email": "hello@functionofbeauty.com"
   },
   {
     "company": "Ouai",
@@ -138,5 +117,124 @@
     "category": "Haircare",
     "url": "theouai.com",
     "email": "jen@theouai.com"
+  },
+  {
+    "company": "Rhode",
+    "founder": "Hailey Bieber",
+    "category": "Skincare",
+    "url": "rhode.com",
+    "email": "hello@rhode.com"
+  },
+  {
+    "company": "BK Beauty",
+    "founder": "Lisa J",
+    "category": "Makeup",
+    "url": "bkbeauty.com",
+    "email": "support@bkbeauty.com"
+  },
+  {
+    "company": "Coco & Eve",
+    "founder": "Alex Tomic",
+    "category": "Haircare",
+    "url": "cocoandeve.com",
+    "email": "hello@cocoandeve.com"
+  },
+  {
+    "company": "Danessa Myricks Beauty",
+    "founder": "Danessa Myricks",
+    "category": "Makeup",
+    "url": "danessamyricksbeauty.com",
+    "email": "danessa@danessamyricks.com"
+  },
+  {
+    "company": "LYS Beauty",
+    "founder": "Tisha Thompson",
+    "category": "Makeup",
+    "url": "lysbeauty.com",
+    "email": "tisha@lysbeauty.com"
+  },
+  {
+    "company": "K18",
+    "founder": "Suveen Sahib",
+    "category": "Haircare",
+    "url": "k18hair.com",
+    "email": "hello@k18hair.com"
+  },
+  {
+    "company": "Wepink",
+    "founder": "Virginia Fonseca",
+    "category": "Skincare",
+    "url": "wepink.com.br",
+    "email": "contato@wepink.com.br"
+  },
+  {
+    "company": "Saie",
+    "founder": "Laney Crowell",
+    "category": "Makeup",
+    "url": "saiehello.com",
+    "email": "laney@saiehello.com"
+  },
+  {
+    "company": "Merit Beauty",
+    "founder": "Katherine Power",
+    "category": "Makeup",
+    "url": "meritbeauty.com",
+    "email": "katherine@meritbeauty.com"
+  },
+  {
+    "company": "Jones Road Beauty",
+    "founder": "Bobbi Brown",
+    "category": "Makeup",
+    "url": "jonesroadbeauty.com",
+    "email": "bobbi@jonesroadbeauty.com"
+  },
+  {
+    "company": "Refy Beauty",
+    "founder": "Jess Hunt",
+    "category": "Makeup",
+    "url": "refybeauty.com",
+    "email": "jess@refybeauty.com"
+  },
+  {
+    "company": "Kosas",
+    "founder": "Sheena Zadeh-Daly",
+    "category": "Makeup",
+    "url": "kosas.com",
+    "email": "sheena@kosas.com"
+  },
+  {
+    "company": "Bubble Skincare",
+    "founder": "Shai Eisenman",
+    "category": "Skincare",
+    "url": "bubbleskincare.com",
+    "email": "hello@bubbleskincare.com"
+  },
+  {
+    "company": "Tilt Beauty",
+    "founder": "Emerging",
+    "category": "Skincare",
+    "url": "tiltbeauty.co",
+    "email": "hello@tiltbeauty.co"
+  },
+  {
+    "company": "The Ordinary",
+    "founder": "Nicola Kilner",
+    "category": "Skincare",
+    "url": "theordinary.com",
+    "email": "nicola@deciem.com"
+  },
+  {
+    "company": "Fenty Beauty",
+    "founder": "Rihanna",
+    "category": "Makeup",
+    "url": "fentybeauty.com",
+    "email": "press@fentybeauty.com"
+  },
+  {
+    "company": "Tatcha",
+    "founder": "Vicky Tsai",
+    "category": "Skincare",
+    "url": "tatcha.com",
+    "email": "vicky@tatcha.com"
   }
 ]

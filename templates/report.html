@@ -373,6 +373,17 @@
 
 <body>
 
+  {% if is_share_preview %}
+  <div
+    style="position: sticky; top: 0; z-index: 9999; background: linear-gradient(90deg, #1a0e2e, #0f0f1a); border-bottom: 1px solid rgba(124,92,252,0.35); padding: 0.6rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-size: 0.82rem;">
+    <span style="color: #b49eff; font-weight: 700; letter-spacing: 0.05em;">&#128274; SHARED PREVIEW &mdash; Some
+      competitive data has been lightly redacted. Ask the owner for your private invite link.</span>
+    <a href="/#pricing"
+      style="background: rgba(124,92,252,0.15); border: 1px solid rgba(124,92,252,0.4); color: #b49eff; padding: 0.35rem 0.9rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem; text-decoration: none; white-space: nowrap;">Get
+      Full Access</a>
+  </div>
+  {% endif %}
+
   <div class="header">
     <!-- Hero / Niche Title -->
     <div class="hero-section">
@@ -384,41 +395,8 @@
     </div>
 
     {% if not is_public %}
-    <div id="hitl-panel" style="margin-top: 1.5rem; background: var(--surface2); border: 1px solid var(--accent); padding: 1rem; border-radius: 12px; display: inline-block;">
-      <span style="font-size: 0.85rem; font-weight: 800; color: var(--accent); margin-right: 1rem;">HITL REVIEW:</span>
-      <button onclick="approveReport()" style="background: var(--green); color: #0c1a16; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer; margin-right: 0.5rem;">Approve & Dispatch</button>
-      <button onclick="rejectReport()" style="background: var(--accent2); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; cursor: pointer;">Reject</button>
-      <div id="hitl-status" style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--muted);">Status: Pending Operator Review</div>
-    </div>
-    <script>
-      function getJobId() {
-        const urlParams = new URLSearchParams(window.location.search);
-        // Sometimes the report is opened via direct filename, so we might need to derive it
-        // In a production system, we'd pass this explicitly.
-        return urlParams.get('job_id');
-      }
-
-      async function submitDecision(status) {
-        const jobId = getJobId();
-        if (!jobId) {
-          alert("Job ID not found in URL. Use the Operator Dashboard (/approval.html) to record decisions.");
-          return;
-        }
-        try {
-          const res = await fetch(`/api/approval/${jobId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: status, reason: 'Report view fast-track' })
-          });
-          const data = await res.json();
-          if (data.error) throw new Error(data.error);
-          document.getElementById('hitl-status').innerText = 'Status: ' + status.toUpperCase();
-          alert('Decision recorded: ' + status);
-        } catch (e) { alert('Failed: ' + e.message); }
-      }
-      function approveReport() { submitDecision('approved'); }
-      function rejectReport() { submitDecision('rejected'); }
-    </script>
+    {# HITL review panel intentionally hidden from report views.
+       Operator approvals happen in the user dashboard (/dashboard or /approval.html). #}
     {% endif %}
     {% if not is_paid %}
     <div style="margin: 1.5rem 0; background: linear-gradient(90deg, rgba(124, 92, 252, 0.2), rgba(0, 245, 255, 0.1)); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; text-align: center; position: relative; overflow: hidden;">
@@ -451,6 +429,59 @@
     </div>
   </div>
 
+  <!-- TARGET SNAPSHOT (buyer-first: what does the target actually say today?) -->
+  {% if target_snapshot %}
+  <div class="section" style="border: 1px solid var(--accent); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h2 style="margin-top: 0;">Target Snapshot &mdash; {{ target_snapshot.name }}</h2>
+    <div style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 1rem;">
+      Live reading of <a href="{{ target_snapshot.url }}" target="_blank" rel="noopener">{{ target_snapshot.url }}</a>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+      <div>
+        <div style="font-size: 0.75rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 0.05em;">Current H1</div>
+        <div style="font-size: 1.05rem; line-height: 1.4; margin-top: 0.25rem;">{{ target_snapshot.h1 or "(not detected)" }}</div>
+      </div>
+      <div>
+        <div style="font-size: 0.75rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 0.05em;">Meta description</div>
+        <div style="font-size: 0.9rem; line-height: 1.4; margin-top: 0.25rem;">{{ target_snapshot.meta_description or "(none)" }}</div>
+      </div>
+      <div>
+        <div style="font-size: 0.75rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 0.05em;">Visible CTAs</div>
+        <div style="font-size: 0.9rem; margin-top: 0.25rem;">
+          {% if target_snapshot.ctas %}
+            {% for cta in target_snapshot.ctas %}<span style="display: inline-block; padding: 0.15rem 0.5rem; margin: 0.15rem; background: rgba(0,0,0,0.06); border-radius: 4px; font-size: 0.85rem;">{{ cta }}</span>{% endfor %}
+          {% else %}(none){% endif %}
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 0.75rem; text-transform: uppercase; opacity: 0.6; letter-spacing: 0.05em;">Tech detected</div>
+        <div style="font-size: 0.9rem; margin-top: 0.25rem;">
+          {% if target_snapshot.tech_stack %}{{ target_snapshot.tech_stack | join(", ") }}{% else %}(none){% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- EVIDENCE QUOTES (verbatim from competitor sites) -->
+  {% if evidence_quotes %}
+  <div class="section">
+    <h2>Evidence from competitors</h2>
+    <p style="font-size: 0.85rem; opacity: 0.75; margin-top: -0.5rem;">Verbatim text pulled from competitor pages. Each quote links to its source.</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.75rem; margin-top: 1rem;">
+      {% for q in evidence_quotes %}
+      <blockquote style="margin: 0; padding: 0.75rem 1rem; border-left: 3px solid var(--accent); background: rgba(0,0,0,0.03); border-radius: 4px;">
+        <div style="font-size: 0.95rem; line-height: 1.5;">&ldquo;{{ q.quote }}&rdquo;</div>
+        <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.5rem;">
+          <strong>{{ q.competitor }}</strong> &middot; {{ q.section }} &middot;
+          <a href="{{ q.url }}" target="_blank" rel="noopener">source</a>
+        </div>
+      </blockquote>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
   <!-- AI Strategic Summary -->
   {% if niche_narrative %}
   <div class="ai-insight section">
@@ -464,17 +495,30 @@
   <div class="section">
     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem;">
         <h2 style="border: none; margin: 0;">Agent Execution Playbook</h2>
-        <div style="display: flex; gap: 0.5rem;">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
             <button id="video-btn" onclick="triggerVideoEngine()" style="background: var(--bg); color: var(--green); border: 1px solid var(--green); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;">
                 <span id="video-btn-icon">🎬</span>
                 <span id="video-btn-text">Generate Forensic Video</span>
             </button>
-            <button onclick="copyAgentJSON()" style="background: var(--surface2); color: var(--accent); border: 1px solid var(--accent); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy JSON Manifest</button>
-            <button onclick="copyForAntigravity()" style="background: var(--accent); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy for Antigravity</button>
+            <button onclick="copyAgentJSON()"
+              style="background: var(--surface2); color: var(--accent); border: 1px solid var(--accent); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy
+              JSON</button>
+            <button onclick="downloadAgentJSON()"
+              style="background: var(--surface2); color: var(--accent); border: 1px solid var(--accent); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Download
+              JSON</button>
+            <button onclick="copyAgentAPIURL()"
+              style="background: var(--surface2); color: var(--muted); border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy
+              API URL</button>
+            <button onclick="exportMarkdown()"
+              style="background: var(--surface2); color: var(--muted); border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Export
+              MD</button>
+            <button onclick="copyForAIAgent()"
+              style="background: var(--accent); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy
+              AI Agent Brief</button>
         </div>
     </div>
     <p style="color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">The following tasks are optimized for AI agents. Hand these instructions to your AI developer or growth agent for immediate execution based on this intelligence run.</p>
-    
+
     <div style="display: grid; gap: 1rem;">
       {% for task in agent_tasks %}
       <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
@@ -484,7 +528,7 @@
         </div>
         <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">{{ task.task }}</div>
         <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">{{ task.rationale }}</div>
-        
+
         <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
             {% if not is_paid %}
             <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
@@ -501,7 +545,13 @@
     <script>
       const isPaid = {{ is_paid | lower if is_paid is not none else 'false' }};
       const agentData = {{ agent_json | safe }};
-      
+        const _reportSlug = (() => {
+          const parts = window.location.pathname.split('/');
+          // pathname like /reports/<slug>/report.html
+          const ri = parts.indexOf('reports');
+          return ri !== -1 ? parts[ri + 1] : null;
+        })();
+
       function copyToClipboard(text, msg) {
         navigator.clipboard.writeText(text).then(() => alert(msg || 'Copied to clipboard!'));
       }
@@ -510,19 +560,52 @@
         copyToClipboard(JSON.stringify(agentData, null, 2), 'Agent JSON Manifest copied!');
       }
 
+        function downloadAgentJSON() {
+          const blob = new Blob([JSON.stringify(agentData, null, 2)], { type: 'application/json' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = (_reportSlug || 'agent-report') + '.json';
+          a.click();
+          URL.revokeObjectURL(a.href);
+        }
+
+        function copyAgentAPIURL() {
+          if (!_reportSlug) { alert('Could not determine report slug.'); return; }
+          const apiBase = window.BIZSPY_API_ORIGIN || window.location.origin;
+          copyToClipboard(apiBase + '/api/agent/' + _reportSlug, 'Agent API URL copied!');
+        }
+
+        async function exportMarkdown() {
+          if (!_reportSlug) { alert('Could not determine report slug.'); return; }
+          const apiBase = window.BIZSPY_API_ORIGIN || window.location.origin;
+          try {
+            const res = await fetch(apiBase + '/api/agent/' + _reportSlug + '?format=md');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const md = await res.text();
+            const blob = new Blob([md], { type: 'text/markdown' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = (_reportSlug || 'agent-report') + '.md';
+            a.click();
+            URL.revokeObjectURL(a.href);
+          } catch (e) {
+            alert('Export failed: ' + e.message);
+          }
+        }
+
       function copySnippet(text) {
         copyToClipboard(text, 'Agent prompt snippet copied!');
       }
 
-      function copyForAntigravity() {
+        function copyForAIAgent() {
         if (!isPaid) {
           alert('Unlock the Forensic Playbook to access machine-readable prompts for your AI agents.');
           return;
         }
-        const prompt = "I have analyzed my competitors using Business Spy. Here are the actionable tasks I need you to execute:\n\n" + 
+        const prompt = "I have analyzed my competitors using Business Spy. Here are the actionable tasks I need you to execute (works with Claude Code, Cursor, Copilot, Antigravity, or any agentic AI):\n\n" +
           agentData.map(t => `- [${t.priority.toUpperCase()}] ${t.task}\n  Prompt: ${t.agent_prompt_snippet}`).join('\n\n') +
           "\n\nStrategic Video Script Context:\n" + JSON.stringify(videoScriptData, null, 2);
-        copyToClipboard(prompt, 'Project context copied for Antigravity development!');
+        copyToClipboard(prompt, 'AI agent brief copied to clipboard.');
       }
 
       const videoScriptData = {{ video_script_json | safe }};

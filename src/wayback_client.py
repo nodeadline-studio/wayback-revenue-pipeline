@@ -18,9 +18,9 @@ SNAPSHOT_BASE = "https://web.archive.org/web"
 
 # Polite rate limit: ~1 request per second
 REQUEST_DELAY = 1.2
-MAX_RETRIES = 3
-TIMEOUT_CDX = 60
-TIMEOUT_SNAPSHOT = 60
+MAX_RETRIES = 5
+TIMEOUT_CDX = 180
+TIMEOUT_SNAPSHOT = 120
 FAST_CDX_LIMIT = 120
 STANDARD_CDX_LIMIT = 500
 EXPANDED_CDX_LIMIT = 1000
@@ -97,7 +97,11 @@ class WaybackClient:
             logger.error("CDX API error for %s: %s", url, e)
             return []
 
-        data = resp.json()
+        try:
+            data = resp.json()
+        except ValueError as e:
+            logger.error("CDX API returned invalid JSON for %s: %s -- response_text=%s", url, e, (resp.text or '')[:1000])
+            return []
         if not data or len(data) < 2:
             return []
 
@@ -120,7 +124,7 @@ class WaybackClient:
             variants.append(url[4:])
         else:
             variants.append(f"www.{url}")
-        
+
         # Add wildcard as final desperate attempt
         if not url.endswith("*"):
             variants.append(f"{url}/*")
@@ -155,14 +159,14 @@ class WaybackClient:
                 limit=EXPANDED_CDX_LIMIT,
                 collapse="",
             )
-            
+
             if expanded:
                 return expanded
-            
+
             # If we are at the last variant and still nothing, return empty
             if variant_index == len(variants) - 1:
                 return []
-            
+
             logger.info("No snapshots for %s, trying variant: %s", current_url, variants[variant_index + 1])
 
         return []
@@ -178,7 +182,11 @@ class WaybackClient:
         try:
             resp = self.session.get(AVAILABILITY_API, params=params, timeout=15)
             resp.raise_for_status()
-            result = resp.json()
+            try:
+                result = resp.json()
+            except ValueError as e:
+                logger.error("Availability API returned invalid JSON for %s: %s -- response_text=%s", url, e, (resp.text or '')[:1000])
+                return None
         except requests.RequestException as e:
             logger.error("Availability API error for %s: %s", url, e)
             return None

@@ -1,0 +1,246 @@
+[
+  {
+    "company": "Glossier",
+    "url": "glossier.com",
+    "status": "error",
+    "error": "<urlopen error [Errno 61] Connection refused>",
+    "timestamp": "2026-04-20T05:16:17Z"
+  },
+  {
+    "company": "Drunk Elephant",
+    "url": "drunkelephant.com",
+    "status": "error",
+    "error": "Timed out waiting for job 23ca303a-99b2-45f0-ac44-690ca32e05ea after 600 seconds",
+    "timestamp": "2026-04-20T05:26:29Z"
+  },
+  {
+    "company": "Hero Cosmetics",
+    "url": "herocosmetics.us",
+    "status": "error",
+    "error": "Timed out waiting for job edf77574-d649-4eb3-8b20-d50e8cd6a815 after 600 seconds",
+    "timestamp": "2026-04-20T05:36:40Z"
+  },
+  {
+    "company": "Sol de Janeiro",
+    "url": "soldejaneiro.com",
+    "status": "error",
+    "error": "Timed out waiting for job dc779509-ba31-4118-a2fb-f1c6588c8427 after 600 seconds",
+    "timestamp": "2026-04-20T05:46:50Z"
+  },
+  {
+    "company": "Summer Fridays",
+    "url": "summerfridays.com",
+    "status": "error",
+    "error": "Timed out waiting for job 808d5686-2659-49f8-8fb8-f2569d48dce0 after 600 seconds",
+    "timestamp": "2026-04-20T05:57:02Z"
+  },
+  {
+    "company": "Rare Beauty",
+    "url": "rarebeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job 0b2dcce4-ce68-445d-b77f-bf46471ffacf after 600 seconds",
+    "timestamp": "2026-04-20T06:07:13Z"
+  },
+  {
+    "company": "Nutrafol",
+    "url": "nutrafol.com",
+    "status": "error",
+    "error": "Timed out waiting for job d104b3c8-3516-4001-a0ea-4173db629aea after 600 seconds",
+    "timestamp": "2026-04-20T06:22:00Z"
+  },
+  {
+    "company": "Olaplex",
+    "url": "olaplex.com",
+    "status": "error",
+    "error": "Timed out waiting for job 5a59e7aa-9bfb-4f2e-90ee-0116ab7ef0e9 after 600 seconds",
+    "timestamp": "2026-04-20T06:32:11Z"
+  },
+  {
+    "company": "Briogeo",
+    "url": "briogeohair.com",
+    "status": "error",
+    "error": "Timed out waiting for job 4776ca7f-12d7-4aad-8cb9-fa145636fc01 after 600 seconds",
+    "timestamp": "2026-04-20T06:42:23Z"
+  },
+  {
+    "company": "Glow Recipe",
+    "url": "glowrecipe.com",
+    "status": "error",
+    "error": "Timed out waiting for job d74487a2-7ff1-42c1-9ea0-3dab84b293a4 after 600 seconds",
+    "timestamp": "2026-04-20T06:52:34Z"
+  },
+  {
+    "company": "Sunday Riley",
+    "url": "sundayriley.com",
+    "job_id": "aee5fce5-e5c6-4e9c-9ae7-45592d784032",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-20T07:00:35Z"
+  },
+  {
+    "company": "KraveBeauty",
+    "url": "kravebeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job 4ba93014-407b-41c5-addc-861b65e3ab2f after 600 seconds",
+    "timestamp": "2026-04-20T07:14:20Z"
+  },
+  {
+    "company": "UOMA Beauty",
+    "url": "uomabeauty.com",
+    "job_id": "17e3b063-59ce-40a9-a84c-42db447ab6c8",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-20T07:23:51Z"
+  },
+  {
+    "company": "Augustinus Bader",
+    "url": "augustinusbader.com",
+    "status": "error",
+    "error": "Timed out waiting for job 0910feba-3752-4988-a8d2-3f377fa5faf3 after 600 seconds",
+    "timestamp": "2026-04-20T07:34:02Z"
+  },
+  {
+    "company": "Skinfix",
+    "url": "skinfix.com",
+    "job_id": "64fc2ea1-e3fc-4408-9117-b134a3127ce5",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-20T07:40:43Z"
+  },
+  {
+    "company": "Function of Beauty",
+    "url": "functionofbeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job a7e1d397-10bd-4818-bda7-b4f73046a00d after 600 seconds",
+    "timestamp": "2026-04-20T07:50:57Z"
+  },
+  {
+    "company": "Ouai",
+    "url": "theouai.com",
+    "status": "error",
+    "error": "Timed out waiting for job a195c927-8969-401a-b489-d6ef71878957 after 600 seconds",
+    "timestamp": "2026-04-20T08:01:10Z"
+  },
+  {
+    "company": "Rhode",
+    "url": "rhode.com",
+    "status": "error",
+    "error": "Timed out waiting for job e9b17dd1-3e7c-4df7-a1c5-3caa8d7a0ddf after 600 seconds",
+    "timestamp": "2026-04-20T08:11:21Z"
+  },
+  {
+    "company": "BK Beauty",
+    "url": "bkbeauty.com",
+    "job_id": "264c7757-ffc6-4587-9802-e9413e1da555",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-20T08:15:41Z"
+  },
+  {
+    "company": "Coco & Eve",
+    "url": "cocoandeve.com",
+    "status": "error",
+    "error": "Timed out waiting for job 9182e7ae-69c6-4e52-bd9d-f6c8f97834f5 after 600 seconds",
+    "timestamp": "2026-04-20T08:25:52Z"
+  },
+  {
+    "company": "Danessa Myricks Beauty",
+    "url": "danessamyricksbeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job ab754737-2ab6-4553-b360-891034ba5fc5 after 600 seconds",
+    "timestamp": "2026-04-20T08:36:03Z"
+  },
+  {
+    "company": "LYS Beauty",
+    "url": "lysbeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job 3aac5dcb-ad4f-4eaa-a712-427583d46992 after 600 seconds",
+    "timestamp": "2026-04-20T08:46:14Z"
+  },
+  {
+    "company": "K18",
+    "url": "k18hair.com",
+    "status": "error",
+    "error": "Timed out waiting for job 092cbf6d-7800-4d9e-b9f8-19385d831aca after 600 seconds",
+    "timestamp": "2026-04-20T08:56:25Z"
+  },
+  {
+    "company": "Wepink",
+    "url": "wepink.com.br",
+    "status": "error",
+    "error": "Timed out waiting for job e3bf1417-e778-435a-8254-d1a96f372271 after 600 seconds",
+    "timestamp": "2026-04-20T09:06:35Z"
+  },
+  {
+    "company": "Saie",
+    "url": "saiehello.com",
+    "status": "error",
+    "error": "Timed out waiting for job a2986356-ab9d-49a8-b970-da21e93187d7 after 600 seconds",
+    "timestamp": "2026-04-20T09:16:46Z"
+  },
+  {
+    "company": "Merit Beauty",
+    "url": "meritbeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job 49631e9b-817e-4252-9886-d9ecdee518f8 after 600 seconds",
+    "timestamp": "2026-04-20T09:26:57Z"
+  },
+  {
+    "company": "Jones Road Beauty",
+    "url": "jonesroadbeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job e5479a1a-f054-4920-b8ca-390e7831469b after 600 seconds",
+    "timestamp": "2026-04-20T09:37:09Z"
+  },
+  {
+    "company": "Refy Beauty",
+    "url": "refybeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job 4ae45703-f7d5-4299-91de-77c4f08698cf after 600 seconds",
+    "timestamp": "2026-04-20T09:47:20Z"
+  },
+  {
+    "company": "Kosas",
+    "url": "kosas.com",
+    "status": "error",
+    "error": "Timed out waiting for job 3255e021-eca5-4cb0-8c58-d0d81c784c03 after 600 seconds",
+    "timestamp": "2026-04-20T09:57:31Z"
+  },
+  {
+    "company": "Bubble Skincare",
+    "url": "bubbleskincare.com",
+    "job_id": "a93ec199-c6a4-4347-a092-ddf730d5f932",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-20T10:05:12Z"
+  },
+  {
+    "company": "Tilt Beauty",
+    "url": "tiltbeauty.co",
+    "status": "error",
+    "error": "Timed out waiting for job 32160932-499b-4e95-bcc3-0db0172d9eb9 after 600 seconds",
+    "timestamp": "2026-04-20T10:15:23Z"
+  },
+  {
+    "company": "The Ordinary",
+    "url": "theordinary.com",
+    "status": "error",
+    "error": "Timed out waiting for job 071c4d2b-6258-4b1e-9314-31418d95a0ff after 600 seconds",
+    "timestamp": "2026-04-20T10:25:34Z"
+  },
+  {
+    "company": "Fenty Beauty",
+    "url": "fentybeauty.com",
+    "status": "error",
+    "error": "Timed out waiting for job 40f210e6-d18e-4cdd-8277-985b0021d246 after 600 seconds",
+    "timestamp": "2026-04-20T12:15:17Z"
+  },
+  {
+    "company": "Tatcha",
+    "url": "tatcha.com",
+    "job_id": "507412d3-da2c-452c-b6b4-e4af7fe79d94",
+    "status": "failed",
+    "report_url": null,
+    "timestamp": "2026-04-20T12:21:28Z"
+  }
+]

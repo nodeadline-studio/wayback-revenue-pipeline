@@ -4,7 +4,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Business Spy - Competitor Strategy Reports</title>
+  <title>BizSpy - Competitor Strategy Intelligence + Cold Outreach Briefs</title>
+  
+  <!-- SEO -->
+  <meta name="description"
+    content="BizSpy reverse-engineers how any startup evolved its messaging using Wayback Machine evidence. Get a competitor strategy report or generate a personalized cold outreach brief in under 2 minutes.">
+  <meta name="keywords"
+    content="competitor intelligence, competitor analysis, cold outreach personalization, B2B outreach, startup messaging, wayback machine analysis, SaaS competitor research">
+  <link rel="canonical" href="https://bizspy.netlify.app/">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bizspy.netlify.app/">
+  <meta property="og:title" content="BizSpy - Competitor Strategy Intelligence + Cold Outreach Briefs">
+  <meta property="og:description"
+    content="Reverse-engineer how any startup evolved its messaging using Wayback Machine evidence. Competitor reports and personalized outreach briefs, ready in under 2 minutes.">
+  <meta property="og:image" content="https://bizspy.netlify.app/static/og-image.png">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://bizspy.netlify.app/">
+  <meta name="twitter:title" content="BizSpy - Competitor Strategy Intelligence + Cold Outreach Briefs">
+  <meta name="twitter:description"
+    content="Reverse-engineer how any startup evolved its messaging using Wayback Machine evidence. Competitor reports and personalized outreach briefs, ready in under 2 minutes.">
+  <meta name="twitter:image" content="https://bizspy.netlify.app/static/og-image.png">
+  
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "BizSpy",
+            "url": "https://bizspy.netlify.app/",
+            "description": "BizSpy reverse-engineers how any startup evolved its messaging using Wayback Machine evidence. Get competitor strategy reports or personalized cold outreach briefs.",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "Free competitor intelligence report"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "BizSpy",
+              "url": "https://bizspy.netlify.app/"
+            }
+          }
+          </script>
+  
+  <!-- Analytics: Microsoft Clarity (heatmaps + session recordings) -->
+  <script type="text/javascript">
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, "clarity", "script", "YOUR_PROJECT_ID");
+  </script>
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -32,7 +89,9 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      cursor: default;
+    }
+    a, button, [onclick], input, select, textarea, label {
+      cursor: pointer;
     }
 
     body {
@@ -246,53 +305,112 @@
 
     .header-nav {
       position: fixed;
-      top: 1.5rem;
-      right: 2rem;
+      top: 1rem;
+      right: 1rem;
       z-index: 1000;
       display: flex;
       align-items: center;
-      gap: 1.5rem;
-      background: rgba(10, 10, 30, 0.6);
-      padding: 0.5rem 1rem;
+      gap: 0.4rem;
+      background: rgba(10, 10, 30, 0.75);
+      padding: 0.35rem 0.7rem;
       border-radius: 100px;
       border: 1px solid var(--surface-border);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
-    /* Target the injected Netlify UI more specifically */
-    .header-nav ul, 
-    .header-nav .netlify-identity-menu {
-      list-style: none !important;
-      display: flex !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      gap: 1rem !important;
-      margin: 0 !important;
-      padding: 0 !important;
+    .nav-btn {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+      background: transparent;
+      border: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 50px;
     }
 
-    .header-nav li {
-      display: inline-flex !important;
-      margin: 0 !important;
+    .nav-btn:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.05);
     }
 
-    .header-nav a.netlify-identity-button {
-      color: var(--muted) !important;
-      text-decoration: none !important;
-      font-size: 0.8rem !important;
-      font-weight: 700 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.05em !important;
-      transition: color 0.2s !important;
-    }
-
-    .header-nav a.netlify-identity-button:hover {
+    .btn-portal {
+      background: var(--accent);
       color: white !important;
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
-    .header-nav .btn-forensic {
-      margin-left: 0.5rem;
+    .btn-portal:hover {
+      transform: scale(1.05);
+      background: #8b6fff;
     }
+
+    .mode-toggle {
+      display: flex;
+      background: rgba(10, 10, 30, 0.75);
+      border-radius: 100px;
+      border: 1px solid var(--surface-border);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    /* Mode radio inputs - visually hidden; CSS :has() drives all switching */
+    .mode-radio {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    .mode-btn {
+      display: inline-block;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .mode-btn:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Active label: pure CSS, no JS */
+    :root:has(#mode-clone:checked) label[for="mode-clone"],
+    :root:has(#mode-signal:checked) label[for="mode-signal"] {
+      background: var(--gradient);
+      color: white;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    /* Hero content blocks - CSS-toggled */
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero-content--signal { display: none; }
+
+    :root:has(#mode-signal:checked) .hero-content--clone { display: none; }
+    :root:has(#mode-signal:checked) .hero-content--signal { display: flex; }
 
     .card-title {
       font-size: 1.1rem;
@@ -341,34 +459,179 @@
       letter-spacing: 0.1em;
       margin-bottom: 2rem;
     }
+
+    /* --- Modal --- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #0d0d20;
+      border: 1px solid var(--surface-border);
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 420px;
+      width: 100%;
+      backdrop-filter: blur(20px);
+    }
+    .modal-box h3 {
+      color: white;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+    .modal-box input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+    }
+    .modal-box input:focus { border-color: var(--accent); }
+    .modal-actions { display: flex; gap: 0.75rem; }
+    .modal-actions .btn-cancel {
+      flex: 1;
+      background: transparent;
+      border: 1px solid var(--surface-border);
+      color: var(--muted);
+      padding: 0.75rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .modal-actions .btn-submit {
+      flex: 2;
+      background: var(--accent);
+      border: none;
+      color: white;
+      padding: 0.75rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* --- Mobile --- */
+    @media (max-width: 720px) {
+      body {
+        padding: 0 1rem 3rem;
+      }
+      .logo {
+        margin-top: 3.5rem;
+        font-size: 0.65rem;
+      }
+      .hero {
+        margin-bottom: 2rem;
+      }
+      .hero h1 {
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+      }
+      .hero p {
+        font-size: 1rem;
+      }
+      .header-nav {
+        top: 0.6rem;
+        right: 0.6rem;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: rgba(10, 10, 30, 0.9);
+      }
+      .glass-intake {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        border-radius: 16px;
+      }
+      .glass-intake input[type="text"] {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+      }
+      .glass-intake .btn-forensic {
+        width: 100%;
+        padding: 0.875rem 1rem;
+      }
+      .bento-grid {
+        display: flex !important;
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <!-- Email modal (replaces browser prompt for iOS compat) -->
+  <div id="email-modal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <h3 id="modal-title">Enter your email</h3>
+      <input id="modal-input" type="email" placeholder="you@company.com" autocomplete="email">
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-submit" id="modal-submit">Continue</button>
+      </div>
+    </div>
+  </div>
+  
+  <nav class="header-nav">
+    <button id="login-btn" onclick="handleAuth()" class="nav-btn">Login</button>
+    <a id="dashboard-link" href="/dashboard.html" class="nav-btn btn-portal" style="display: none;">Portal</a>
+  </nav>
 
   <div class="glow-layer">
     <div class="glow-1"></div>
     <div class="glow-2"></div>
   </div>
 
-  <div class="header-nav">
-    <a id="login-btn" href="#" class="netlify-identity-button" onclick="handleAuth()" style="display: none;">Log In</a>
-    <a id="dashboard-link" href="/dashboard.html" class="btn-forensic" style="display: none; padding: 0.5rem 1rem; font-size: 0.8rem; text-decoration: none; border-radius: 8px;">Dashboard</a>
+  <div class="logo">
+    <span data-brand>slopradar</span> - Competitor Intelligence for Founders
   </div>
 
-  <div class="logo">
-    Forensic Intelligence Studio 2026
-  </div>
+  <input type="radio" class="mode-radio" id="mode-clone" name="mode" value="clone" checked>
+  <input type="radio" class="mode-radio" id="mode-signal" name="mode" value="signal">
 
   <div class="hero">
-    <h1>The Forensic Engine for <span style="color: var(--accent);">Founder Breakouts</span></h1>
-    <p>We analyze the hidden pivots of market leaders from their "no-name" beginnings. Replicate the messaging trajectory of the giants.</p>
-
     <div style="display: flex; justify-content: center; margin-bottom: 3rem;">
-      <form id="pipeline-form" class="glass-intake">
-        <input type="text" id="target-url" placeholder="Enter target domain to scan..." required>
-        <button type="submit" class="btn-forensic">Initiate Scan</button>
-      </form>
+      <div class="mode-toggle">
+        <label for="mode-clone" class="mode-btn">Clone a Startup</label>
+        <label for="mode-signal" class="mode-btn">Brief a Prospect</label>
+      </div>
+      </div>
+      
+      <!-- Clone a Startup: Wayback competitor history analysis -->
+      <div class="hero-content hero-content--clone">
+        <h1>See how your future competitors won <span style="color: var(--accent);">before you write a single word</span></h1>
+        <p>We pull 3 years of Wayback snapshots to surface the exact pivots, price changes, and messaging hooks that built
+          market leaders. Free scan. Full unlock for $49.</p>
+        <div style="display: flex; justify-content: center; margin-bottom: 3rem; width: 100%;">
+          <form class="pipeline-form glass-intake">
+            <input type="text" class="mode-url-input" placeholder="Enter target domain to scan..." required>
+            <button type="submit" class="btn-forensic">Initiate Scan</button>
+          </form>
+        </div>
+    </div>
+    
+    <!-- Brief a Prospect: live site outreach personalization -->
+    <div class="hero-content hero-content--signal">
+      <h1>Personalized Outreach <span style="color: var(--accent);">Intelligence</span></h1>
+      <p>Generate hyper-personalized outreach hooks based on real website evidence. Turn cold prospects into warm
+        conversations.</p>
+      <div style="display: flex; justify-content: center; margin-bottom: 3rem; width: 100%;">
+        <form class="pipeline-form glass-intake">
+          <input type="text" class="mode-url-input" placeholder="Enter prospect domain to brief..." required>
+          <button type="submit" class="btn-forensic">Generate Brief</button>
+        </form>
+      </div>
     </div>
 
     <div class="bento-grid">
@@ -420,7 +683,7 @@
     <!-- Pricing Bento -->
     <div style="margin-top: 6rem; text-align: center;">
       <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 3rem; background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.6) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Forensic Access Plans</h2>
-      
+
       <div class="bento-grid" style="max-width: 800px; margin: 0 auto;">
         <!-- Single Scan -->
         <div class="bento-card" style="grid-column: span 1; text-align: left; border-color: rgba(124, 92, 252, 0.3);">
@@ -458,67 +721,121 @@
   </div>
 
   <script>
-    function initiatePurchase(packageId) {
-      const email = prompt("Enter your email to associate with this forensic license:");
-      if (!email) return;
+                    // --- Modal helpers (replaces browser prompt for iOS PWA safety) ---
+                    let _modalCb = null;
+                    function showModal(title, placeholder, cb) {
+                      _modalCb = cb;
+                      document.getElementById('modal-title').textContent = title;
+                      document.getElementById('modal-input').placeholder = placeholder;
+                      document.getElementById('modal-input').value = '';
+                      document.getElementById('email-modal').classList.add('open');
+                      setTimeout(() => document.getElementById('modal-input').focus(), 60);
+                    }
+                    function closeModal() {
+                      document.getElementById('email-modal').classList.remove('open');
+                      _modalCb = null;
+                    }
+                    document.getElementById('modal-submit').addEventListener('click', () => {
+                      const val = document.getElementById('modal-input').value.trim();
+                      if (!val) { document.getElementById('modal-input').focus(); return; }
+                      const cb = _modalCb;
+                      closeModal();
+                      if (cb) cb(val);
+                    });
+                    document.getElementById('modal-input').addEventListener('keydown', e => {
+                      if (e.key === 'Enter') document.getElementById('modal-submit').click();
+                    });
 
-      // Redirect to the checkout page with package and email
-      const params = new URLSearchParams({
-        packageId: packageId,
-        email: email
-      });
-      window.location.href = `/checkout.html?${params.toString()}`;
+                    function initiatePurchase(packageId) {
+                    showModal('Enter your email for this forensic license:', 'you@company.com', (email) => {
+                      const params = new URLSearchParams({ packageId, email });
+                      window.location.href = `/checkout.html?${params.toString()}`;
+                    });
     }
 
-    document.getElementById('pipeline-form').addEventListener('submit', (e) => {
+        document.querySelectorAll('.pipeline-form').forEach(function (form) {
+          form.addEventListener('submit', function (e) {
       e.preventDefault();
 
-      const target = document.getElementById('target-url').value;
-      const submitBtn = e.target.querySelector('button');
-      
-      submitBtn.innerText = "SCANNING ARCHIVES...";
-      submitBtn.style.opacity = "0.7";
-      submitBtn.disabled = true;
+          const currentMode = document.querySelector('[name="mode"]:checked').value;
+          const target = e.target.querySelector('.mode-url-input').value;
+          const submitBtn = e.target.querySelector('button[type="submit"]');
 
-      fetch('/api/demo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ target_url: target })
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.url) {
-            // REDICT TO STATUS IMMEDIATELY (Async Hardening)
-            window.location.href = data.url;
-          } else {
-            console.error('[Pipeline] Scan failed:', data);
-            alert('Forensic Scan Interrupted: ' + (data?.error || 'Unknown server error'));
-            submitBtn.innerText = "Initiate Scan";
+          // Capture UTM params from URL for acquisition tracking
+          const _qp = new URLSearchParams(window.location.search);
+          const _acq = {
+            referrer: document.referrer || null,
+            utm_source: _qp.get('utm_source') || null,
+            utm_medium: _qp.get('utm_medium') || null,
+            utm_campaign: _qp.get('utm_campaign') || null,
+          };
+
+          showModal('Where should we send your report?', 'you@company.com', (capturedEmail) => {
+            const actionText = currentMode === 'signal' ? "GENERATING BRIEF..." : "SCANNING ARCHIVES...";
+            submitBtn.innerText = actionText;
+            submitBtn.style.opacity = "0.7";
+            submitBtn.disabled = true;
+
+          // Fire Clarity custom event
+          if (typeof clarity === 'function') {
+            clarity('set', 'search_submit', target + '|' + currentMode);
+          }
+
+          const endpoint = currentMode === 'signal' ? '/api/signal' : '/api/demo';
+
+          fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ target_url: target, email: capturedEmail, ..._acq })
+        })
+          .then(async (res) => {
+            const ct = res.headers.get('content-type') || '';
+            if (!ct.includes('application/json')) {
+              const text = await res.text();
+              const snippet = text.slice(0, 120).replace(/\s+/g, ' ');
+              throw new Error(`Backend offline or misrouted (HTTP ${res.status}). The /api/* proxy must point at a running BizSpy backend. Response started with: ${snippet}`);
+            }
+            return res.json();
+          })
+          .then(data => {
+            if (data && data.url) {
+              // REDIRECT TO STATUS IMMEDIATELY (Async Hardening)
+              window.location.href = data.url;
+            } else if (data && data.error === 'backend_offline') {
+              console.error('[Pipeline] Backend offline:', data);
+              alert('BizSpy backend is not configured yet (set BIZSPY_API_ORIGIN in Netlify).');
+              submitBtn.innerText = currentMode === 'signal' ? "Generate Brief" : "Initiate Scan";
+              submitBtn.style.opacity = "1";
+              submitBtn.disabled = false;
+            } else {
+              console.error('[Pipeline] Scan failed:', data);
+              const errorMsg = currentMode === 'signal' ? 'Brief Generation Failed' : 'Forensic Scan Interrupted';
+              alert(errorMsg + ': ' + (data?.error || 'Unknown server error'));
+              submitBtn.innerText = currentMode === 'signal' ? "Generate Brief" : "Initiate Scan";
+              submitBtn.style.opacity = "1";
+              submitBtn.disabled = false;
+            }
+          })
+          .catch(err => {
+            console.error('[Pipeline Error]', err);
+            alert(`Forensic Connection Error: ${err.message || 'Server timeout or route mismatch'}`);
+            submitBtn.innerText = currentMode === 'signal' ? 'Generate Brief' : 'Initiate Scan';
             submitBtn.style.opacity = "1";
             submitBtn.disabled = false;
-          }
-        })
-        .catch(err => {
-          console.error('[Pipeline Error]', err);
-          alert(`Forensic Connection Error: ${err.message || 'Server timeout or route mismatch'}. Check console for details.`);
-          submitBtn.innerText = "Initiate Scan";
-          submitBtn.style.opacity = "1";
-          submitBtn.disabled = false;
+          });
         });
-    });
+        }); // end form addEventListener
+      }); // end querySelectorAll forEach
 
     async function handleAuth() {
-      const email = prompt("Enter your founder email:");
-      if (!email) return;
-      
-      // For MVP: Magic link or simple session logic
-      const { error } = await _supabase.auth.signInWithOtp({ 
-        email: email,
-        options: { emailRedirectTo: window.location.origin + '/dashboard.html' }
+      showModal('Enter your founder email:', 'you@company.com', async (email) => {
+        const { error } = await _supabase.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: window.location.origin + '/dashboard.html' }
+        });
+        if (error) alert('Auth error: ' + error.message);
+        else alert('Check your email for the forensic access link!');
       });
-      
-      if (error) alert("Auth error: " + error.message);
-      else alert("Check your email for the forensic access link!");
     }
 
     const dashboardLink = document.getElementById('dashboard-link');
@@ -543,5 +860,13 @@
       updateAuthUI(session);
     });
   </script>
+<script>
+  // Single source of truth for product brand label: APP_BRAND_NAME on the API.
+  fetch('/api/config').then(r => r.ok ? r.json() : null).then(cfg => {
+    if (!cfg || !cfg.brand) return;
+    document.querySelectorAll('[data-brand]').forEach(el => { el.textContent = cfg.brand; });
+    document.title = document.title.replace(/^[^-]+-/, cfg.brand + ' -');
+  }).catch(() => { });
+</script>
 </body>
 </html>

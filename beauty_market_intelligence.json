@@ -1,0 +1,206 @@
+{
+  "glossier.com": {
+    "founder": "Emily Weiss",
+    "instagram_followers": "3.2M",
+    "market_reach": "Community-led icon; ~5M+ monthly engagements.",
+    "realistic_reach_tier": "Mega-Influencer Presence"
+  },
+  "drunkelephant.com": {
+    "founder": "Tiffany Masterson",
+    "instagram_followers": "1.8M",
+    "market_reach": "Viral trend leader; acquired by Shiseido.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "theordinary.com": {
+    "founder": "Nicola Kilner",
+    "instagram_followers": "2.1M",
+    "market_reach": "Ingredient transparency leader; global digital reach.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "fentybeauty.com": {
+    "founder": "Rihanna",
+    "instagram_followers": "13.4M",
+    "market_reach": "Cultural juggernaut; Billion-dollar reach via Rihanna (400M+).",
+    "realistic_reach_tier": "Giga-Influencer Reach"
+  },
+  "tatcha.com": {
+    "founder": "Vicky Tsai",
+    "instagram_followers": "1.2M",
+    "market_reach": "Premium skincare; strong celebrity/expert following.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "herocosmetics.us": {
+    "founder": "Ju Rhyu",
+    "instagram_followers": "245K",
+    "market_reach": "Acne-care disruptor; acquired by Church & Dwight.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "soldejaneiro.com": {
+    "founder": "Heela Yang",
+    "instagram_followers": "3.2M",
+    "market_reach": "Body care trendsetter; viral scent presence.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "summerfridays.com": {
+    "founder": "Marianna Hewitt",
+    "instagram_followers": "1.5M",
+    "market_reach": "Influencer-led (Marianna Hewitt: 1.1M personal).",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "rarebeauty.com": {
+    "founder": "Selena Gomez",
+    "instagram_followers": "8.6M",
+    "market_reach": "Mental health focused; Selena Gomez reach (414M).",
+    "realistic_reach_tier": "Giga-Influencer Reach"
+  },
+  "nutrafol.com": {
+    "founder": "Giorgos Tsetis",
+    "instagram_followers": "310K",
+    "market_reach": "Hair growth clinical leader; acquired by Unilever.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "olaplex.com": {
+    "founder": "JuE Wong",
+    "instagram_followers": "2.4M",
+    "market_reach": "Biotech hair care leader; massive stylist network.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "briogeohair.com": {
+    "founder": "Nancy Twine",
+    "instagram_followers": "680K",
+    "market_reach": "Clean haircare pioneer; acquired by Wella.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "glowrecipe.com": {
+    "founder": "Sarah Lee",
+    "instagram_followers": "1.7M",
+    "market_reach": "K-beauty innovation leader; high organic viral growth.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "sundayriley.com": {
+    "founder": "Sunday Riley",
+    "instagram_followers": "540K",
+    "market_reach": "Luxe skincare; professional/retail dominance.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "kravebeauty.com": {
+    "founder": "Liah Yoo",
+    "instagram_followers": "260K",
+    "market_reach": "Liah Yoo (247K) led; community skincare first.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "uomabeauty.com": {
+    "founder": "Sharon Chuter",
+    "instagram_followers": "210K",
+    "market_reach": "Inclusivity pioneer; currently in transition/restructuring.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "augustinusbader.com": {
+    "founder": "Augustinus Bader",
+    "instagram_followers": "340K",
+    "market_reach": "Ultra-luxe sci-biotech; elite celebrity following.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "skinfix.com": {
+    "founder": "Amy Gordinier",
+    "instagram_followers": "180K",
+    "market_reach": "Clinical boundary skincare; fast growth in Sephora.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "functionofbeauty.com": {
+    "founder": "Zahir Dossa",
+    "instagram_followers": "890K",
+    "market_reach": "Customization leader; massive social-first scale.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "theouai.com": {
+    "founder": "Jen Atkin",
+    "instagram_followers": "4.5M",
+    "market_reach": "Jen Atkin (millions) personal brand synergy.",
+    "realistic_reach_tier": "Mega-Influencer Presence"
+  },
+  "rhode.com": {
+    "founder": "Hailey Bieber",
+    "instagram_followers": "4.2M",
+    "market_reach": "Hailey Bieber (51M) reach; breakout brand of 2024.",
+    "realistic_reach_tier": "Giga-Influencer Reach"
+  },
+  "bkbeauty.com": {
+    "founder": "Lisa J",
+    "instagram_followers": "150K",
+    "market_reach": "Makeup artist founded; 3X growth through creator marketing.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "cocoandeve.com": {
+    "founder": "Alex Tomic",
+    "instagram_followers": "1.1M",
+    "market_reach": "Bali-inspired viral sensation; heavyweight social D2C.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "danessamyricksbeauty.com": {
+    "founder": "Danessa Myricks",
+    "instagram_followers": "850K",
+    "market_reach": "Professional makeup artist staple; viral for 'Blurring Balm'.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "lysbeauty.com": {
+    "founder": "Tisha Thompson",
+    "instagram_followers": "120K",
+    "market_reach": "Creator marketing top performer; first Black-owned Sephora brand.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "k18hair.com": {
+    "founder": "Suveen Sahib",
+    "instagram_followers": "1.3M",
+    "market_reach": "Biotech repair viral sensation; huge salon distribution.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "wepink.com.br": {
+    "founder": "Virginia Fonseca",
+    "instagram_followers": "4.5M",
+    "market_reach": "Virginia Fonseca reach (43M); massive micro-influencer network.",
+    "realistic_reach_tier": "Giga-Influencer Reach"
+  },
+  "saiehello.com": {
+    "founder": "Laney Crowell",
+    "instagram_followers": "410K",
+    "market_reach": "Clean makeup leader; 'Glowy Super Gel' viral status.",
+    "realistic_reach_tier": "Mid-Tier Presence"
+  },
+  "meritbeauty.com": {
+    "founder": "Katherine Power",
+    "instagram_followers": "620K",
+    "market_reach": "Minimalist luxe; Katherine Power (WhoWhatWear) synergy.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "jonesroadbeauty.com": {
+    "founder": "Bobbi Brown",
+    "instagram_followers": "780K",
+    "market_reach": "Bobbi Brown re-entry; viral 'What The Foundation' growth.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "refybeauty.com": {
+    "founder": "Jess Hunt",
+    "instagram_followers": "1.4M",
+    "market_reach": "Jess Hunt (1.8M) led; aesthetic brow innovator.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "kosas.com": {
+    "founder": "Sheena Zadeh-Daly",
+    "instagram_followers": "950K",
+    "market_reach": "Clean girl aesthetic leader; huge presence in Sephora.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "bubbleskincare.com": {
+    "founder": "Shai Eisenman",
+    "instagram_followers": "1.5M",
+    "market_reach": "Gen-Z hydration leader; massive TikTok/Community scale.",
+    "realistic_reach_tier": "Macro-Influencer Presence"
+  },
+  "tiltbeauty.co": {
+    "founder": "Emerging",
+    "instagram_followers": "Under 50K",
+    "market_reach": "Inclusive/Accessible design disruptor.",
+    "realistic_reach_tier": "Emerging/Niche"
+  }
+}

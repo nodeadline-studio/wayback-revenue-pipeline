@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Report: glowrecipe.com - Competitive Intelligence Report</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --surface2: #24243a;
+      --border: #2e2e4a;
+      --text: #e4e4f0;
+      --muted: #8888aa;
+      --accent: #7c5cfc;
+      --accent2: #ff6b6b;
+      --green: #34d399;
+      --orange: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .header .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-card .label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+
+    .competitor-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .competitor-card h3 {
+      color: var(--accent);
+      font-size: 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .competitor-card .url {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .snapshot-timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 1rem 0;
+    }
+
+    .snapshot-timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--surface2);
+      border-radius: 8px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.75rem;
+      top: 1.25rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .timeline-date {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .change-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin: 0.15rem 0.25rem 0.15rem 0;
+    }
+
+    .tag-added {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--green);
+    }
+
+    .tag-removed {
+      background: rgba(255, 107, 107, 0.15);
+      color: var(--accent2);
+    }
+
+    .tag-changed {
+      background: rgba(124, 92, 252, 0.15);
+      color: var(--accent);
+    }
+
+    .tag-tech {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--orange);
+    }
+
+    .tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .tech-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+    }
+
+    .price-table th,
+    .price-table td {
+      padding: 0.6rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .price-table th {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .snapshot-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.8rem;
+    }
+
+    .snapshot-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .diff-block {
+      margin: 0.5rem 0;
+    }
+
+    .diff-from {
+      color: var(--accent2);
+      text-decoration: line-through;
+      font-size: 0.9rem;
+    }
+
+    .diff-to {
+      color: var(--green);
+      font-size: 0.9rem;
+    }
+
+    .analysis-detail {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .analysis-detail strong {
+      color: var(--accent);
+    }
+
+    .source-pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      margin-left: 0.5rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(52, 211, 153, 0.08);
+    }
+
+    .page-list {
+      margin-top: 0.75rem;
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .page-list a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .page-list a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .page-label {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .ai-insight {
+      background: linear-gradient(135deg, rgba(124, 92, 252, 0.1), rgba(255, 107, 107, 0.05));
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-insight::before {
+      content: 'AI INSIGHT';
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      opacity: 0.5;
+    }
+
+    .ai-insight h2,
+    .ai-insight h4 {
+      border: none !important;
+      color: var(--accent) !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    .ai-insight p {
+      font-style: italic;
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+
+      .header h1 {
+        font-size: 1.4rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .competitor-card {
+        padding: 1rem;
+      }
+
+      .timeline-item {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+
+      .diff-from,
+      .diff-to {
+        font-size: 0.8rem;
+        word-break: break-word;
+      }
+
+      .price-table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .snapshot-timeline {
+        padding-left: 1.5rem;
+      }
+
+      .analysis-detail {
+        word-break: break-word;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <!-- Hero / Niche Title -->
+    <div class="hero-section">
+      
+      <h1>Free Report: glowrecipe.com</h1>
+      <p>Strategic Intelligence Report &mdash; Generated on 2026-04-20 07:04 UTC</p>
+    </div>
+
+    
+    
+    
+    
+    <div style="margin: 1.5rem 0; background: linear-gradient(90deg, rgba(124, 92, 252, 0.2), rgba(0, 245, 255, 0.1)); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; text-align: center; position: relative; overflow: hidden;">
+        <div style="position: relative; z-index: 2;">
+            <h3 style="color: white; margin-bottom: 0.5rem; font-size: 1.2rem;">Detailed Forensic Evidence Locked</h3>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem;">This is a redacted Free Scan. Purchase a <strong>Forensic Unlock</strong> to access the full historical pivot data, unredacted AI Agent Playbooks, and 60s Forensic Video generation.</p>
+            <a href="/#pricing" style="display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 0.8rem 1.75rem; border-radius: 10px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 0 20px rgba(124, 92, 252, 0.3);">Unlock Full Intelligence</a>
+        </div>
+    </div>
+    
+    <div class="subtitle" style="margin-top:0.5rem; font-size: 0.8rem;">Historical web data analysis</div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="number">4</div>
+      <div class="label">Competitors Tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">219</div>
+      <div class="label">Snapshots Analyzed</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">12</div>
+      <div class="label">Changes Detected</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">9</div>
+      <div class="label">Tech Tools Found</div>
+    </div>
+  </div>
+
+  <!-- AI Strategic Summary -->
+  
+  <div class="ai-insight section">
+    <h2>Executive Strategic Summary</h2>
+    <p>Market Evolution &amp; Bloat: The skincare direct-to-consumer (DTC) market has rapidly evolved from its nascent stages in 2014-2016, exemplified by Glossier&#39;s minimal digital footprint (0 tech/CTAs), into a sophisticated, data-driven e-commerce battleground. The shift was signaled by early adopters like The Ordinary (2016-2018) leveraging basic payment infrastructure (Stripe) for direct sales, and accelerated by Hero Cosmetics (2017-2019) with its adoption of Shopify and Google Tag Manager to drive targeted sales and subscriptions with a highly specific value proposition. This evolution has led to a market now experiencing &#34;feature bloat&#34; and messaging dilution. Glowrecipe&#39;s current tech stack of 6 distinct tools including Google Analytics, Facebook Pixel, TikTok Pixel, and Hotjar signifies a heavy investment in granular conversion optimization and attribution. While crucial, this robust infrastructure risks becoming &#34;bloated&#34; if not anchored by a distinct, aggressive value proposition. Similarly, Glowrecipe&#39;s current meta description, &#34;clinically effective, fruit-powered, clean skincare for glowing skin,&#34; while comprehensive, embodies a broader market trend of genericizing multiple desirable attributes, losing the sharp, category-defining edge observed in earlier disruptors like Hero Cosmetics, which owned a very specific problem-solution narrative.</p>
+<p>Competitive Gaps: Glowrecipe&#39;s current positioning attempts to capture multiple value segments—clinical efficacy, natural ingredients (&#34;fruit-powered&#34;), clean beauty, and aspirational results (&#34;glowing skin&#34;). This composite approach, while appealing broadly, leaves a critical gap in a hyper-competitive market: the absence of a singular, undeniable competitive differentiator. While Hero Cosmetics cornered the market on targeted acne solutions (&#34;Absorbs pus while protecting pimples&#34;), and The Ordinary championed ingredient-focused, accessible efficacy, Glowrecipe&#39;s current messaging risks being perceived as &#34;one of many&#34; premium clean clinical brands. The advanced analytics and marketing technology Glowrecipe employs are powerful, but they are optimizing a narrative that lacks the incisive punch needed to de-risk the brand from a &#39;no-name&#39; to a &#39;category leader.&#39; Competitors, particularly larger established brands or those that have diversified, are vulnerable to being slow to articulate a truly innovative *source* of efficacy beyond generic clinical claims or vague &#34;clean&#34; labels. They are hesitant to jettison legacy messaging, leaving an opening for a more agile player to redefine efficacy.</p>
+<p>Strategic Counter-Positioning: Glowrecipe must aggressively pivot its strategic narrative to claim a unique market position. Instead of merely listing attributes, Glowrecipe should elevate &#34;fruit-powered&#34; from an ingredient descriptor to the *proprietary mechanism* driving superior clinical results. The counter-positioning should be: &#34;While established competitors rely on traditional synthetic compounds or generic &#39;clean&#39; claims, Glowrecipe dominates the market by harnessing *bio-optimized fruit potency for accelerated, visibly transformative skin results.*&#34; This sharpens the &#34;clinically effective&#34; claim by tying it directly to the unique &#34;fruit-powered&#34; aspect, making it an innovative, category-defining differentiator that sets it apart from both synthetic-heavy clinical brands and broadly &#34;natural&#34; offerings. This messaging signals the EXACT moment of pivot, de-risking Glowrecipe as a category leader by defining a new, elevated standard of efficacy. The &#34;Free samples with every order&#34; becomes a powerful, confidence-driven call for customers to &#34;experience the next generation of fruit-powered results firsthand,&#34; challenging competitors who are slow to embrace such innovative, nature-derived biotech solutions. This aggressive clarity will enable Glowrecipe to capture market share from brands suffering from messaging bloat and lack of a truly unique value proposition.</p>
+  </div>
+  
+
+  <!-- Agent Execution Playbook -->
+  
+  <div class="section">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem;">
+        <h2 style="border: none; margin: 0;">Agent Execution Playbook</h2>
+        <div style="display: flex; gap: 0.5rem;">
+            <button id="video-btn" onclick="triggerVideoEngine()" style="background: var(--bg); color: var(--green); border: 1px solid var(--green); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;">
+                <span id="video-btn-icon">🎬</span>
+                <span id="video-btn-text">Generate Forensic Video</span>
+            </button>
+            <button onclick="copyAgentJSON()" style="background: var(--surface2); color: var(--accent); border: 1px solid var(--accent); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy JSON Manifest</button>
+            <button onclick="copyForAIAgent()" style="background: var(--accent); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy AI Agent Brief</button>
+        </div>
+    </div>
+    <p style="color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">The following tasks are optimized for AI agents. Hand these instructions to your AI developer or growth agent for immediate execution based on this intelligence run.</p>
+    
+    <div style="display: grid; gap: 1rem;">
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">POSITIONING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Implement a highly specific, problem-solution headline on the homepage, mirroring Hero Cosmetics&#39; early &#39;Got a pimple emergency?&#39; pivot, to clearly define the target niche and immediate value proposition.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Hero Cosmetics successfully established a foothold by directly addressing a painful problem, a critical step for a &#39;no-name&#39; startup gaining initial traction and mindshare.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Develop and launch a pricing strategy that includes both low-cost entry products (e.g., under $20) to attract new customers and premium-tier offerings (e.g., $100+) to capture higher-value segments and increase average order value, as seen in Glowrecipe&#39;s evolution.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Glowrecipe demonstrated a successful strategy of expanding its pricing range to cover both accessible entry points and high-value luxury products, indicating market diversification and LTV growth.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Replace generic &#39;Add to Cart&#39; or &#39;Buy Now&#39; CTAs with &#39;Subscribe Now&#39; or &#39;SUBSCRIBE &amp; SAVE X%&#39; options on key product pages, making recurring purchases the primary call to action, reflecting Hero Cosmetics&#39; and Glowrecipe&#39;s emphasis on subscriptions.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Both Hero Cosmetics and Glowrecipe prioritized subscription CTAs as a major growth signal, driving predictable revenue and enhancing customer loyalty.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">TECHNICAL</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Implement a comprehensive analytics and marketing pixel suite, including Google Tag Manager, Google Analytics, Facebook Pixel, and TikTok Pixel, to enable granular tracking, retargeting, and performance measurement across diverse marketing channels, mirroring Glowrecipe&#39;s tech stack evolution.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Glowrecipe&#39;s evolution of its tech stack shows a commitment to data-driven decision-making and diversification of acquisition channels, crucial for scaling.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">TECHNICAL</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--muted); letter-spacing: 0.05em;">MEDIUM PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Ensure the e-commerce platform utilizes a robust and widely trusted payment gateway like Stripe to professionalize transaction processing and build customer confidence, as adopted by The Ordinary.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">The Ordinary&#39;s early adoption of Stripe signals a foundational step in establishing professional e-commerce operations, a key technical de-risking move.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--muted); letter-spacing: 0.05em;">MEDIUM PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Introduce brand-specific community-building CTAs (e.g., &#39;Join The [Brand Name] Gang,&#39; &#39;Sign up for exclusive perks&#39;) as prominent secondary calls to action to foster loyalty and collect early customer data, replicating Glowrecipe&#39;s early CTA shifts.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Glowrecipe successfully transitioned from generic list sign-ups to more engaging, brand-centric community CTAs, crucial for early brand building and customer engagement.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">POSITIONING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--muted); letter-spacing: 0.05em;">MEDIUM PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Develop a long-term messaging roadmap that anticipates a pivot away from a specific problem-solution headline to a more sophisticated, brand-led statement once category leadership is established, mirroring Hero Cosmetics&#39; evolution.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Hero Cosmetics demonstrated the ability to shed its initial niche-specific headline once it achieved broader brand recognition, signaling a transition from &#39;no-name&#39; to &#39;category leader.&#39; Planning for this prevents messaging stagnation.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+    </div>
+
+    <script>
+      const isPaid = false;
+      const agentData = [
+  {
+    "category": "positioning",
+    "priority": "high",
+    "task": "Implement a highly specific, problem-solution headline on the homepage, mirroring Hero Cosmetics' early 'Got a pimple emergency?' pivot, to clearly define the target niche and immediate value proposition.",
+    "rationale": "Hero Cosmetics successfully established a foothold by directly addressing a painful problem, a critical step for a 'no-name' startup gaining initial traction and mindshare.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "high",
+    "task": "Develop and launch a pricing strategy that includes both low-cost entry products (e.g., under $20) to attract new customers and premium-tier offerings (e.g., $100+) to capture higher-value segments and increase average order value, as seen in Glowrecipe's evolution.",
+    "rationale": "Glowrecipe demonstrated a successful strategy of expanding its pricing range to cover both accessible entry points and high-value luxury products, indicating market diversification and LTV growth.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "high",
+    "task": "Replace generic 'Add to Cart' or 'Buy Now' CTAs with 'Subscribe Now' or 'SUBSCRIBE & SAVE X%' options on key product pages, making recurring purchases the primary call to action, reflecting Hero Cosmetics' and Glowrecipe's emphasis on subscriptions.",
+    "rationale": "Both Hero Cosmetics and Glowrecipe prioritized subscription CTAs as a major growth signal, driving predictable revenue and enhancing customer loyalty.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "technical",
+    "priority": "high",
+    "task": "Implement a comprehensive analytics and marketing pixel suite, including Google Tag Manager, Google Analytics, Facebook Pixel, and TikTok Pixel, to enable granular tracking, retargeting, and performance measurement across diverse marketing channels, mirroring Glowrecipe's tech stack evolution.",
+    "rationale": "Glowrecipe's evolution of its tech stack shows a commitment to data-driven decision-making and diversification of acquisition channels, crucial for scaling.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "technical",
+    "priority": "medium",
+    "task": "Ensure the e-commerce platform utilizes a robust and widely trusted payment gateway like Stripe to professionalize transaction processing and build customer confidence, as adopted by The Ordinary.",
+    "rationale": "The Ordinary's early adoption of Stripe signals a foundational step in establishing professional e-commerce operations, a key technical de-risking move.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "medium",
+    "task": "Introduce brand-specific community-building CTAs (e.g., 'Join The [Brand Name] Gang,' 'Sign up for exclusive perks') as prominent secondary calls to action to foster loyalty and collect early customer data, replicating Glowrecipe's early CTA shifts.",
+    "rationale": "Glowrecipe successfully transitioned from generic list sign-ups to more engaging, brand-centric community CTAs, crucial for early brand building and customer engagement.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "positioning",
+    "priority": "medium",
+    "task": "Develop a long-term messaging roadmap that anticipates a pivot away from a specific problem-solution headline to a more sophisticated, brand-led statement once category leadership is established, mirroring Hero Cosmetics' evolution.",
+    "rationale": "Hero Cosmetics demonstrated the ability to shed its initial niche-specific headline once it achieved broader brand recognition, signaling a transition from 'no-name' to 'category leader.' Planning for this prevents messaging stagnation.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  }
+];
+      
+      function copyToClipboard(text, msg) {
+        navigator.clipboard.writeText(text).then(() => alert(msg || 'Copied to clipboard!'));
+      }
+
+      function copyAgentJSON() {
+        copyToClipboard(JSON.stringify(agentData, null, 2), 'Agent JSON Manifest copied!');
+      }
+
+      function copySnippet(text) {
+        copyToClipboard(text, 'Agent prompt snippet copied!');
+      }
+
+      function copyForAIAgent() {
+        if (!isPaid) {
+          alert('Unlock the Forensic Playbook to access machine-readable prompts for your AI agents.');
+          return;
+        }
+        const prompt = "I have analyzed my competitors using Business Spy. Here are the actionable tasks I need you to execute (works with Claude Code, Cursor, Copilot, Antigravity, or any agentic AI):\n\n" + 
+          agentData.map(t => `- [${t.priority.toUpperCase()}] ${t.task}\n  Prompt: ${t.agent_prompt_snippet}`).join('\n\n') +
+          "\n\nStrategic Video Script Context:\n" + JSON.stringify(videoScriptData, null, 2);
+        copyToClipboard(prompt, 'AI agent brief copied to clipboard.');
+      }
+
+      const videoScriptData = {
+  "full_voiceover": "Forensic Studio analysis locked. Upgrade to generate your cinematic strategy trailer."
+};
+      const VIDEO_ENGINE_URL = "https://lexicographic-venturesomely-angelita.ngrok-free.dev";
+
+      async function triggerVideoEngine() {
+        if (!isPaid) {
+          alert('Forensic Studio Locked. Upgrade to clear reports for one-click asset production.');
+          return;
+        }
+        const btn = document.getElementById('video-btn');
+        const btnText = document.getElementById('video-btn-text');
+        const btnIcon = document.getElementById('video-btn-icon');
+
+        if (!videoScriptData || !videoScriptData.full_voiceover) {
+            alert("No video script available for this report run.");
+            return;
+        }
+
+        try {
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btnText.innerText = "Dispatching to Studio...";
+            btnIcon.innerText = "🛰️";
+
+            const response = await fetch(`${VIDEO_ENGINE_URL}/api/saas/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    description: videoScriptData.full_voiceover,
+                    visual_preset: videoScriptData.recommended_visual_preset || "b2b",
+                    subject: `Strategic Forensic Summary: Free Report: glowrecipe.com`,
+                    speed_mode: "balanced",
+                    engine_overrides: {
+                        "vibe": videoScriptData.vibe || "technological"
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.text();
+                throw new Error(err || "Failed to trigger video engine");
+            }
+
+            const result = await response.json();
+            btnText.innerText = "Video Queued in Studio";
+            btnIcon.innerText = "✅";
+            btn.style.borderColor = "var(--green)";
+            alert(`Video generation started! Job ID: ${result.job_id || result.id}. Check local studio terminal for logs.`);
+        } catch (e) {
+            console.error(e);
+            btnText.innerText = "Dispatch Failed";
+            btnIcon.innerText = "❌";
+            btn.style.borderColor = "var(--accent2)";
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            alert(`Failed to trigger video engine: ${e.message}\n\nMake sure your local video engine is running on port 8001 and ngrok is active.`);
+        }
+      }
+    </script>
+  </div>
+  
+
+  <!-- Market Impact Analysis -->
+  
+  <div class="section">
+    <h2>Market Impact Analysis</h2>
+    <p style="color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Strategic signals derived from competitor
+      behavior patterns. Growth and decline indicators are inferred from tech investments, messaging pivots, and pricing
+      moves.</p>
+
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="color: var(--green); font-size: 1.1rem; margin-bottom: 0.75rem;">&#9650; What's Working in This Market
+      </h3>
+      
+      <div
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">Strategic Pricing Segmentation</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--green); opacity: 0.8; letter-spacing: 0.05em;">LOCKED</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">Optimized Retention &amp; Engagement</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">Aggressive Channel Expansion</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="color: var(--orange); font-size: 1.1rem; margin-bottom: 0.75rem;">&#9660; Warning Signs</h3>
+      
+      <div
+        style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">Inconsistent Data Infrastructure</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--orange); opacity: 0.8; letter-spacing: 0.05em;">LOCKED</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">Weakened Core Messaging</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.75rem;">Market Trends</h3>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">DTC Barbell Pricing Strategy: The market is seeing a trend where successful DTC beauty brands like Glowrecipe are employing a &#39;barbell&#39; pricing strategy, offering both accessible entry points and high-value premium products to appeal to a broader customer base.</div>
+      </div>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">Hyper-Focus on Retention &amp; Loyalty: The prevalence of &#39;Subscribe &amp; Save&#39; CTAs and SMS marketing integrations across the analyzed brands highlights a market-wide shift towards maximizing customer lifetime value and building direct, sticky relationships.</div>
+      </div>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">Agile Ad Channel Adoption: The rapid integration of new social media pixels (e.g., TikTok Pixel by Glowrecipe) underscores the competitive necessity for brands to quickly adopt emerging advertising channels to maintain acquisition efficacy and reach.</div>
+      </div>
+      
+    </div>
+    
+
+    
+    <div
+      style="background: linear-gradient(135deg, rgba(124, 92, 252, 0.1), rgba(52, 211, 153, 0.08)); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; margin-top: 1rem;">
+      <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.5rem;">&#x1F3AF; Your Opportunity</h3>
+      <div style="font-size: 0.95rem; line-height: 1.6;"><p>Glowrecipe must immediately prioritize and stabilize its customer data infrastructure, re-evaluating the Segment removal to ensure a cohesive 360-degree customer view for personalized marketing and product development. Additionally, with its broad pricing strategy, Glowrecipe should reintroduce a compelling, category-defining H1 to clearly articulate its brand promise and guide diverse customer segments through its offerings, leveraging its established brand equity.</p></div>
+    </div>
+    
+  </div>
+  
+
+  <!-- Tech Stack Overview -->
+  <div class="section">
+    <h2>Tech Stack Across Competitors</h2>
+    <div class="tech-grid" style="position: relative;">
+      
+      <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.1); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px;">
+          <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 800; font-size: 0.7rem; box-shadow: 0 0 15px var(--accent-glow);">UNLOCK FULL TECH STACK</span>
+      </div>
+      
+      
+      <div class="tech-chip" style="">... [LOCKED]</div>
+      
+      <div class="tech-chip" style="">Facebook Pixel</div>
+      
+      <div class="tech-chip" style="">Google Analytics</div>
+      
+      <div class="tech-chip" style="">Google Tag Manager</div>
+      
+      <div class="tech-chip" style="">Hotjar</div>
+      
+      <div class="tech-chip" style="opacity: 0.3;">Segment</div>
+      
+      <div class="tech-chip" style="opacity: 0.3;">Shopify</div>
+      
+      <div class="tech-chip" style="opacity: 0.3;">Stripe</div>
+      
+      <div class="tech-chip" style="opacity: 0.3;">WordPress</div>
+      
+    </div>
+  </div>
+
+  <!-- Pricing Overview -->
+  
+  <div class="section">
+    <h2>Pricing Signals Detected</h2>
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>Competitor</th>
+          <th>Prices Found</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>Glowrecipe (Target)</td>
+          <td>$10, $116, $121, $123, $129, $130, $148, $15, $15,, $20, $22, $306, $35, $38, $40, $44, $5, $50, $57, $74, $78, $79, $83, $84, $85, $87, $88, $89, $95, $99</td>
+        </tr>
+        
+        <tr>
+          <td>Hero Cosmetics (Historical: 2017-2019)</td>
+          <td>$1, $12.99, $17.99, $25</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+
+  <!-- Per-Competitor Deep Dive -->
+  <div class="section">
+    <h2>Competitor Evolution</h2>
+
+    
+    <div class="competitor-card">
+      <h3>Glowrecipe (Target)</h3>
+      <div class="url">
+        glowrecipe.com
+        
+        - 9 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>Glowrecipe’s strategic narrative reveals a calculated and aggressive ascent from a validated startup to a confident category leader. Their most significant pivot occurred between 2021 and 2023. They surgically shifted their core messaging from an emotive, &#34;fruit-powered skincare designed to help bring out your inner glow&#34; to a results-driven, &#34;clinically effective, fruit-forward, clean skincare for glowing skin.&#34; This was more than a cosmetic change; it was a foundational repositioning from a &#39;natural beauty&#39; brand, initially validated by a Shark Tank appearance, to a premium, science-backed efficacy leader. Concurrently, they executed a massive up-market pricing shift, removing lower mid-range items and introducing numerous products in the $70-$130+ range, signaling confidence in an elevated value proposition and a clear play for a more affluent customer segment. This combination of &#34;clinical efficacy&#34; messaging, premium pricing, and a substantial increase in descriptive content is the precise moment they de-risked their founder story and asserted their claim as a serious market force, moving beyond novelty to proven, high-value results. The later &#34;barbell&#34; pricing strategy with ultra-premium ($306) and entry-level ($5) items, alongside aggressive LTV plays like &#34;Subscribe &amp; Save 15%&#34; and a TikTok Pixel integration, solidifies their position as a multi-segment targeting powerhouse.</p>
+<p>In their aggressive pursuit of premiumization and clinical effectiveness, Glowrecipe has potentially sacrificed some of their initial mass appeal and the simple, accessible entry points that resonated with a broader, less discerning audience. While they later introduced a &#34;barbell&#34; pricing strategy, the overwhelming brand narrative, driven by &#34;clinically effective&#34; claims and higher-tier products, could create a perception of complexity or elitism. Their journey of increasing and then streamlining word count suggests they’ve wrestled with explaining the &#34;how&#34; behind their clinical claims, which, despite best efforts, can still intimidate or alienate customers seeking uncomplicated, approachable skincare. They&#39;ve optimized for the informed, results-oriented consumer, potentially at the cost of being the inherently &#34;easy choice&#34; for newcomers or those seeking straightforward, joyous beauty without feeling the need for scientific validation.</p>
+<p>To exploit this vulnerability, our product should position itself as the &#34;Effortless, Radiant Simplicity&#34; alternative to Glowrecipe&#39;s &#34;Clinically Defined Efficacy.&#34; Our messaging must directly counter their complexity, emphasizing ease of use, immediate gratification, and a clear, approachable path to healthy, glowing skin without the scientific burden. Leverage a messaging angle like &#34;Your Glow, Uncomplicated&#34; or &#34;Real Results, Real Easy.&#34; Introduce compelling, mid-range entry pricing (e.g., a signature product line priced between $35-$65) with strong value propositions that clearly stand out against Glowrecipe&#39;s barbell extremes, making our brand the obvious, inviting choice for those who desire quality and noticeable results without the perceived complexity or premium price tag of a &#34;clinically effective&#34; regimen. Our CTAs should be warm and inviting, prompting users to &#34;Discover Your Simple Routine&#34; or &#34;Experience Everyday Radiance,&#34; offering a clear, friction-free path to purchase and immediate satisfaction, directly contrasting with Glowrecipe&#39;s current focus on subscriptions and deeper engagement which can signal a higher commitment threshold.</p></div>
+      </div>
+      
+
+      
+      
+      <div style="position: relative; margin-top: 1rem;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            
+            Latest archived snapshot <span class="source-pill">Wayback</span>
+            
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> Glow Recipe | Clinically Effective. Fruit-Powered. Glowing Skin</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> N/A</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> Shop our clinically effective, fruit-powered, clean skincare for glowing skin. Free samples with every order.</div>
+        
+        <div class="analysis-detail"><strong>CTAs:</strong> Subscribe &amp; Save 15% | Sign Up To Shop | Sign up or login | Sign Up | Contact Us</div>
+        
+        
+        
+        <div class="analysis-detail"><strong>Tech Stack:</strong>
+            <span class="change-tag tag-tech">Google Analytics</span><span class="change-tag tag-tech">Google Tag Manager</span><span class="change-tag tag-tech">Facebook Pixel</span><span class="change-tag tag-tech">Hotjar</span><span class="change-tag tag-tech">Shopify</span><span class="change-tag tag-tech">TikTok Pixel</span>
+        </div>
+        
+      </div>
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
+      <div class="snapshot-timeline" style="position: relative;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-01-04 &#8594; 2020-01-11
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20200111124235/glowrecipe.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2020-01-11 &#8594; 2021-01-06
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20210106124837/glowrecipe.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2021-01-06 &#8594; 2023-01-01
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20230101002713/glowrecipe.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2023-01-01 &#8594; 2024-01-05
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20240105061946/glowrecipe.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2024-01-05 &#8594; 2026-01-03
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20260103164856/glowrecipe.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+    <div class="competitor-card">
+      <h3>Glossier (Historical: 2014-2016)</h3>
+      <div class="url">
+        glossier.com
+        
+        - 0 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>No significant changes or live data to analyze.</p></div>
+      </div>
+      
+
+      
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <p style="color: var(--muted); margin-top: 1rem;">No significant archived changes detected between the sampled
+        snapshots.</p>
+      
+    </div>
+    
+    <div class="competitor-card">
+      <h3>The Ordinary (Historical: 2016-2018)</h3>
+      <div class="url">
+        theordinary.com
+        
+        - 151 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>The Ordinary&#39;s critical pivot between March and May 2018 was a strategic double-down: the integration of Stripe fundamentally shifted them from a potential &#39;no-name&#39; startup to a direct-to-consumer powerhouse capable of scalable transactions. Concurrently, their website content exploded from 345 to 1020 words—a monumental 195% increase. This wasn&#39;t just adding information; it was a messaging pivot from &#34;affordable ingredients&#34; to &#34;accessible, scientifically-backed skincare education.&#34; They aggressively moved to de-risk their brand by empowering customers with knowledge, fostering trust, and establishing themselves as an authoritative voice rather than just a budget option. The subsequent removal of the Facebook Pixel, while minor in isolation, suggests a growing confidence in organic traction or a strategic shift in marketing priorities as they solidify their brand authority, potentially moving away from granular performance tracking to a broader brand narrative.</p>
+<p>This aggressive pivot, cementing The Ordinary&#39;s position as an educational leader, inadvertently created a significant market gap: information overload for the everyday consumer. They have sacrificed absolute simplicity at the altar of scientific transparency. Our counter-move must exploit this &#34;analysis paralysis.&#34; Position our product as the effortless solution to their demanding curriculum. Recommend messaging that pivots from &#34;DIY skincare chemist&#34; to &#34;effortless, expertly curated results.&#34; Leverage their inherent complexity with messaging such as: &#34;Too much science, not enough glow? Stop being a skincare chemist. We&#39;ve simplified the science, so you can enjoy the results without the research.&#34; Focus on &#34;pre-built solutions,&#34; &#34;guaranteed compatibility,&#34; and &#34;zero guesswork required&#34; to capture the segment overwhelmed by The Ordinary&#39;s deep dive into ingredient-level education.</p></div>
+      </div>
+      
+
+      
+      
+      <div style="position: relative; margin-top: 1rem;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            
+            Latest archived snapshot <span class="source-pill">Wayback</span>
+            
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> The Ordinary | Clinical Formulations with Integrity.</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> N/A</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> N/A</div>
+        
+        
+        
+        <div class="analysis-detail"><strong>Tech Stack:</strong>
+            <span class="change-tag tag-tech">Stripe</span>
+        </div>
+        
+      </div>
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
+      <div class="snapshot-timeline" style="position: relative;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-03-10 &#8594; 2018-05-13
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20180513175317/theordinary.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-05-13 &#8594; 2018-08-11
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20180811071756/theordinary.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+    <div class="competitor-card">
+      <h3>Hero Cosmetics (Historical: 2017-2019)</h3>
+      <div class="url">
+        herocosmetics.us
+        
+        - 59 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>STRATEGIC INSIGHT FOR THE FOUNDER:</p>
+<p>Hero Cosmetics executed a critical strategic pivot between November 2018 and February 2019, shifting from a generic product description to a compelling, problem-solution driven brand. They moved from a functional statement like &#34;Hydrocolloid Acne Patches, 36 patches, 12mm size. Absorbs pus while protecting blemishes for faster healing. The best way to treat trouble spots.&#34; to framing an urgent need with the H1 &#34;Got a pimple emergency?&#34; and defining a modern, ethical solution in the meta description: &#34;Absorbs pus while protecting pimples for faster healing. The new way to treat your acne breakouts. Cruelty-free, vegan-friendly and super gentle on skin.&#34; This was the exact moment they began de-risking from a no-name startup to a category leader, consolidating their core product pricing around $12.99 and $17.99 and introducing &#34;Subscribe Now,&#34; signaling a focus on customer lifetime value for a now clearly defined, premium solution.</p>
+<p>However, this rapid growth and messaging pivot came at a significant cost, revealing a critical vulnerability. Between February and June 2019, Hero Cosmetics inexplicably removed &#39;Segment&#39; and &#39;Google Analytics&#39; from their site, effectively abandoning their primary data infrastructure at a crucial scaling juncture. Simultaneously, their clear H1 &#34;Got a pimple emergency?&#34; disappeared. This indicates either a chaotic, data-blind period, a reliance on unlisted internal systems, or a severe tactical oversight in maintaining a data-driven approach. Our counter-move must exploit this gaping vulnerability. We should position our product with a &#34;Data-Backed Efficacy, Transparent Results&#34; narrative, directly challenging Hero&#39;s apparent neglect of analytics and the ambiguity of their current H1. Our messaging should be, &#34;Stop guessing in a pimple emergency. Our solution provides proven, data-driven results, guaranteed.&#34; This directly contrasts Hero&#39;s 2019 changes, appealing to consumers seeking measurable, reliable outcomes in a market where Hero has inadvertently signaled a potential lack of data-driven confidence. Target their stable $12.99-$17.99 price point with competitive packages emphasizing immediate, tangible proof of efficacy to capture those wary of subscription commitments without clear, verifiable performance.</p></div>
+      </div>
+      
+
+      
+      
+      <div style="position: relative; margin-top: 1rem;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            
+            Latest archived snapshot <span class="source-pill">Wayback</span>
+            
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> Hero Cosmetics | Best-Selling Acne Patches - Mighty Patch by Hero Cosmetics</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> N/A</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> Absorbs pus while protecting pimples for faster healing. The new way to treat your acne breakouts. Cruelty-free, vegan-friendly and super gentle on skin.</div>
+        
+        <div class="analysis-detail"><strong>CTAs:</strong> Subscribe Now | Learn More | $12.99 Add to Cart | $17.99 Add to Cart | Join Now</div>
+        
+        
+        
+        <div class="analysis-detail"><strong>Tech Stack:</strong>
+            <span class="change-tag tag-tech">Google Tag Manager</span><span class="change-tag tag-tech">Shopify</span>
+        </div>
+        
+      </div>
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
+      <div class="snapshot-timeline" style="position: relative;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-06-18 &#8594; 2018-11-06
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20181106075321/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-11-06 &#8594; 2019-02-14
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20190214144706/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2019-02-14 &#8594; 2019-06-02
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20190602223516/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2019-06-02 &#8594; 2019-07-15
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20190715014226/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2019-07-15 &#8594; 2019-12-28
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20191228052858/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+
+    <!-- MVP DEMO LOCK: Show Locked Competitors -->
+    
+
+    
+
+  </div>
+
+  <div class="footer">
+    <p>Business Spy - Competitive Intelligence Engine</p>
+    <p>Historical web data analysis for strategic research purposes.</p>
+  </div>
+
+</body>
+
+</html>

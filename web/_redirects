@@ -1,0 +1,5 @@
+/api/*      https://bizspy-api.leadideal.com/api/:splat       200!
+/health     https://bizspy-api.leadideal.com/health           200!
+/reports/*  https://bizspy-api.leadideal.com/reports/:splat   200!
+/brief/*    https://bizspy-api.leadideal.com/brief/:splat     200!
+/*          /index.html               200

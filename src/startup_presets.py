@@ -82,6 +82,48 @@ STARTUP_PRESETS: Dict[str, Dict[str, Any]] = {
             {"domain": "lusha.com", "selection_reason": "Israeli-rooted B2B data benchmark relevant for localization contrast.", "similarity_score": 0.88},
         ],
     },
+    "leadideal-il-us-wedge": {
+        "preset_id": "leadideal-il-us-wedge",
+        "label": "LeadIdeal (Israeli founder selling to US)",
+        "target_url": "leadideal.com",
+        "startup_name": "LeadIdeal",
+        "variant_id": "il-us-wedge",
+        "language": "en",
+        "geo": "us",
+        "offer": "AI Lead Research (low-cost self-serve)",
+        "audience": "Israeli founders selling to US B2B buyers",
+        "objective": "Pick a wedge of Israeli operators selling to US buyers and pressure-test the $49 self-serve positioning against same-band tools, not enterprise platforms or DFY agencies.",
+        "message_pillars": [
+            "Israeli founder, US-quality buyers — without an SDR team",
+            "Verified contacts at $49 vs paying for unused Apollo seats",
+            "Proof-of-work before commitment, not a 12-month contract",
+        ],
+        "recommended_experiments": [
+            "Ship a hero variant explicitly addressed to Israeli founders selling to US buyers.",
+            "Replace any agency / DFY language on the homepage with self-serve $49 pricing language.",
+        ],
+        "publishability": {
+            "internal_only": False,
+            "public_case_study_ready": True,
+            "redactions_needed": ["customer names", "internal buyer lists"],
+        },
+        "leadideal": {
+            "industry": "lead generation",
+            "roles": ["Founder", "Owner", "Head of Growth"],
+            "locations": ["United States"],
+            "job_title": "",
+            "base_url": "https://leadideal.com",
+            "segment_label": "startup-intel-leadideal-il-us-wedge",
+        },
+        "wedge": {
+            "geo_origin": "il",
+            "geo_target": "us",
+            "price_tier": "low_self_serve",
+            "business_model": "self_serve",
+            "audience_segment": "Israeli founders / small operators selling to US B2B buyers",
+        },
+        # Intentionally NO seeded_competitors so the wedge-aware AI discovery path runs.
+    },
     "creatorpacks": {
         "preset_id": "creatorpacks",
         "label": "CreatorPacks",
@@ -221,7 +263,7 @@ def apply_startup_preset(payload: Optional[Dict[str, Any]]) -> Dict[str, Any]:
 
     merged = deepcopy(preset)
     for key, value in payload.items():
-        if key in {"leadideal", "creatorpacks", "publishability"} and isinstance(value, dict):
+        if key in {"leadideal", "creatorpacks", "publishability", "wedge"} and isinstance(value, dict):
             existing = merged.get(key) or {}
             existing.update(value)
             merged[key] = existing

@@ -1,7 +1,17 @@
 # Wayback Revenue Pipeline - Project Context
 
-**Last Updated**: 2026-04-19
-**Status**: Local Flask demo working. **New**: Automated Forensic Handoff to LeadIdeal integrated (2026-04-19).
+**Last Updated**: 2026-04-20
+**Status**: **LIVE** — Frontend at https://bizspy.netlify.app proxies to Flask API on EC2 at https://bizspy-api.leadideal.com.
+
+## Production Deploy (2026-04-20)
+
+- **Frontend**: `bizspy.netlify.app` (Netlify, site id `d7aabf23-87a7-4131-b6b6-80d70779e0df`, pre-built deploy mode).
+- **Backend**: gunicorn + Flask on EC2 `i-0d5bbaa30ace972dc` (EIP `100.48.115.164`), bound `127.0.0.1:8010`, fronted by nginx vhost `bizspy-api.leadideal.com` with Let's Encrypt TLS (auto-renew enabled).
+- **App dir**: `/opt/bizspy-api/` (user `bizspy`), systemd unit `bizspy-api.service`, env file `/opt/bizspy-api/.env` (composed from leadideal shared keys + bizspy defaults).
+- **Netlify proxy**: `web/_redirects` (built locally via `scripts/build_netlify_redirects.sh` from `BIZSPY_API_ORIGIN`) routes `/api/*`, `/health`, `/reports/*` -> EC2 backend.
+- **Agent contract**: `bizspy.report.agent.v1` JSON at `GET /api/agent/<slug>` (FREE redacted, PAID full); `POST /api/agent/resolve` for URL lookup; `POST /api/admin/unlock` (header `X-Admin-Token`) for manual paid promotion.
+- **Paid fulfillment**: `fulfill_order` reads `<slug>/render-payload.json` and re-emits agent JSON with `is_paid=True` so PAID buyers get full uncensored content.
+- **Deploy bundle**: `deploy/ec2/` (systemd unit, nginx confs, install script, README).
 
 ## LeadIdeal Forensic Signal Handoff (2026-04-19)
 

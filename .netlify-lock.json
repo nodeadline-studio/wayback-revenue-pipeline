@@ -1,0 +1,10 @@
+{
+  "site_id": "d7aabf23-87a7-4131-b6b6-80d70779e0df",
+  "site_name": "slopradar",
+  "project_dir": "wayback-revenue-pipeline",
+  "custom_domain": "bizspy.netlify.app",
+  "build_dir": "web",
+  "functions_dir": "netlify/functions",
+  "deploy_mode": "pre-built",
+  "notes": "Static publish dir 'web' contains index.html + reports/beauty/<slug>/public-demo.html. Pre-built mode: never let Netlify rebuild — bundle locally then deploy --no-build."
+}

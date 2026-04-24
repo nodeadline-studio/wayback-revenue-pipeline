@@ -64,7 +64,6 @@
       color: var(--accent);
     }
   </style>
-  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
 </head>
 <body>
   <div class="checkout-card">
@@ -95,14 +94,20 @@
 
     const packages = {
       'single': { name: 'Single Forensic Scan', price: '49.00' },
-      'pro': { name: 'Founder Pass (5 Reports)', price: '149.00' }
+      'pro': { name: 'Founder Pass (5 Reports)', price: '149.00' },
+      'super': { name: 'Super Tier + 20 ICP Prospects', price: '499.00' }
     };
 
     const pkg = packages[packageId] || packages.single;
     document.getElementById('pkg-name').innerText = pkg.name;
     document.getElementById('pkg-price').innerText = `$${pkg.price}`;
 
-    paypal.Buttons({
+        function initPayPalButtons(clientId) {
+          const sdkUrl = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=USD`;
+          const script = document.createElement('script');
+          script.src = sdkUrl;
+          script.onload = function () {
+          paypal.Buttons({
       createOrder: function(data, actions) {
         return fetch('/api/paypal/create-order', {
           method: 'POST',
@@ -133,7 +138,24 @@
           }
         });
       }
-    }).render('#paypal-button-container');
+        }).render('#paypal-button-container');
+              };
+              document.body.appendChild(script);
+            }
+
+            fetch('/api/paypal-config')
+              .then(r => r.json())
+              .then(cfg => {
+                const clientId = cfg.client_id;
+                if (!clientId) {
+                  document.getElementById('status').innerText = 'Payment not configured. Contact support.';
+                  return;
+                }
+                initPayPalButtons(clientId);
+              })
+              .catch(() => {
+                document.getElementById('status').innerText = 'Failed to load payment config. Refresh and try again.';
+              });
   </script>
 </body>
 </html>

@@ -7,8 +7,8 @@ const BASE = 'http://127.0.0.1:8889';
 
 test('Landing: loads with correct title and hero', async ({ page }) => {
   await page.goto(BASE);
-  await expect(page).toHaveTitle(/Business Spy/i);
-  const hero = page.locator('h1');
+  await expect(page).toHaveTitle(/BizSpy/i);
+  const hero = page.locator('.hero-content--clone h1');
   await expect(hero).toBeVisible();
   const heroText = await hero.textContent();
   expect(heroText.toLowerCase()).not.toContain('vapi');
@@ -28,15 +28,16 @@ test('Landing: no supplier/technical references', async ({ page }) => {
 
 test('Landing: has domain input and submit button', async ({ page }) => {
   await page.goto(BASE);
-  const input = page.locator('input#target-url');
+  const input = page.locator('.hero-content--clone .mode-url-input');
   await expect(input).toBeVisible();
-  await expect(input).toHaveAttribute('placeholder', /yourstartup/i);
-  const btn = page.locator('button[type="submit"]');
+  await expect(input).toHaveAttribute('placeholder', 'Enter target domain to scan...');
+  const btn = page.locator('.hero-content--clone button[type="submit"]');
   await expect(btn).toBeVisible();
-  await expect(btn).toContainText(/Generate Free/i);
+  await expect(btn).toContainText(/Initiate Scan/i);
 });
 
-test('Landing: pricing tier no voice, has market impact', async ({ page }) => {
+test.fixme('Landing: pricing tier no voice, has market impact', async ({ page }) => {
+  // .pricing-tier element removed from current landing page design
   await page.goto(BASE);
   const tier = page.locator('.pricing-tier');
   await expect(tier).toBeVisible();
@@ -45,69 +46,55 @@ test('Landing: pricing tier no voice, has market impact', async ({ page }) => {
   expect(text.toLowerCase()).toContain('market impact');
 });
 
-test('Landing: sample insight quote visible', async ({ page }) => {
+test.fixme('Landing: sample insight quote visible', async ({ page }) => {
+  // 'Sample finding from a real report' block removed from current design
   await page.goto(BASE);
   const body = await page.locator('body').textContent();
   expect(body).toContain('Sample finding from a real report');
 });
 
-test('Landing: form submission redirects to status page', async ({ page }) => {
+test('Landing: form submission shows email modal then redirects', async ({ page }) => {
+  test.setTimeout(20000);
   await page.goto(BASE);
-  const input = page.locator('input#target-url');
+  const input = page.locator('.hero-content--clone .mode-url-input');
   await input.fill('example.com');
 
-  await page.locator('button[type="submit"]').click();
-  // The form does a fetch then window.location.href - wait for navigation
-  await page.waitForURL('**/api/status**', { timeout: 15000 });
-  const url = page.url();
-  expect(url).toContain('/api/status');
+  await page.locator('.hero-content--clone button[type="submit"]').click();
+
+  // Modal should appear asking for email
+  await expect(page.locator('#email-modal')).toHaveClass(/open/, { timeout: 3000 });
+  await page.locator('#modal-input').fill('test@bizspy.io');
+  await page.locator('#modal-submit').click();
+
+  // After email submit the fetch fires; expect redirect to status page
+  await page.waitForURL(/\/status\/|api\/status/, { timeout: 15000 });
+  expect(page.url()).toMatch(/status/);
 });
 
 // ─── CHECKOUT PAGE ──────────────────────────────────────────────────────────
 
-test('Checkout: loads with package cards', async ({ page }) => {
+test('Checkout: loads with correct title and order summary', async ({ page }) => {
   await page.goto(BASE + '/checkout');
   await expect(page).toHaveTitle(/Checkout/i);
-
-  const starter = page.locator('.package-card[data-package="starter"]');
-  const pro = page.locator('.package-card[data-package="pro"]');
-  await expect(starter).toBeVisible();
-  await expect(pro).toBeVisible();
+  await expect(page.locator('h1')).toContainText('Forensic Unlock');
+  await expect(page.locator('#paypal-button-container')).toBeAttached();
 });
 
-test('Checkout: starter card correct price and features', async ({ page }) => {
-  await page.goto(BASE + '/checkout');
-  const starter = page.locator('.package-card[data-package="starter"]');
-  await expect(starter.locator('.price')).toContainText('$49');
-  const text = await starter.textContent();
-  expect(text).toContain('3 competitors');
-  expect(text).toContain('Executive Strategy Summary');
+test('Checkout: single plan shows $49 price', async ({ page }) => {
+  await page.goto(BASE + '/checkout?packageId=single&email=test@bizspy.io');
+  await expect(page.locator('#pkg-price')).toContainText('$49');
+  await expect(page.locator('#pkg-name')).toContainText('Single');
 });
 
-test('Checkout: pro card correct price and features', async ({ page }) => {
-  await page.goto(BASE + '/checkout');
-  const pro = page.locator('.package-card[data-package="pro"]');
-  await expect(pro.locator('.price')).toContainText('$149');
-  const text = await pro.textContent();
-  expect(text).toContain('5 competitors');
-  expect(text).toContain('JSON data export');
+test('Checkout: pro plan shows $149 price', async ({ page }) => {
+  await page.goto(BASE + '/checkout?packageId=pro&email=test@bizspy.io');
+  await expect(page.locator('#pkg-price')).toContainText('$149');
+  await expect(page.locator('#pkg-name')).toContainText('Founder Pass');
 });
 
-test('Checkout: package selection highlights and updates summary', async ({ page }) => {
-  await page.goto(BASE + '/checkout');
-  await page.waitForTimeout(1500);
-
-  const pro = page.locator('.package-card[data-package="pro"]');
-  await expect(pro).toHaveClass(/selected/);
-
-  await page.locator('.package-card[data-package="starter"]').click();
-  const starter = page.locator('.package-card[data-package="starter"]');
-  await expect(starter).toHaveClass(/selected/);
-
-  const summaryName = page.locator('#summary-name');
-  await expect(summaryName).toContainText('Starter');
-  const summaryPrice = page.locator('#summary-price');
-  await expect(summaryPrice).toContainText('$49');
+test('Checkout: email prefills from query param', async ({ page }) => {
+  await page.goto(BASE + '/checkout?packageId=single&email=founder@test.io');
+  await expect(page.locator('#user-email')).toContainText('founder@test.io');
 });
 
 test('Checkout: PayPal SDK loads and renders buttons', async ({ page }) => {
@@ -122,18 +109,16 @@ test('Checkout: PayPal SDK loads and renders buttons', async ({ page }) => {
   expect(hasPayPal || hasError || content.length > 10).toBeTruthy();
 });
 
-test('Checkout: form-error element exists', async ({ page }) => {
+test('Checkout: status message element exists', async ({ page }) => {
   await page.goto(BASE + '/checkout');
   await page.waitForTimeout(2000);
-  const errorEl = page.locator('#form-error');
-  await expect(errorEl).toBeAttached();
+  const statusEl = page.locator('#status');
+  await expect(statusEl).toBeAttached();
 });
 
-test('Checkout: back link to home', async ({ page }) => {
+test('Checkout: order summary is visible', async ({ page }) => {
   await page.goto(BASE + '/checkout');
-  const backLink = page.locator('a.back-link');
-  await expect(backLink).toBeVisible();
-  await expect(backLink).toHaveAttribute('href', '/');
+  await expect(page.locator('.order-summary')).toBeVisible();
 });
 
 // ─── API ENDPOINTS ──────────────────────────────────────────────────────────
@@ -238,11 +223,11 @@ test('Mobile: landing page works on 375px', async ({ browser }) => {
   const page = await context.newPage();
   await page.goto(BASE);
 
-  const hero = page.locator('h1');
+  const hero = page.locator('.hero-content--clone h1');
   await expect(hero).toBeVisible();
-  const input = page.locator('input#target-url');
+  const input = page.locator('.hero-content--clone .mode-url-input');
   await expect(input).toBeVisible();
-  const btn = page.locator('button[type="submit"]');
+  const btn = page.locator('.hero-content--clone button[type="submit"]');
   await expect(btn).toBeVisible();
 
   await context.close();
@@ -255,10 +240,8 @@ test('Mobile: checkout page works on 375px', async ({ browser }) => {
   const page = await context.newPage();
   await page.goto(BASE + '/checkout');
 
-  const starter = page.locator('.package-card[data-package="starter"]');
-  const pro = page.locator('.package-card[data-package="pro"]');
-  await expect(starter).toBeVisible();
-  await expect(pro).toBeVisible();
+  await expect(page.locator('.checkout-card')).toBeVisible();
+  await expect(page.locator('#paypal-button-container')).toBeAttached();
 
   await context.close();
 });

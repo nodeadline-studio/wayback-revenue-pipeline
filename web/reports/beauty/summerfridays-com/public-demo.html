@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Report: summerfridays.com - Competitive Intelligence Report</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --surface2: #24243a;
+      --border: #2e2e4a;
+      --text: #e4e4f0;
+      --muted: #8888aa;
+      --accent: #7c5cfc;
+      --accent2: #ff6b6b;
+      --green: #34d399;
+      --orange: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .header .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-card .label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+
+    .competitor-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .competitor-card h3 {
+      color: var(--accent);
+      font-size: 1.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .competitor-card .url {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .snapshot-timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin: 1rem 0;
+    }
+
+    .snapshot-timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--surface2);
+      border-radius: 8px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.75rem;
+      top: 1.25rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .timeline-date {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .change-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin: 0.15rem 0.25rem 0.15rem 0;
+    }
+
+    .tag-added {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--green);
+    }
+
+    .tag-removed {
+      background: rgba(255, 107, 107, 0.15);
+      color: var(--accent2);
+    }
+
+    .tag-changed {
+      background: rgba(124, 92, 252, 0.15);
+      color: var(--accent);
+    }
+
+    .tag-tech {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--orange);
+    }
+
+    .tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .tech-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+    }
+
+    .price-table th,
+    .price-table td {
+      padding: 0.6rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .price-table th {
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .snapshot-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.8rem;
+    }
+
+    .snapshot-link:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .diff-block {
+      margin: 0.5rem 0;
+    }
+
+    .diff-from {
+      color: var(--accent2);
+      text-decoration: line-through;
+      font-size: 0.9rem;
+    }
+
+    .diff-to {
+      color: var(--green);
+      font-size: 0.9rem;
+    }
+
+    .analysis-detail {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .analysis-detail strong {
+      color: var(--accent);
+    }
+
+    .source-pill {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      margin-left: 0.5rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(52, 211, 153, 0.08);
+    }
+
+    .page-list {
+      margin-top: 0.75rem;
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .page-list a {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .page-list a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .page-label {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .ai-insight {
+      background: linear-gradient(135deg, rgba(124, 92, 252, 0.1), rgba(255, 107, 107, 0.05));
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-insight::before {
+      content: 'AI INSIGHT';
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      opacity: 0.5;
+    }
+
+    .ai-insight h2,
+    .ai-insight h4 {
+      border: none !important;
+      color: var(--accent) !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    .ai-insight p {
+      font-style: italic;
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+
+      .header h1 {
+        font-size: 1.4rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .competitor-card {
+        padding: 1rem;
+      }
+
+      .timeline-item {
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+
+      .diff-from,
+      .diff-to {
+        font-size: 0.8rem;
+        word-break: break-word;
+      }
+
+      .price-table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .snapshot-timeline {
+        padding-left: 1.5rem;
+      }
+
+      .analysis-detail {
+        word-break: break-word;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <!-- Hero / Niche Title -->
+    <div class="hero-section">
+      
+      <h1>Free Report: summerfridays.com</h1>
+      <p>Strategic Intelligence Report &mdash; Generated on 2026-04-20 06:02 UTC</p>
+    </div>
+
+    
+    
+    
+    
+    <div style="margin: 1.5rem 0; background: linear-gradient(90deg, rgba(124, 92, 252, 0.2), rgba(0, 245, 255, 0.1)); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; text-align: center; position: relative; overflow: hidden;">
+        <div style="position: relative; z-index: 2;">
+            <h3 style="color: white; margin-bottom: 0.5rem; font-size: 1.2rem;">Detailed Forensic Evidence Locked</h3>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem;">This is a redacted Free Scan. Purchase a <strong>Forensic Unlock</strong> to access the full historical pivot data, unredacted AI Agent Playbooks, and 60s Forensic Video generation.</p>
+            <a href="/#pricing" style="display: inline-block; background: var(--accent); color: white; text-decoration: none; padding: 0.8rem 1.75rem; border-radius: 10px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 0 20px rgba(124, 92, 252, 0.3);">Unlock Full Intelligence</a>
+        </div>
+    </div>
+    
+    <div class="subtitle" style="margin-top:0.5rem; font-size: 0.8rem;">Historical web data analysis</div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="number">4</div>
+      <div class="label">Competitors Tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">219</div>
+      <div class="label">Snapshots Analyzed</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">12</div>
+      <div class="label">Changes Detected</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">7</div>
+      <div class="label">Tech Tools Found</div>
+    </div>
+  </div>
+
+  <!-- AI Strategic Summary -->
+  
+  <div class="ai-insight section">
+    <h2>Executive Strategic Summary</h2>
+    <p>The beauty and skincare market has undergone a significant fragmentation, moving from traditional brand loyalty to a landscape dominated by niche DTC players. This evolution has created vulnerabilities among what once were disruptive forces, now showing signs of strategic bloat or over-specialization. Glossier, a historical titan (2014-2016 data unavailable for direct analysis, but widely acknowledged as a category definer), successfully built an empire on aspirational lifestyle and community, but its broad appeal risks becoming generic, lacking a sharp focus on specific, tangible results for the discerning consumer. Similarly, The Ordinary (2016-2018 data showing a lean Stripe-only tech stack) disrupted with extreme transparency and aggressive pricing, yet its single-ingredient, science-first approach can overwhelm, creating &#34;complexity bloat&#34; for consumers seeking simplified, holistic skincare solutions rather than a chemist&#39;s toolkit. Hero Cosmetics (2017-2019, focused on &#34;Absorbs pus while protecting pimples&#34; with explicit CTAs like &#34;$12.99 Add to Cart&#34;) found a strong niche in hyper-specific problem-solving, but its tight focus inherently limits its addressable market and positioning beyond reactive solutions.</p>
+<p>Summerfridays, with its current H1 &#34;Dewier Skin is Coming...&#34; and meta description highlighting &#34;glowing, with vegan and clean ingredients,&#34; is strategically positioned to exploit these competitive gaps. While Glossier sells an aesthetic, Summerfridays delivers a tangible, aspirational outcome (&#34;dewier,&#34; &#34;glowing&#34;) with a strong ethical backing (&#34;vegan and clean&#34;). This contrasts sharply with Glossier’s potential lack of specific results messaging. Against The Ordinary&#39;s scientific deluge, Summerfridays offers curated elegance; its current messaging emphasizes an effortless path to radiance, bypassing the overwhelming complexity of single-ingredient DIY. Furthermore, its current CTAs, including &#34;Join the Self-Care Club Rewards&#34; and &#34;Subscribe &amp; Save Get 15% Off,&#34; signal a clear move beyond the reactive, problem-solution focus of Hero Cosmetics towards a comprehensive, preventative, and indulgence-driven skincare regimen, optimizing for customer lifetime value rather than single-transaction impulse buys. The lean Shopify-centric tech stack indicates efficient scaling, focusing resources on brand building and customer experience.</p>
+<p>To aggressively counter-position, Summerfridays should double down on owning the &#34;effortless efficacy in clean self-care&#34; narrative. While The Ordinary has bloated its consumer base with overwhelming ingredient choices, Summerfridays should confidently present itself as the sophisticated curator, offering a streamlined path to visible, glowing results without compromise on ethics or experience. This means messaging not just &#34;clean&#34; but &#34;clean without the confusion,&#34; and not just &#34;glowing&#34; but &#34;glowing, simplified.&#34; The &#34;EXACT moment&#34; Summerfridays pivoted from a &#34;No-name&#34; startup to a nascent &#34;Category Leader&#34; is precisely in its current messaging shift: from simply listing products to promising a future state (&#34;Dewier Skin is Coming...&#34;) and fostering deep customer relationships via &#34;Self-Care Club Rewards&#34; and &#34;Subscribe &amp; Save.&#34; This signals a profound shift from transactional product sales to building a visionary brand that sells an achievable, aspirational lifestyle backed by tangible, ethical results, carving out a lucrative segment between mass-market complexity and hyper-niche problem solvers.</p>
+  </div>
+  
+
+  <!-- Agent Execution Playbook -->
+  
+  <div class="section">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem;">
+        <h2 style="border: none; margin: 0;">Agent Execution Playbook</h2>
+        <div style="display: flex; gap: 0.5rem;">
+            <button id="video-btn" onclick="triggerVideoEngine()" style="background: var(--bg); color: var(--green); border: 1px solid var(--green); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.4rem;">
+                <span id="video-btn-icon">🎬</span>
+                <span id="video-btn-text">Generate Forensic Video</span>
+            </button>
+            <button onclick="copyAgentJSON()" style="background: var(--surface2); color: var(--accent); border: 1px solid var(--accent); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy JSON Manifest</button>
+            <button onclick="copyForAIAgent()" style="background: var(--accent); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Copy AI Agent Brief</button>
+        </div>
+    </div>
+    <p style="color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">The following tasks are optimized for AI agents. Hand these instructions to your AI developer or growth agent for immediate execution based on this intelligence run.</p>
+    
+    <div style="display: grid; gap: 1rem;">
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">POSITIONING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Revise the website&#39;s main hero headline to directly address a core pain point or promised benefit for your target audience, mirroring Hero Cosmetics&#39; &#39;Got a pimple emergency?&#39; pivot and Summerfridays&#39; &#39;Dewier Skin is Coming...&#39; messaging evolution.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Hero Cosmetics&#39; immediate problem-solution framing and Summerfridays&#39; anticipatory benefit headline effectively capture attention and establish immediate relevance, crucial for early market penetration and category leadership.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Implement a strategic pricing structure that includes a low-cost or free entry-point product (e.g., sample/mini) alongside your main offerings to de-risk initial purchase, similar to Hero Cosmetics&#39; initial &#39;$1&#39; offering and Summerfridays&#39; later &#39;$0&#39; entry, while expanding into higher-value product tiers.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Providing an accessible entry point lowers the barrier to trial and builds trust, while a diverse pricing range supports broader market capture and increased average order value, indicating a mature product strategy.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Develop and launch a comprehensive customer loyalty program or &#39;Subscribe &amp; Save&#39; initiative, mirroring Summerfridays&#39; &#39;Join the Self-Care Club Rewards&#39; and &#39;Subscribe &amp; Save Get 15% Off&#39; to incentivize repeat purchases and build community.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Loyalty programs significantly increase customer lifetime value and foster a sense of belonging, moving customers from transactional to relational, a key growth signal for scaling brands.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">TECHNICAL</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Ensure a robust and integrated e-commerce and analytics tech stack is in place, specifically integrating Shopify for sales, Google Tag Manager for event tracking, and Google Analytics for performance measurement, as demonstrated by Summerfridays&#39; early adoption, and Stripe for payments like The Ordinary.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">A solid technical foundation is critical for scalable operations, data-driven decision-making, and secure transactions, effectively de-risking future growth and enabling competitive intelligence.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--muted); letter-spacing: 0.05em;">MEDIUM PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Replace generic &#39;Shop Now&#39; CTAs with descriptive, benefit-oriented &#39;Learn More&#39; buttons for individual products, and implement &#39;Coming Soon&#39; teasers for upcoming launches, replicating Summerfridays&#39; detailed product storytelling and launch strategy.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Detailed CTAs educate customers and guide them through specific product benefits, while &#39;Coming Soon&#39; messages build anticipation and capture early interest, signaling a robust product pipeline.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--muted); letter-spacing: 0.05em;">MEDIUM PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Deploy an SMS sign-up CTA and integrate an SMS marketing platform to establish a direct, high-conversion communication channel with potential and existing customers, as implemented by Summerfridays for enhanced engagement.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">SMS marketing offers significantly higher open and conversion rates than email, facilitating direct, personalized engagement for promotions, updates, and community building, indicating a mature growth strategy.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; position: relative;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span class="source-pill" style="margin-left: 0; background: rgba(124, 92, 252, 0.1); color: var(--accent); border-color: var(--accent);">MARKETING</span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--accent2); letter-spacing: 0.05em;">HIGH PRIORITY</span>
+        </div>
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text);">Introduce a clear subscription option for core products, allowing customers to &#39;Subscribe Now&#39; or &#39;Subscribe + Save&#39;, emulating Hero Cosmetics&#39; and Summerfridays&#39; successful move to recurring revenue models.</div>
+        <div style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">Subscriptions drive predictable recurring revenue, increase customer loyalty, and simplify the re-purchase process for customers, providing a strong signal of business model sustainability and growth.</div>
+        
+        <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden;">
+            
+            <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.1em; z-index: 10;">
+                <span onclick="window.location.href='/#pricing'" style="cursor: pointer; text-decoration: underline;">UNLOCK FORENSIC PLAYBOOK</span>
+            </div>
+            
+            <code style="font-size: 0.8rem; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 1rem;">"LOCK-RED-XXXX-XXXX-XXXX"</code>
+            <button onclick="if(isPaid) { copySnippet('[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks.') } else { alert('Upgrade to unlock machine-readable prompts.') }" style="background: none; border: 1px solid var(--muted); color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; cursor: pointer; opacity: 0.4;">Copy Prompt</button>
+        </div>
+      </div>
+      
+    </div>
+
+    <script>
+      const isPaid = false;
+      const agentData = [
+  {
+    "category": "positioning",
+    "priority": "high",
+    "task": "Revise the website's main hero headline to directly address a core pain point or promised benefit for your target audience, mirroring Hero Cosmetics' 'Got a pimple emergency?' pivot and Summerfridays' 'Dewier Skin is Coming...' messaging evolution.",
+    "rationale": "Hero Cosmetics' immediate problem-solution framing and Summerfridays' anticipatory benefit headline effectively capture attention and establish immediate relevance, crucial for early market penetration and category leadership.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "high",
+    "task": "Implement a strategic pricing structure that includes a low-cost or free entry-point product (e.g., sample/mini) alongside your main offerings to de-risk initial purchase, similar to Hero Cosmetics' initial '$1' offering and Summerfridays' later '$0' entry, while expanding into higher-value product tiers.",
+    "rationale": "Providing an accessible entry point lowers the barrier to trial and builds trust, while a diverse pricing range supports broader market capture and increased average order value, indicating a mature product strategy.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "high",
+    "task": "Develop and launch a comprehensive customer loyalty program or 'Subscribe & Save' initiative, mirroring Summerfridays' 'Join the Self-Care Club Rewards' and 'Subscribe & Save Get 15% Off' to incentivize repeat purchases and build community.",
+    "rationale": "Loyalty programs significantly increase customer lifetime value and foster a sense of belonging, moving customers from transactional to relational, a key growth signal for scaling brands.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "technical",
+    "priority": "high",
+    "task": "Ensure a robust and integrated e-commerce and analytics tech stack is in place, specifically integrating Shopify for sales, Google Tag Manager for event tracking, and Google Analytics for performance measurement, as demonstrated by Summerfridays' early adoption, and Stripe for payments like The Ordinary.",
+    "rationale": "A solid technical foundation is critical for scalable operations, data-driven decision-making, and secure transactions, effectively de-risking future growth and enabling competitive intelligence.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "medium",
+    "task": "Replace generic 'Shop Now' CTAs with descriptive, benefit-oriented 'Learn More' buttons for individual products, and implement 'Coming Soon' teasers for upcoming launches, replicating Summerfridays' detailed product storytelling and launch strategy.",
+    "rationale": "Detailed CTAs educate customers and guide them through specific product benefits, while 'Coming Soon' messages build anticipation and capture early interest, signaling a robust product pipeline.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "medium",
+    "task": "Deploy an SMS sign-up CTA and integrate an SMS marketing platform to establish a direct, high-conversion communication channel with potential and existing customers, as implemented by Summerfridays for enhanced engagement.",
+    "rationale": "SMS marketing offers significantly higher open and conversion rates than email, facilitating direct, personalized engagement for promotions, updates, and community building, indicating a mature growth strategy.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  },
+  {
+    "category": "marketing",
+    "priority": "high",
+    "task": "Introduce a clear subscription option for core products, allowing customers to 'Subscribe Now' or 'Subscribe + Save', emulating Hero Cosmetics' and Summerfridays' successful move to recurring revenue models.",
+    "rationale": "Subscriptions drive predictable recurring revenue, increase customer loyalty, and simplify the re-purchase process for customers, providing a strong signal of business model sustainability and growth.",
+    "agent_prompt_snippet": "[LOCKED] Purchase Forensic Unlock to access AI Agent Playbooks."
+  }
+];
+      
+      function copyToClipboard(text, msg) {
+        navigator.clipboard.writeText(text).then(() => alert(msg || 'Copied to clipboard!'));
+      }
+
+      function copyAgentJSON() {
+        copyToClipboard(JSON.stringify(agentData, null, 2), 'Agent JSON Manifest copied!');
+      }
+
+      function copySnippet(text) {
+        copyToClipboard(text, 'Agent prompt snippet copied!');
+      }
+
+      function copyForAIAgent() {
+        if (!isPaid) {
+          alert('Unlock the Forensic Playbook to access machine-readable prompts for your AI agents.');
+          return;
+        }
+        const prompt = "I have analyzed my competitors using Business Spy. Here are the actionable tasks I need you to execute (works with Claude Code, Cursor, Copilot, Antigravity, or any agentic AI):\n\n" + 
+          agentData.map(t => `- [${t.priority.toUpperCase()}] ${t.task}\n  Prompt: ${t.agent_prompt_snippet}`).join('\n\n') +
+          "\n\nStrategic Video Script Context:\n" + JSON.stringify(videoScriptData, null, 2);
+        copyToClipboard(prompt, 'AI agent brief copied to clipboard.');
+      }
+
+      const videoScriptData = {
+  "full_voiceover": "Forensic Studio analysis locked. Upgrade to generate your cinematic strategy trailer."
+};
+      const VIDEO_ENGINE_URL = "https://lexicographic-venturesomely-angelita.ngrok-free.dev";
+
+      async function triggerVideoEngine() {
+        if (!isPaid) {
+          alert('Forensic Studio Locked. Upgrade to clear reports for one-click asset production.');
+          return;
+        }
+        const btn = document.getElementById('video-btn');
+        const btnText = document.getElementById('video-btn-text');
+        const btnIcon = document.getElementById('video-btn-icon');
+
+        if (!videoScriptData || !videoScriptData.full_voiceover) {
+            alert("No video script available for this report run.");
+            return;
+        }
+
+        try {
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btnText.innerText = "Dispatching to Studio...";
+            btnIcon.innerText = "🛰️";
+
+            const response = await fetch(`${VIDEO_ENGINE_URL}/api/saas/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    description: videoScriptData.full_voiceover,
+                    visual_preset: videoScriptData.recommended_visual_preset || "b2b",
+                    subject: `Strategic Forensic Summary: Free Report: summerfridays.com`,
+                    speed_mode: "balanced",
+                    engine_overrides: {
+                        "vibe": videoScriptData.vibe || "technological"
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.text();
+                throw new Error(err || "Failed to trigger video engine");
+            }
+
+            const result = await response.json();
+            btnText.innerText = "Video Queued in Studio";
+            btnIcon.innerText = "✅";
+            btn.style.borderColor = "var(--green)";
+            alert(`Video generation started! Job ID: ${result.job_id || result.id}. Check local studio terminal for logs.`);
+        } catch (e) {
+            console.error(e);
+            btnText.innerText = "Dispatch Failed";
+            btnIcon.innerText = "❌";
+            btn.style.borderColor = "var(--accent2)";
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            alert(`Failed to trigger video engine: ${e.message}\n\nMake sure your local video engine is running on port 8001 and ngrok is active.`);
+        }
+      }
+    </script>
+  </div>
+  
+
+  <!-- Market Impact Analysis -->
+  
+  <div class="section">
+    <h2>Market Impact Analysis</h2>
+    <p style="color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Strategic signals derived from competitor
+      behavior patterns. Growth and decline indicators are inferred from tech investments, messaging pivots, and pricing
+      moves.</p>
+
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="color: var(--green); font-size: 1.1rem; margin-bottom: 0.75rem;">&#9650; What's Working in This Market
+      </h3>
+      
+      <div
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">Premiumization &amp; Loyalty-Driven Ecosystem</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--green); opacity: 0.8; letter-spacing: 0.05em;">LOCKED</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(52, 211, 153, 0.06); border: 1px solid rgba(52, 211, 153, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--green); margin-bottom: 0.25rem;">Direct Problem-Solution Acquisition &amp; Recurring Revenue</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="color: var(--orange); font-size: 1.1rem; margin-bottom: 0.75rem;">&#9660; Warning Signs</h3>
+      
+      <div
+        style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">Inconsistent Analytics Prioritization</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; padding: 0 1rem; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 800; color: var(--orange); opacity: 0.8; letter-spacing: 0.05em;">LOCKED</div>
+        
+      </div>
+      
+      <div
+        style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem; position: relative;">
+        <div style="font-weight: 600; color: var(--orange); margin-bottom: 0.25rem;">Ambiguous H1 Messaging &amp; CTA Volatility</div>
+        <div style="font-size: 0.9rem; color: var(--text);">[PREMIUM REDACTION] Upgrade to unlock tactical details.</div>
+        
+      </div>
+      
+    </div>
+    
+
+    
+    <div style="margin-bottom: 1.5rem;">
+      <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.75rem;">Market Trends</h3>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">The e-commerce beauty market is aggressively pivoting towards subscription and loyalty-based models to maximize Customer Lifetime Value (CLTV), evidenced by &#39;Subscribe &amp; Save&#39; and &#39;Self-Care Club Rewards&#39; initiatives.</div>
+      </div>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">Brands are adopting a tiered pricing strategy, simultaneously introducing high-end premium products and low-barrier entry points (e.g., $0 offers) to capture a broader market spectrum and drive upsells.</div>
+      </div>
+      
+      <div
+        style="background: rgba(124, 92, 252, 0.06); border: 1px solid rgba(124, 92, 252, 0.2); border-radius: 10px; padding: 1rem; margin-bottom: 0.5rem;">
+        <div style="font-size: 0.9rem; color: var(--text);">Dynamic, benefit-driven H1s are replacing static brand names, focusing on aspirational outcomes and creating anticipation for new product releases or brand evolutions.</div>
+      </div>
+      
+    </div>
+    
+
+    
+    <div
+      style="background: linear-gradient(135deg, rgba(124, 92, 252, 0.1), rgba(52, 211, 153, 0.08)); border: 1px solid var(--accent); border-radius: 12px; padding: 1.5rem; margin-top: 1rem;">
+      <h3 style="color: var(--accent); font-size: 1.1rem; margin-bottom: 0.5rem;">&#x1F3AF; Your Opportunity</h3>
+      <div style="font-size: 0.95rem; line-height: 1.6;"><p>Summerfridays must solidify its &#39;Dewier Skin is Coming...&#39; narrative by launching a compelling hero product that anchors the new $94 premium pricing and substantiates the aspirational promise. Furthermore, they need to re-evaluate their analytics strategy, potentially reintegrating a robust platform like Segment, to intricately measure the impact of &#39;Self-Care Club Rewards&#39; on customer retention and to identify strategic upsell opportunities within their growing loyal base.</p></div>
+    </div>
+    
+  </div>
+  
+
+  <!-- Tech Stack Overview -->
+  <div class="section">
+    <h2>Tech Stack Across Competitors</h2>
+    <div class="tech-grid" style="position: relative;">
+      
+      <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.1); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px;">
+          <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 800; font-size: 0.7rem; box-shadow: 0 0 15px var(--accent-glow);">UNLOCK FULL TECH STACK</span>
+      </div>
+      
+      
+      <div class="tech-chip" style="">... [LOCKED]</div>
+      
+      <div class="tech-chip" style="">Facebook Pixel</div>
+      
+      <div class="tech-chip" style="">Google Analytics</div>
+      
+      <div class="tech-chip" style="">Google Tag Manager</div>
+      
+      <div class="tech-chip" style="">Segment</div>
+      
+      <div class="tech-chip" style="opacity: 0.3;">Shopify</div>
+      
+      <div class="tech-chip" style="opacity: 0.3;">Stripe</div>
+      
+    </div>
+  </div>
+
+  <!-- Pricing Overview -->
+  
+  <div class="section">
+    <h2>Pricing Signals Detected</h2>
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>Competitor</th>
+          <th>Prices Found</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td>Summerfridays (Target)</td>
+          <td>$0, $10, $10,, $17, $20.00, $22.00, $24, $25, $26, $28, $34, $35, $36, $38.00, $42, $44, $44.00, $45, $48.00, $49, $52, $52.00, $55, $59, $64.00, $66, $72, $75, $78, $89, $94</td>
+        </tr>
+        
+        <tr>
+          <td>Hero Cosmetics (Historical: 2017-2019)</td>
+          <td>$1, $12.99, $17.99, $25</td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+
+  <!-- Per-Competitor Deep Dive -->
+  <div class="section">
+    <h2>Competitor Evolution</h2>
+
+    
+    <div class="competitor-card">
+      <h3>Summerfridays (Target)</h3>
+      <div class="url">
+        summerfridays.com
+        
+        - 9 archived snapshots and 75 live pages
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>Here is a strategic analysis of Summer Fridays&#39; evolution:</p>
+<p>Summer Fridays has executed a calculated progression from a premium DTC skincare brand to a sophisticated, aspirational innovator. Initially launching with a strong e-commerce tech stack and a mid-to-high price point (initial prices like $25-$52), their early phase (2018-2020) was about establishing brand presence and product line. The crucial pivot from a &#39;no-name&#39; startup to a category leader solidified between 2021 and 2023. During this period, they re-asserted their brand identity with &#39;Summer Fridays&#39; as the primary H1, cemented their values around &#34;cruelty-free, vegan and clean ingredients&#34; in their meta description, and signaled future innovation with a &#39;COMING SOON MIDNIGHT RITUAL RETINOL&#39; CTA. This strategic move demonstrated confidence, defined their niche, and indicated a clear roadmap for advanced product development, elevating them beyond just a collection of products to a trusted, value-driven brand. Their subsequent focus on &#39;Subscribe + Save&#39; (2023-2024) and leveraging &#39;AWARD WINNER&#39; CTAs indicated a maturation into customer lifetime value optimization and social proof.</p>
+<p>Their most recent, aggressive pivot (2024-2026) is marked by a transformative H1: &#39;Dewier Skin is Coming...&#39;. This signals a clear shift from selling current products to promising a future state of transformation and innovation. Coupled with a significant push upmarket, introducing new highest price points like $94 and a $0 placeholder (likely for samples or aggressive lead generation), Summer Fridays is now positioning itself as a leader in next-generation skincare, emphasizing loyalty programs (&#39;Join the Self-Care Club Rewards&#39;) and more aggressive discounts (&#39;Subscribe &amp; Save Get 15% Off&#39;). They are moving beyond simple &#39;clean beauty&#39; to become a high-end, forward-looking brand focused on advanced results and an exclusive customer experience.</p>
+<p>The Pivot: Summer Fridays’ most significant strategic messaging pivot was from a clean beauty brand focused on the &#39;Summer Fridays feeling&#39; to a visionary, transformative skincare innovator. This shift was definitively marked between 2021-01-17 and 2023-01-01 when they owned their brand with H1 &#39;Summer Fridays&#39; and clearly signaled future product innovation with &#39;COMING SOON MIDNIGHT RITUAL RETINOL Learn More&#39;, moving from a descriptive presence to an assertive market leader. Their latest H1 &#39;Dewier Skin is Coming...&#39; is the culmination of this strategy, promising a future state rather than simply detailing current offerings.</p>
+<p>The Gap: In their pursuit of this aspirational, future-focused narrative and a significant upmarket expansion (evidenced by prices up to $94), Summer Fridays has implicitly sacrificed immediate accessibility and straightforward solutions for the everyday consumer. Their current messaging, centered on &#39;Dewier Skin is Coming...&#39; with general &#39;Learn More&#39; and &#39;sign up&#39; CTAs, creates anticipation but neglects customers seeking instant gratification or clear, easy-to-understand entry points for immediate results. They&#39;ve likely deprioritized the mid-range customer who wants effective skincare *now*, without waiting for the &#34;next big thing&#34; or committing to higher price points. The subtle removal of &#39;cruelty-free&#39; from their meta description in 2023 could also be a gap for ethically-minded consumers if not addressed elsewhere.</p>
+<p>The Counter-Move: Our product should directly exploit Summer Fridays&#39; new, future-oriented complexity and higher price point ceiling. Our messaging angle must be <strong>&#34;Unlock Your Immediate Glow: Real Results, Right Now.&#34;</strong> We should position ourselves as the accessible, no-wait solution for premium, visible skin transformation. Highlight our product&#39;s efficacy and ease of integration into daily routines, directly contrasting Summer Fridays&#39; &#34;is Coming&#34; narrative. Specifically, we should feature our most popular products in the $25-$50 range, emphasizing their tangible benefits and &#39;before &amp; after&#39; results *today*. An explicit call-to-action could be &#34;Why Wait for Dewier Skin? Experience Yours Today.&#34; This provides a clear, actionable alternative to Summer Fridays&#39; high-end, future-tense promise, capturing the segment they are neglecting by becoming too aspirational and forward-looking.</p></div>
+      </div>
+      
+
+      
+      
+      <div style="position: relative; margin-top: 1rem;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            
+            Live website crawl <span class="source-pill">Homepage + sitemap + internal pages</span>
+            
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> Summer Fridays | Skincare + Hybrid Makeup</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> Toasted Marshmallow</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> Shop Summer Fridays skincare products. Our collection includes face masks, treatments and serums to leave your skin glowing, with vegan and clean ingredients.</div>
+        
+        <div class="analysis-detail"><strong>CTAs:</strong> Learn More | Join the Self-Care Club Rewards | Learn more. | Subscribe &amp; Save Get 15% Off | Subscribe | Contact Us</div>
+        
+        
+        <div class="analysis-detail"><strong>Live Crawl Coverage:</strong> 75 pages
+            analyzed across the current site.</div>
+        
+        
+        <div class="analysis-detail"><strong>Sitewide Tech Stack:</strong>
+            <span class="change-tag tag-tech">Google Analytics</span><span class="change-tag tag-tech">Google Tag Manager</span><span class="change-tag tag-tech">Shopify</span>
+        </div>
+        
+      </div>
+      
+
+      
+      <div class="analysis-detail" style="margin-top: 0.9rem;"><strong>Key Current Pages:</strong></div>
+      <div class="page-list">
+        
+        <div>
+          <a href="https://summerfridays.com/products/jet-lag-mask" target="_blank">Jet Lag Mask® - Hydrating Face Mask | Summer Fridays</a>
+          <div class="page-label">Jet Lag Mask®+ Moisturizer</div>
+        </div>
+        
+        <div>
+          <a href="https://summerfridays.com/products/overtime-mask-1" target="_blank">Overtime Mask - Brightening Face Mask | Summer Fridays</a>
+          <div class="page-label">Overtime Mask Brightening Face Mask</div>
+        </div>
+        
+        <div>
+          <a href="https://summerfridays.com/products/r-r-mask" target="_blank">R+R Face Mask | Summer Fridays</a>
+          <div class="page-label">R+R Mask</div>
+        </div>
+        
+        <div>
+          <a href="https://summerfridays.com/products/mini-jet-lag-mask" target="_blank">Mini Jet Lag Mask® - Hydrating Face Mask | Summer Fridays</a>
+          <div class="page-label">Mini Jet Lag Mask®+ Moisturizer</div>
+        </div>
+        
+        <div>
+          <a href="https://summerfridays.com/products/cc-me-serum" target="_blank">CC Me Vitamin C Serum | Summer Fridays</a>
+          <div class="page-label">CC Me Serum®with Vitamin C + Niacinamide</div>
+        </div>
+        
+        <div>
+          <a href="https://summerfridays.com/products/tube-key" target="_blank">Tube Key and Tub Squeezer | Summer Fridays</a>
+          <div class="page-label">Tube Key</div>
+        </div>
+        
+        <div>
+          <a href="https://summerfridays.com/products/super-amino-gel-cleanser" target="_blank">Super Amino Gel Cleanser - Facial Cleanser | Summer Fridays</a>
+          <div class="page-label">Super Amino Gel Cleanser®</div>
+        </div>
+        
+        <div>
+          <a href="https://summerfridays.com/products/lip-butter-balm" target="_blank">Lip Butter Balm, Vanilla | Summer Fridays</a>
+          <div class="page-label">Lip Butter Balm Vanilla</div>
+        </div>
+        
+      </div>
+      
+
+      <!-- Change Timeline -->
+      
+      <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
+      <div class="snapshot-timeline" style="position: relative;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-01-17 &#8594; 2020-02-18
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20200218050244/summerfridays.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2020-02-18 &#8594; 2021-01-17
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20210117233349/summerfridays.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2021-01-17 &#8594; 2023-01-01
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20230101071603/summerfridays.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2023-01-01 &#8594; 2024-01-01
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20240101173036/summerfridays.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2024-01-01 &#8594; 2026-01-01
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20260101090628/summerfridays.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+    <div class="competitor-card">
+      <h3>Glossier (Historical: 2014-2016)</h3>
+      <div class="url">
+        glossier.com
+        
+        - 0 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>No significant changes or live data to analyze.</p></div>
+      </div>
+      
+
+      
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <p style="color: var(--muted); margin-top: 1rem;">No significant archived changes detected between the sampled
+        snapshots.</p>
+      
+    </div>
+    
+    <div class="competitor-card">
+      <h3>The Ordinary (Historical: 2016-2018)</h3>
+      <div class="url">
+        theordinary.com
+        
+        - 151 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>CMO and Competitive Intelligence Expert Analysis: The Ordinary (Historical: 2016-2018)</p>
+<p>STRATEGIC NARRATIVE:</p>
+<p>The analysis of The Ordinary&#39;s website evolution from 2016-2018 reveals a decisive strategic pivot from a basic product vendor to an educational authority driving direct-to-consumer commerce. The initial low word count (345 words) suggests a minimalist, perhaps even experimental, online presence. The monumental 296% increase in word count (from 345 to 1020 words) between March and May 2018 is not merely an update; it signifies a deliberate and aggressive investment in content strategy. This move indicates a shift from simply listing products to deeply educating consumers on ingredients, formulations, and scientific principles—a direct play to own the narrative around transparent, science-backed skincare. This content expansion, coupled with the integration of Stripe, professionalized their e-commerce capabilities, moving them from a potential &#39;side hustle&#39; to a serious player capable of handling significant transaction volume and scaling direct sales.</p>
+<p>The removal of the Facebook Pixel later that year is a fascinating signal. For a brand like The Ordinary, which thrives on organic virality and word-of-mouth fueled by its unique value proposition, this could imply a strategic reduction in reliance on aggressive paid acquisition and direct attribution, signaling confidence in their burgeoning brand power and organic growth loops. It suggests a pivot towards a more sustainable, brand-centric growth model, less reliant on short-term campaign tracking and more on enduring brand loyalty and consumer education. This period marks The Ordinary’s transition from a nascent brand to one actively asserting its educational leadership and operational maturity in the direct-to-consumer beauty space. They aren&#39;t just selling products; they are selling a philosophy backed by accessible science and making it frictionless to buy into it.</p>
+<p>Strategic Insight for the Founder:</p>
+<p>The Pivot: The Ordinary’s most significant strategic messaging move was the abrupt shift from a minimalist &#34;product listing&#34; model to an &#34;educational authority and direct commerce facilitator.&#34; They transitioned from merely displaying their affordable, ingredient-focused products to becoming the definitive guide and trusted source for understanding and purchasing effective, transparent skincare. The massive content expansion around ingredient science, coupled with the enablement of seamless direct purchase via Stripe, established them as the go-to resource for the ingredient-conscious consumer.</p>
+<p>The Gap: While The Ordinary has effectively cultivated an informed customer base, their deep dive into complex scientific explanations and extensive product choice has inadvertently created a vulnerability: information overload and the burden of self-curation. Their messaging, while transparent, implicitly demands that customers invest significant time and effort to research, understand, and assemble their own multi-product regimens. This complexity can alienate a vast segment of the market seeking efficacy and affordability without the need for a chemistry degree or extensive personal research. They have become &#39;too expert&#39; for the &#39;simple solutions&#39; seeker, potentially sacrificing ease-of-use and immediate gratification for deep scientific validation.</p>
+<p>The Counter-Move: We should position our product directly against The Ordinary’s current complexity and the implicit &#39;homework&#39; required from their customers. Our messaging must emphasize &#34;Effortless Efficacy&#34; and &#34;Curated Simplicity.&#34; Exploit the frustration of navigating overwhelming choices and scientific jargon. Our specific angle: &#34;Achieve Your Best Skin. No Science Degree Required. We Cut Through the Noise with Curated Routines, Delivering Visible Results Without the Guesswork.&#34; Target our H1s to directly address this pain point, for example: &#34;Stop Googling Ingredients. Start Seeing Results. Simple, Powerful Skincare Routines Designed For You.&#34; Or, &#34;The Science is Our Job, Not Yours. Expertly Curated Skincare for Effortless Radiance.&#34; We are not sacrificing efficacy or affordability; we are offering a simplified, guided path to achieving it, directly contrasting with The Ordinary’s demanding educational journey. This angle captures the consumer segment that values convenience and clarity without compromising on quality or transparency.</p></div>
+      </div>
+      
+
+      
+      
+      <div style="position: relative; margin-top: 1rem;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            
+            Latest archived snapshot <span class="source-pill">Wayback</span>
+            
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> The Ordinary | Clinical Formulations with Integrity.</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> N/A</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> N/A</div>
+        
+        
+        
+        <div class="analysis-detail"><strong>Tech Stack:</strong>
+            <span class="change-tag tag-tech">Stripe</span>
+        </div>
+        
+      </div>
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
+      <div class="snapshot-timeline" style="position: relative;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-03-10 &#8594; 2018-05-13
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20180513175317/theordinary.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-05-13 &#8594; 2018-08-11
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20180811071756/theordinary.com" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+    <div class="competitor-card">
+      <h3>Hero Cosmetics (Historical: 2017-2019)</h3>
+      <div class="url">
+        herocosmetics.us
+        
+        - 59 snapshots
+        
+      </div>
+
+      
+      <div class="ai-insight"
+        style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 1rem; background: rgba(124, 92, 252, 0.05);">
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent);">Strategic Insight</h4>
+        <div style="font-size: 0.9rem; line-height: 1.5;"><p>Hero Cosmetics (2017-2019) Strategic Narrative: Evolution and Vulnerabilities</p>
+<p>Hero Cosmetics executed a critical pivot that transformed them from an obscure product to a brand with a distinct market position. Their most significant strategic messaging pivot occurred between November 2018 and February 2019. They dramatically shifted from an undifferentiated product descriptor, &#34;Hydrocolloid Acne Patches,&#34; to a definitive, urgent solution provider and nascent category innovator. This transformation was cemented by the introduction of the H1 &#34;Got a pimple emergency?&#34; and the compelling meta description, specifically the line: &#34;The new way to treat your acne breakouts. Cruelty-free, vegan-friendly and super gentle on skin.&#34; This move allowed them to claim market innovation, immediately resonate with a specific consumer pain point, and de-risk their brand by defining their unique problem-solution fit. Concurrently, they solidified specific consumer-friendly pricing ($17.99, $12.99, having previously explored broader options like $1 and $25), and crucially, introduced &#34;Subscribe Now&#34; and &#34;Join Now&#34; CTAs by mid-2019, signalling a clear intent for recurring revenue and community building, aggressively scaling their direct-to-consumer model.</p>
+<p>However, in their zealous focus on the &#34;pimple emergency&#34; and immediate, reactive treatment, Hero Cosmetics has carved a niche that inherently sacrifices the broader, preventative, and holistic skincare journey. While effective for initial conversion and establishing a rapid-response brand identity, this laser focus on &#34;emergency&#34; has potentially neglected the opportunity to own the long-term health and maintenance of clear skin. Their subsequent removal of the explicit H1 &#34;Got a pimple emergency?&#34; (between February and June 2019) might indicate an early recognition of this narrow framing, yet their core identity remains rooted in urgent, reactive intervention. Furthermore, the puzzling removal of both Segment and Google Analytics during this critical growth period, if not immediately replaced by equally robust systems, represents a gaping vulnerability in their ability to conduct granular data-driven decision making and understand their evolving customer lifecycle beyond the initial purchase.</p>
+<p>Our product should launch a direct counter-offensive against Hero Cosmetics by strategically embracing the holistic, long-term skincare journey and preventative care. While Hero Cosmetics addresses the symptom, our strategic move is to offer a superior solution that *prevents* the problem entirely. Our messaging must highlight that true, lasting confidence comes from consistent, clear skin, not just a reactive patch for an emergency. We will leverage an H1 like: &#34;Beyond the Emergency: Cultivate Lasting Clear Skin&#34; or &#34;Proactive Clarity: Stop Pimple Breakouts Before They Start.&#34; We will target their established consumer price points of $12.99-$17.99 but elevate the value proposition through a comprehensive, subscription-based regimen focused on *prevention* and *maintenance*, effectively capturing the customer&#39;s journey *post-emergency* and for the long haul. This directly exploits their reactive focus and the implied short-term nature of their &#34;emergency&#34; solution, seizing the white space they&#39;ve abandoned in the holistic skincare market.</p></div>
+      </div>
+      
+
+      
+      
+      <div style="position: relative; margin-top: 1rem;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.4); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; border: 1px dashed var(--accent);">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--surface2); border: 1px solid var(--accent); color: var(--accent); padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.75rem;">UNLOCK FORENSIC DEEP-DIVE</span>
+        </div>
+        
+        <div class="analysis-detail">
+            <strong>Current Source:</strong>
+            
+            Latest archived snapshot <span class="source-pill">Wayback</span>
+            
+        </div>
+        <div class="analysis-detail"><strong>Current Title:</strong> Hero Cosmetics | Best-Selling Acne Patches - Mighty Patch by Hero Cosmetics</div>
+        <div class="analysis-detail"><strong>Current H1:</strong> N/A</div>
+        <div class="analysis-detail"><strong>Current Meta:</strong> Absorbs pus while protecting pimples for faster healing. The new way to treat your acne breakouts. Cruelty-free, vegan-friendly and super gentle on skin.</div>
+        
+        <div class="analysis-detail"><strong>CTAs:</strong> Subscribe Now | Learn More | $12.99 Add to Cart | $17.99 Add to Cart | Join Now</div>
+        
+        
+        
+        <div class="analysis-detail"><strong>Tech Stack:</strong>
+            <span class="change-tag tag-tech">Google Tag Manager</span><span class="change-tag tag-tech">Shopify</span>
+        </div>
+        
+      </div>
+      
+
+      
+
+      <!-- Change Timeline -->
+      
+      <h4 style="margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--muted);">Change Timeline</h4>
+      <div class="snapshot-timeline" style="position: relative;">
+        
+        <div style="position: absolute; inset: 0; background: rgba(5, 5, 16, 0.05); backdrop-filter: grayscale(1); display: flex; align-items: center; justify-content: center; z-index: 5; border-radius: 12px; margin-left: 2rem;">
+            <span onclick="window.location.href='/#pricing'" style="cursor: pointer; background: var(--accent); color: white; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 800; font-size: 0.8rem; box-shadow: 0 0 20px var(--accent-glow);">UNLOCK HISTORICAL PIVOT FORENSICS</span>
+        </div>
+        
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-06-18 &#8594; 2018-11-06
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20181106075321/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Content reduced by 0 words</span>
+          </div>
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2018-11-06 &#8594; 2019-02-14
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20190214144706/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Title Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Meta Description</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2019-02-14 &#8594; 2019-06-02
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20190602223516/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+          <div class="diff-block">
+            <span class="change-tag tag-changed">Headline Changed</span><br>
+            <span class="diff-from">[LOCKED]</span><br>
+            <span class="diff-to">[LOCKED]</span>
+          </div>
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ Price: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- Price: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- [LOCKED]</span>
+            
+          </div>
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2019-06-02 &#8594; 2019-07-15
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20190715014226/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+
+          
+        </div>
+        
+        <div class="timeline-item" style="opacity: 0.3; pointer-events: none;">
+          <div class="timeline-date">
+            2019-07-15 &#8594; 2019-12-28
+            
+            <a class="snapshot-link" href="https://web.archive.org/web/20191228052858/herocosmetics.us" target="_blank">[view snapshot]</a>
+            
+          </div>
+
+          
+
+          
+
+          
+
+          
+          <div class="diff-block">
+            
+            <span class="change-tag tag-added">+ CTA: [LOCKED]</span>
+            
+            
+            <span class="change-tag tag-removed">- CTA: [LOCKED]</span>
+            
+          </div>
+          
+
+          
+
+          
+
+          
+        </div>
+        
+      </div>
+      
+    </div>
+    
+
+    <!-- MVP DEMO LOCK: Show Locked Competitors -->
+    
+
+    
+
+  </div>
+
+  <div class="footer">
+    <p>Business Spy - Competitive Intelligence Engine</p>
+    <p>Historical web data analysis for strategic research purposes.</p>
+  </div>
+
+</body>
+
+</html>

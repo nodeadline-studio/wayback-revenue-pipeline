@@ -1,0 +1,28 @@
+[Unit]
+Description=BizSpy Wayback Revenue Pipeline (Flask via gunicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=bizspy
+Group=bizspy
+WorkingDirectory=/opt/bizspy-api
+EnvironmentFile=/opt/bizspy-api/.env
+ExecStart=/opt/bizspy-api/.venv/bin/gunicorn \
+    --workers 1 \
+    --threads 8 \
+    --timeout 600 \
+    --bind 127.0.0.1:8010 \
+    --access-logfile - \
+    --error-logfile - \
+    app:app
+# NOTE: workers MUST be 1. Background pipeline jobs are stored in an in-memory
+# dict (JOBS) and run via threading.Thread inside the worker process. Adding
+# workers makes /api/status return "Invalid Job" because the polling request
+# may land on a worker that never saw the POST /api/demo.
+Restart=on-failure
+RestartSec=5
+# Reports are written to /opt/bizspy-api/output, must be writable.
+
+[Install]
+WantedBy=multi-user.target

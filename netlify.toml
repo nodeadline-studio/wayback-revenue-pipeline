@@ -1,17 +1,11 @@
 [build]
   publish = "web"
   functions = "netlify/functions"
+  command = "bash scripts/build_netlify_redirects.sh"
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api"
-  status = 200
-
-[[redirects]]
-  from = "/reports/*"
-  to = "/reports/:splat"
-  status = 200
-
+# Redirects are written to web/_redirects at build time from BIZSPY_API_ORIGIN.
+# See scripts/build_netlify_redirects.sh.
+# Keep an SPA fallback here as a safety net.
 [[redirects]]
   from = "/*"
   to = "/index.html"

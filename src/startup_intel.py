@@ -77,6 +77,38 @@ def coerce_seeded_competitors(raw_value: Any) -> List[Dict[str, Any]]:
     return seeded
 
 
+_WEDGE_PRICE_TIERS = {"low_self_serve", "mid_market", "enterprise", "agency_retainer"}
+_WEDGE_BUSINESS_MODELS = {"self_serve", "sales_led", "agency_service", "managed_service"}
+
+
+def coerce_wedge(raw_value: Any) -> Dict[str, Any]:
+    """Normalize the optional wedge block. Unknown keys are dropped."""
+    if not isinstance(raw_value, dict):
+        return {}
+
+    def _str(key: str) -> str:
+        return str(raw_value.get(key) or "").strip().lower()
+
+    price_tier = _str("price_tier")
+    if price_tier and price_tier not in _WEDGE_PRICE_TIERS:
+        price_tier = ""
+    business_model = _str("business_model")
+    if business_model and business_model not in _WEDGE_BUSINESS_MODELS:
+        business_model = ""
+
+    wedge = {
+        "geo_target": _str("geo_target"),
+        "geo_origin": _str("geo_origin"),
+        "price_tier": price_tier,
+        "business_model": business_model,
+        "audience_segment": str(raw_value.get("audience_segment") or "").strip(),
+    }
+    # Drop block entirely if every field is empty.
+    if not any(wedge.values()):
+        return {}
+    return wedge
+
+
 def build_sprint_context(payload: Optional[Dict[str, Any]], target_url: str) -> Dict[str, Any]:
     payload = payload or {}
     seeded_competitors = coerce_seeded_competitors(payload.get("seeded_competitors"))
@@ -84,6 +116,7 @@ def build_sprint_context(payload: Optional[Dict[str, Any]], target_url: str) -> 
     leadideal = dict(payload.get("leadideal") or {})
     creatorpacks = dict(payload.get("creatorpacks") or {})
     publishability = dict(payload.get("publishability") or {})
+    wedge = coerce_wedge(payload.get("wedge"))
 
     if leadideal.get("base_url"):
         leadideal["base_url"] = str(leadideal.get("base_url") or "").strip().rstrip("/")
@@ -108,6 +141,7 @@ def build_sprint_context(payload: Optional[Dict[str, Any]], target_url: str) -> 
         "publishability": publishability,
         "leadideal": leadideal,
         "creatorpacks": creatorpacks,
+        "wedge": wedge,
         "seeded_competitors": seeded_competitors,
         "selection_mode": "seeded" if seeded_competitors else "discovery",
     }
@@ -161,11 +195,11 @@ def build_leadideal_handoff(manifest: Dict[str, Any]) -> Dict[str, Any]:
     # Derive forensic context from niche narrative or first competitor insight
     niche_narrative = manifest.get("niche_narrative") or ""
     forensic_context = niche_narrative[:1000] if niche_narrative else ""
-    
+
     # Construct BizSpy report URL (assumes production domain + slugified niche)
     def _local_slugify(value: str) -> str:
         return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
-        
+
     safe_niche = _local_slugify(manifest.get("niche_name") or "report")
     bizspy_report_url = f"https://bizspy.netlify.app/gallery/{safe_niche}/report.html"
 

@@ -1,0 +1,5 @@
+{
+  "error": "backend_offline",
+  "message": "BizSpy backend is not configured. Set BIZSPY_API_ORIGIN in Netlify and redeploy.",
+  "schema_version": "bizspy.error.v1"
+}
